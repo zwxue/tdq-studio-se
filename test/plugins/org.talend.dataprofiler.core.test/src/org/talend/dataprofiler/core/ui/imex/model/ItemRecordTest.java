@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -77,7 +77,7 @@ public class ItemRecordTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.imex.model.ItemRecord#loadProperty()}.
-     * 
+     *
      * @throws PersistenceException
      */
     @Test
@@ -131,7 +131,7 @@ public class ItemRecordTest {
      * DOC zshen Comment method "chooseRightProject".
      */
     private void chooseRightProject() {
-        String projectName = "TEST_NOLOGIN"; //getAppArgValue("-project", "TEST_NOLOGIN"); //$NON-NLS-1$ 
+        String projectName = "TEST_NOLOGIN"; //getAppArgValue("-project", "TEST_NOLOGIN"); //$NON-NLS-1$
         log.debug("##############current setting Project name is " + projectName); //$NON-NLS-1$
         IProject rootProject = ReponsitoryContextBridge.getRootProject();
         if (!projectName.equals(rootProject.getName())) {
@@ -233,12 +233,12 @@ public class ItemRecordTest {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "checkFileName".
-     * 
+     *
      * @param fileName
      * @param pattern
-     * 
+     *
      * copy the method from ProxyRepositoryFactory to avoid tos migeration.
      */
     private void checkFileName(String fileName, String pattern) {
@@ -263,7 +263,7 @@ public class ItemRecordTest {
 
     /**
      * DOC zshen Comment method "saveAnalysis".
-     * 
+     *
      * @param analysis
      */
     private ReturnCode saveAnalysis(Analysis analysis) {

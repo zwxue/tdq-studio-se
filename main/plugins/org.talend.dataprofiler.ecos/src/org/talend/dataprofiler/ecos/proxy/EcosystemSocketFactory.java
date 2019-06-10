@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.apache.axis.utils.Messages;
 import org.apache.commons.logging.Log;
 
 /**
- * 
+ *
  * DOC mzhao class global comment. Detailled comment
  */
 public class EcosystemSocketFactory implements SocketFactory {
@@ -66,7 +66,7 @@ public class EcosystemSocketFactory implements SocketFactory {
 
     /**
      * Constructor is used only by subclasses.
-     * 
+     *
      * @param attributes
      */
     public EcosystemSocketFactory(Hashtable<String, String> attributes) {
@@ -75,14 +75,14 @@ public class EcosystemSocketFactory implements SocketFactory {
 
     /**
      * Creates a socket.
-     * 
+     *
      * @param host
      * @param port
      * @param otherHeaders
      * @param useFullURL
-     * 
+     *
      * @return Socket
-     * 
+     *
      * @throws Exception
      */
     public Socket create(String host, int port, StringBuffer otherHeaders, BooleanHolder useFullURL) throws Exception {
@@ -125,7 +125,7 @@ public class EcosystemSocketFactory implements SocketFactory {
 
     /**
      * Creates a socket with connect timeout using reflection API
-     * 
+     *
      * @param host
      * @param port
      * @param timeout
@@ -146,10 +146,10 @@ public class EcosystemSocketFactory implements SocketFactory {
 
     /**
      * Check if the specified host is in the list of non proxy hosts.
-     * 
+     *
      * @param host host name
      * @param nonProxyHosts string containing the list of non proxy hosts
-     * 
+     *
      * @return true/false
      */
     protected boolean isHostInNonProxyList(String host, String nonProxyHosts) {
@@ -180,11 +180,11 @@ public class EcosystemSocketFactory implements SocketFactory {
     /**
      * Matches a string against a pattern. The pattern contains two special characters: '*' which means zero or more
      * characters,
-     * 
+     *
      * @param pattern the (non-null) pattern to match against
      * @param str the (non-null) string that must be matched against the pattern
      * @param isCaseSensitive
-     * 
+     *
      * @return <code>true</code> when the string matches against the pattern, <code>false</code> otherwise.
      */
     protected static boolean match(String pattern, String str, boolean isCaseSensitive) {

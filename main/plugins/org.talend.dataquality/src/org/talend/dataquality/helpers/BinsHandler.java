@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ public final class BinsHandler {
     /**
      * Method "generateOpenBins". The size of the returned array is nbBins -1. We consider that the first bin is made of
      * the values < min and the last bin is made of the values > max.
-     * 
+     *
      * @param min the first value of the bin interval
      * @param max the last value of the bin interval
      * @param nbBins the number of bins
@@ -44,7 +44,7 @@ public final class BinsHandler {
     /**
      * Method "generateClosedBins". The size of the returned array is nbBins+1. We consider that the first bin starts at
      * the value min and the last bin ends at the value max.
-     * 
+     *
      * @param min the first value of the bin interval
      * @param max the last value of the bin interval
      * @param nbBins the number of bins

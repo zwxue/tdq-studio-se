@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -71,7 +71,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author rli
- * 
+ *
  */
 public final class EObjectHelper {
 
@@ -95,7 +95,7 @@ public final class EObjectHelper {
     }
 
     /**
-     * 
+     *
      * @deprecated it's probably better to use {@link ConnectionHelper#getTdDataProvider(TdColumn)}
      */
     @Deprecated
@@ -134,9 +134,9 @@ public final class EObjectHelper {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "removeDependencys".
-     * 
+     *
      * @param elementToDelete
      */
     public static void removeDependencys(ModelElement elementToDelete) {
@@ -194,9 +194,9 @@ public final class EObjectHelper {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "getDependencyClients".
-     * 
+     *
      * @param respositoryNode
      * @return
      */
@@ -214,7 +214,7 @@ public final class EObjectHelper {
 
     /**
      * Go throught all reports in the project and return all which used the current jrxml.
-     * 
+     *
      * @param node the Jrxml node
      * @return list of reports who used this jrxml as user defined template
      */
@@ -244,7 +244,7 @@ public final class EObjectHelper {
     /**
      * check if the anaMap comtains the Jrxml or not, by compare the jrxml's path with anaMap's jrxml source(when user
      * mode)
-     * 
+     *
      * @param path the path of the jrxml saved in the analysis map
      * @param anaMap the analysis map in the report.
      * @return the analysis map used the current jrxml or not.
@@ -283,9 +283,9 @@ public final class EObjectHelper {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "hasDependences".
-     * 
+     *
      * @param node
      * @return
      */
@@ -299,7 +299,7 @@ public final class EObjectHelper {
 
     /**
      * get the first Dependency of node(only used for METADATA_CON_TABLE and METADATA_CON_VIEW).
-     * 
+     *
      * @param node
      * @return
      */
@@ -353,7 +353,7 @@ public final class EObjectHelper {
 
     /**
      * compare two ModelElements.
-     * 
+     *
      * @param model1
      * @param model2
      * @return boolean true: when they have the same name and uuid.
@@ -381,7 +381,7 @@ public final class EObjectHelper {
 
     /**
      * add Dependencies For File.
-     * 
+     *
      * @param file
      * @param modelElements
      */
@@ -394,7 +394,7 @@ public final class EObjectHelper {
 
     /**
      * DOC bZhou Comment method "retrieveEObject".
-     * 
+     *
      * @param filePath
      * @param classfier
      * @return
@@ -418,7 +418,7 @@ public final class EObjectHelper {
 
     /**
      * DOC bZhou Comment method "isEObjectPathExited".
-     * 
+     *
      * @param objectPath
      * @return
      */
@@ -431,9 +431,9 @@ public final class EObjectHelper {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "resolveObject".
-     * 
+     *
      * @param proxy
      * @return
      */
@@ -453,9 +453,9 @@ public final class EObjectHelper {
 
     /**
      * DOC bZhou Comment method "getURI".
-     * 
+     *
      * Get uri for an object.
-     * 
+     *
      * @param object
      * @return
      */

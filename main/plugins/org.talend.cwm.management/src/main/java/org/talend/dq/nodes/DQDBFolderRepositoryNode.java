@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ import org.talend.repository.model.RepositoryNode;
 
 /**
  * created by xqliu on Apr 15, 2013 Detailled comment
- * 
+ *
  */
 public class DQDBFolderRepositoryNode extends DQRepositoryNode {
 
@@ -86,7 +86,7 @@ public class DQDBFolderRepositoryNode extends DQRepositoryNode {
 
     /**
      * DOC xqliu DQConnectionRepositoryNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -126,7 +126,7 @@ public class DQDBFolderRepositoryNode extends DQRepositoryNode {
 
     /**
      * Getter for item.
-     * 
+     *
      * @return the item
      */
     public ConnectionItem getItem() {
@@ -135,7 +135,7 @@ public class DQDBFolderRepositoryNode extends DQRepositoryNode {
 
     /**
      * Sets the item.
-     * 
+     *
      * @param item the item to set
      */
     public void setItem(ConnectionItem item) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,8 +33,8 @@ import org.talend.dataquality.indicators.schema.util.SchemaSwitch;
 
 /**
  * @author scorreia
- * 
- * 
+ *
+ *
  */
 public final class DataqualitySwitchHelper {
 
@@ -126,7 +126,7 @@ public final class DataqualitySwitchHelper {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * org.talend.dataquality.domain.pattern.util.PatternSwitch#casePattern(org.talend.dataquality.domain.pattern
          * .Pattern)
@@ -142,7 +142,7 @@ public final class DataqualitySwitchHelper {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * org.talend.dataquality.domain.pattern.util.PatternSwitch#caseRegularExpression(org.talend.dataquality.domain
          * .pattern.RegularExpression)

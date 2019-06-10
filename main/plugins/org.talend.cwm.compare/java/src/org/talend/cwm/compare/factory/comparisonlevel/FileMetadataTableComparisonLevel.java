@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -53,7 +53,7 @@ public class FileMetadataTableComparisonLevel extends AbstractTableComparisonLev
 
     /**
      * DOC yyin FileMetadataTableComparisonLevel constructor comment.
-     * 
+     *
      * @param columnSet
      */
     public FileMetadataTableComparisonLevel(ColumnSet columnSet) {
@@ -62,7 +62,7 @@ public class FileMetadataTableComparisonLevel extends AbstractTableComparisonLev
 
     /**
      * DOC yyin FileMetadataTableComparisonLevel constructor comment.
-     * 
+     *
      * @param resObject
      * @param newMetadataTable
      */
@@ -162,7 +162,7 @@ public class FileMetadataTableComparisonLevel extends AbstractTableComparisonLev
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#saveReloadResult()
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
  * created by yyin on 2014-2-18 : add the sql expressions for the database:Netezza, in the system indicators of: some
  * Text indicators, Pattern Frequency Statistics, Soundex, and Benford indicator; and add the default one in pattern
  * finder and soundex who does not have the default one before
- * 
+ *
  */
 public class AddNetezzaExpressionInIndicatorsTask extends AbstractWorksapceUpdateTask {
 
@@ -104,7 +104,7 @@ public class AddNetezzaExpressionInIndicatorsTask extends AbstractWorksapceUpdat
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -160,7 +160,7 @@ public class AddNetezzaExpressionInIndicatorsTask extends AbstractWorksapceUpdat
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -169,7 +169,7 @@ public class AddNetezzaExpressionInIndicatorsTask extends AbstractWorksapceUpdat
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {

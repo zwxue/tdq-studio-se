@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ public class CustomerDefaultCategoryDataset implements ICustomerDataset {
     private Object dataset;
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 1L;
 
@@ -50,7 +50,7 @@ public class CustomerDefaultCategoryDataset implements ICustomerDataset {
 
     /**
      * add the value to the dataset
-     * 
+     *
      * @param value
      * @param labelx
      * @param labely

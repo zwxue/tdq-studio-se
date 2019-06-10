@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,7 +35,7 @@ import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 
 /**
  * @author scorreia
- * 
+ *
  * Factory for the creation of DbmsLanguage objects.
  */
 public final class DbmsLanguageFactory {
@@ -48,7 +48,7 @@ public final class DbmsLanguageFactory {
 
     /**
      * Method "createDbmsLanguage".
-     * 
+     *
      * @param dataManager a data manager used for initializing the correct language in the created DbmsLanguage
      * @return a new DbmsLanguage even if the data manager did not allow to get the correct language
      */
@@ -104,7 +104,7 @@ public final class DbmsLanguageFactory {
 
     /**
      * Method "createDbmsLanguage".
-     * 
+     *
      * @param dbmsSubtype
      * @return the appropriate DbmsLanguage
      */
@@ -171,7 +171,7 @@ public final class DbmsLanguageFactory {
 
     /**
      * DOC talend Comment method "isImpala".
-     * 
+     *
      * @param dbmsSubtype
      * @return
      */
@@ -186,7 +186,7 @@ public final class DbmsLanguageFactory {
 
     /**
      * DOC jet Comment method "getDbmsLanguage".
-     * 
+     *
      * @param dbType
      * @return
      */
@@ -204,7 +204,7 @@ public final class DbmsLanguageFactory {
 
     /**
      * Method "createDbmsLanguage".
-     * 
+     *
      * @param connection a connection (must be open)
      * @return the appropriate DbmsLanguage or a default one if something failed with the connection.
      */
@@ -321,7 +321,7 @@ public final class DbmsLanguageFactory {
 
     /**
      * if lang1 equals lang2 (ignore case) return true, else return false.
-     * 
+     *
      * @param lang1
      * @param lang2
      * @return
@@ -396,7 +396,7 @@ public final class DbmsLanguageFactory {
 
     /**
      * Method "createDbmsLanguage".
-     * 
+     *
      * @param analysis
      * @return the dbms language associated to the connection of the given analysis or a default one.
      */

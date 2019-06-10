@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -85,7 +85,7 @@ public final class ImportFactory {
 
     /**
      * DOC bZhou Comment method "doImport".
-     * 
+     *
      * @param resourceType
      * @param importFile
      * @return
@@ -98,7 +98,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "doImport".
-     * 
+     *
      * @param resourceType
      * @param importFile
      * @param importItemName
@@ -112,7 +112,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "doImport".
-     * 
+     *
      * @param resourceType
      * @param importObject
      * @param importItemName
@@ -124,7 +124,7 @@ public final class ImportFactory {
 
     /**
      * DOC bZhou Comment method "doImport".
-     * 
+     *
      * @param category
      * @param importFile
      * @return
@@ -137,7 +137,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "doImport".
-     * 
+     *
      * @param resourceType
      * @param importFile
      * @param skip
@@ -169,7 +169,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "doImport".
-     * 
+     *
      * @param resourceType
      * @param importObject
      * @param skip
@@ -199,7 +199,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importToStucture".
-     * 
+     *
      * @param importFile
      * @param selectionFolder
      * @param type
@@ -216,7 +216,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importToStucture".
-     * 
+     *
      * @param importFile
      * @param selectionFolder
      * @param type
@@ -235,7 +235,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importToStucture".
-     * 
+     *
      * @param importObject
      * @param selectionFolder
      * @param type
@@ -323,7 +323,7 @@ public final class ImportFactory {
 
     /**
      * check the importEvent list, if it is empty add message into it.
-     * 
+     *
      * @param importItemName
      * @param importEvent
      */
@@ -331,7 +331,7 @@ public final class ImportFactory {
         if (importEvent.isEmpty()) {
             if (!StringUtils.isBlank(importItemName)) {
                 importEvent
-                        .add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.ImportFailed", importItemName), false)); //$NON-NLS-1$                    
+                        .add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.ImportFailed", importItemName), false)); //$NON-NLS-1$
             }
         }
     }
@@ -376,7 +376,7 @@ public final class ImportFactory {
 
     /**
      * DOC qzhang Comment method "createPattern".
-     * 
+     *
      * @param name
      * @param author
      * @param description
@@ -471,7 +471,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importIndicatorToStucture".
-     * 
+     *
      * @param importFile
      * @param selectionFolder
      * @param skip
@@ -487,7 +487,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importIndicatorToStucture".
-     * 
+     *
      * @param importFile
      * @param selectionFolder
      * @param skip
@@ -505,7 +505,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importIndicatorToStucture".
-     * 
+     *
      * @param importObject
      * @param selectionFolder
      * @param skip
@@ -646,7 +646,7 @@ public final class ImportFactory {
     /**
      * get the IndicatorDefinitionParameter information from the record and build the paraMap, set it into
      * UDIParameters.
-     * 
+     *
      * @param record
      */
     private static Map<String, String> buildIndDefPara(HashMap<String, String> record) {
@@ -684,7 +684,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "createAndStoreUDI".
-     * 
+     *
      * @param parameters
      * @param selectionFolder
      */
@@ -734,7 +734,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importFile".
-     * 
+     *
      * @param importFile
      * @param targetFile
      * @throws IOException
@@ -753,7 +753,7 @@ public final class ImportFactory {
 
     /**
      * The method is used for importing a parser rule from file.
-     * 
+     *
      * @param importFile
      * @param selectionFolder
      * @param skip
@@ -769,7 +769,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importParserRuleToStucture".
-     * 
+     *
      * @param importFile
      * @param selectionFolder
      * @param skip
@@ -787,7 +787,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importParserRuleToStucture".
-     * 
+     *
      * @param importObject
      * @param selectionFolder
      * @param skip
@@ -875,7 +875,7 @@ public final class ImportFactory {
 
     /**
      * DOC klliu Comment method "addQual".
-     * 
+     *
      * @param string
      * @return
      */
@@ -886,7 +886,7 @@ public final class ImportFactory {
 
     /**
      * DOC klliu Comment method "createAndStoreParserRule".
-     * 
+     *
      * @param prParameters
      * @param selectionFolder
      */
@@ -960,7 +960,7 @@ public final class ImportFactory {
 
     /**
      * DOC xqliu Comment method "importFromExchange".
-     * 
+     *
      * @param componet
      * @return
      */

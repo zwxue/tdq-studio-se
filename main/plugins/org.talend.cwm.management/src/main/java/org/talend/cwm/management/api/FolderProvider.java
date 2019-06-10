@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,7 +19,7 @@ import org.talend.dataquality.PluginConstant;
 
 /**
  * @author scorreia
- * 
+ *
  * A simple container for a folder.
  */
 public class FolderProvider {
@@ -30,7 +30,7 @@ public class FolderProvider {
 
     /**
      * Getter for folder.
-     * 
+     *
      * @return the folder
      */
     public File getFolder() {
@@ -39,7 +39,7 @@ public class FolderProvider {
 
     /**
      * Sets the folder.
-     * 
+     *
      * @param folder the folder to set
      */
     public void setFolder(File folder) {
@@ -48,7 +48,7 @@ public class FolderProvider {
 
     /**
      * Getter for folderResource.
-     * 
+     *
      * @return the folderResource
      */
     public IFolder getFolderResource() {
@@ -57,7 +57,7 @@ public class FolderProvider {
 
     /**
      * Sets the folderResource.
-     * 
+     *
      * @param folderResource the folderResource to set
      */
     public void setFolderResource(IFolder folderResource) {

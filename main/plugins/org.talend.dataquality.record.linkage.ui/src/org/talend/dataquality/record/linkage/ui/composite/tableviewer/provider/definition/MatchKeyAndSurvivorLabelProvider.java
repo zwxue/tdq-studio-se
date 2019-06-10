@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ public class MatchKeyAndSurvivorLabelProvider extends MatchRuleLabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider#getColumnText(
      * java.lang.Object, int)
@@ -77,7 +77,7 @@ public class MatchKeyAndSurvivorLabelProvider extends MatchRuleLabelProvider {
 
     /*
      * (non-Javadoc) differents with parent: lost one column: "column" , so columnIndex+1
-     * 
+     *
      * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
      */
     @Override

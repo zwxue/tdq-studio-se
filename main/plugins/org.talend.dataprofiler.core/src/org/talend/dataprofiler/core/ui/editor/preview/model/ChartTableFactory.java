@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -106,7 +106,7 @@ public final class ChartTableFactory {
 
     /**
      * add contextual menu for job generation.
-     * 
+     *
      * @param menu
      * @param analysis
      * @param currentIndicator
@@ -430,7 +430,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC yyin Comment method "createMenuOfGenerateRegularPattern".
-     * 
+     *
      * @param analysis
      * @param menu
      * @param itemEntity
@@ -454,7 +454,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC bZhou Comment method "createPattern".
-     * 
+     *
      * @param analysis
      * @param itemEntity
      * @param pattTransformer
@@ -469,7 +469,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC bZhou Comment method "isAllMatchIndicator".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -486,7 +486,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC bZhou Comment method "isDUDIndicator".
-     * 
+     *
      * @param indicator
      * @return false if the indicator is not Duplicated,Uniqure,Distinct indicator.
      */
@@ -514,7 +514,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC bZhou Comment method "isPatternMatchingIndicator".
-     * 
+     *
      * @param indicator
      * @return false if the indicator is not pattern matching indicator.
      */
@@ -544,7 +544,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC zshen Comment method "isFrequenceIndicator".
-     * 
+     *
      * @param indicator
      * @return false if the indicator is not Frequence indicator.
      */
@@ -562,7 +562,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC bZhou Comment method "isPatternFrequencyIndicator".
-     * 
+     *
      * @param indicator
      * @return false if the indicator is not pattern frequency indicator.
      */
@@ -585,7 +585,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC bZhou Comment method "isPatternFrequencyIndicator".
-     * 
+     *
      * @param indicator
      * @return false if the indicator is not pattern frequency indicator.
      */
@@ -594,7 +594,7 @@ public final class ChartTableFactory {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#caseEastAsiaPatternFreqIndicator(org.talend.
              * dataquality.indicators.EastAsiaPatternFreqIndicator)
              */
@@ -605,7 +605,7 @@ public final class ChartTableFactory {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see
              * org.talend.dataquality.indicators.util.IndicatorsSwitch#caseEastAsiaPatternLowFreqIndicator(org.talend
              * .dataquality.indicators.EastAsiaPatternLowFreqIndicator)
@@ -622,7 +622,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC zshen Comment method "isDatePatternFrequencyIndicator".
-     * 
+     *
      * @param indicator
      * @return false if the indicator is not Date pattern frequency indicator.
      */
@@ -640,7 +640,7 @@ public final class ChartTableFactory {
 
     /**
      * Added yyin TDQ-4829 20120717 To add the new feature: generate job from DQ rule
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -693,7 +693,7 @@ public final class ChartTableFactory {
 
     /**
      * DOC Administrator Comment method "isPhonseNumberIndicator".
-     * 
+     *
      * @param indicator
      * @return
      */

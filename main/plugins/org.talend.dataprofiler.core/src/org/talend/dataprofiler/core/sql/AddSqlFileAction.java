@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,9 +36,9 @@ import org.talend.resource.ResourceManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
- * 
+ *
  */
 public class AddSqlFileAction extends Action implements ICheatSheetAction {
 
@@ -50,7 +50,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
 
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
-     * 
+     *
      * @param node
      */
     public AddSqlFileAction(RepositoryNode node) {
@@ -60,9 +60,9 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
     }
 
     /**
-     * 
+     *
      * DOC zshen AddSqlFileAction constructor comment.
-     * 
+     *
      */
     public AddSqlFileAction() {
         setText(DefaultMessagesImpl.getString("AddSqlFileAction.createSQLFile")); //$NON-NLS-1$
@@ -72,7 +72,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -96,7 +96,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */

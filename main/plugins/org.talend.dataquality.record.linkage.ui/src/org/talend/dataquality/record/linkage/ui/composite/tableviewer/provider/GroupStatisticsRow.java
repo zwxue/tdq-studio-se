@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -14,7 +14,7 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider;
 
 /**
  * created by zhao on Aug 19, 2013 Detailled comment
- * 
+ *
  */
 public class GroupStatisticsRow {
 
@@ -28,7 +28,7 @@ public class GroupStatisticsRow {
 
     /**
      * Getter for groupSize.
-     * 
+     *
      * @return the groupSize
      */
     public Long getGroupSize() {
@@ -37,7 +37,7 @@ public class GroupStatisticsRow {
 
     /**
      * Sets the groupSize.
-     * 
+     *
      * @param groupSize the groupSize to set
      */
     public void setGroupSize(Long groupSize) {
@@ -46,7 +46,7 @@ public class GroupStatisticsRow {
 
     /**
      * Getter for groupCount.
-     * 
+     *
      * @return the groupCount
      */
     public Long getGroupCount() {
@@ -55,7 +55,7 @@ public class GroupStatisticsRow {
 
     /**
      * Sets the groupCount.
-     * 
+     *
      * @param groupCount the groupCount to set
      */
     public void setGroupCount(Long groupCount) {
@@ -64,7 +64,7 @@ public class GroupStatisticsRow {
 
     /**
      * Getter for recordCount.
-     * 
+     *
      * @return the recordCount
      */
     public Long getRecordCount() {
@@ -73,7 +73,7 @@ public class GroupStatisticsRow {
 
     /**
      * Sets the recordCount.
-     * 
+     *
      * @param recordCount the recordCount to set
      */
     public void setRecordCount(Long recordCount) {
@@ -82,7 +82,7 @@ public class GroupStatisticsRow {
 
     /**
      * Getter for recordPercentage.
-     * 
+     *
      * @return the recordPercentage
      */
     public String getRecordPercentage() {
@@ -91,7 +91,7 @@ public class GroupStatisticsRow {
 
     /**
      * Sets the recordPercentage.
-     * 
+     *
      * @param recordPercentage the recordPercentage to set
      */
     public void setRecordPercentage(String recordPercentage) {

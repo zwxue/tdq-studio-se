@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.talend.dataprofiler.ecos.model.impl.Revision;
 
 /**
- * 
+ *
  * DOC mzhao class global comment. Detailled comment
  */
 public class EcosystemServiceTest {
@@ -185,8 +185,8 @@ public class EcosystemServiceTest {
         // fail(e.getMessage());
         // }
         // parameter = new HashMap<String, String>();
-        //        parameter.put("categories", null); //$NON-NLS-1$ 
-        //        parameter.put("version", null); //$NON-NLS-1$ 
+        //        parameter.put("categories", null); //$NON-NLS-1$
+        //        parameter.put("version", null); //$NON-NLS-1$
         // try {
         //            jsonContent = EcosystemService.sendPostRequest("http://talendforge.org/exchange/top/api/get_revision_list.php", //$NON-NLS-1$
         // parameter);

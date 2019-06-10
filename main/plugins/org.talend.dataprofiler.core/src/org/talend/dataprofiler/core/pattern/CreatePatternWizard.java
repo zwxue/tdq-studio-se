@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,9 +38,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
- * 
+ *
  */
 public class CreatePatternWizard extends AbstractWizard {
 
@@ -66,7 +66,7 @@ public class CreatePatternWizard extends AbstractWizard {
 
     /**
      * DOC qzhang CreateSqlFileWizard constructor comment.
-     * 
+     *
      * @param parameter
      * @param type
      */
@@ -77,7 +77,7 @@ public class CreatePatternWizard extends AbstractWizard {
 
     /**
      * CreatePatternWizard constructor.
-     * 
+     *
      * @param parameter
      * @param type
      * @param expression
@@ -91,7 +91,7 @@ public class CreatePatternWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -142,7 +142,7 @@ public class CreatePatternWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataprofiler.core.ui.wizard.AbstractWizard#fillMetadataToCWMResource(orgomg.cwm.objectmodel.core.
      * ModelElement)
      */
@@ -154,7 +154,7 @@ public class CreatePatternWizard extends AbstractWizard {
 
     /**
      * Getter for location.
-     * 
+     *
      * @return the location
      */
     public IPath getLocation() {
@@ -199,7 +199,7 @@ public class CreatePatternWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
      * )

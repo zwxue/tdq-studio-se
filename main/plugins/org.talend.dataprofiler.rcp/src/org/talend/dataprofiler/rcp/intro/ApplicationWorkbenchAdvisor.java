@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.talend.registration.register.RegisterManagement;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
@@ -59,7 +59,7 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor#postStartup()
      */
     @Override

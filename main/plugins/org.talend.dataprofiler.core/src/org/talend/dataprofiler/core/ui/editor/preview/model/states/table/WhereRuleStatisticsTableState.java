@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-4 Detailled comment
- * 
+ *
  */
 public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableState {
 
@@ -59,7 +59,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.table.AbstractTableTypeStates#getDataEntity()
      */
     @Override
@@ -81,7 +81,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
 
     /**
      * DOC xqliu Comment method "getDataEntityRowCount".
-     * 
+     *
      * @return
      */
     public ChartDataEntity[] getDataEntityOfRowCount() {
@@ -100,7 +100,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.table.AbstractTableTypeStates#getDataExplorer()
      */
     @Override
@@ -137,7 +137,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
 
     /**
      * DOC xqliu Comment method "getTableFormRowCount".
-     * 
+     *
      * @param composite
      * @return
      */
@@ -165,7 +165,7 @@ public class WhereRuleStatisticsTableState extends AbstractRuleStatisticsTableSt
 
     /**
      * DOC xqliu Comment method "getLabelProviderRowCount".
-     * 
+     *
      * @return
      */
     private IBaseLabelProvider getLabelProviderRowCount() {

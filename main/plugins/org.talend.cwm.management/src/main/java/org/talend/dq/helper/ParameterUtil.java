@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -76,7 +76,7 @@ public final class ParameterUtil {
 
     /**
      * zshen Comment method "toMap".
-     * 
+     *
      * @param parameter the object which pass to parameter infomation.It can't be null.
      * @return a map which contain both name of attribute and the it's value.return a null when parameter is null.
      */
@@ -102,9 +102,9 @@ public final class ParameterUtil {
     }
 
     /**
-     * 
+     *
      * qiongli remove the enclosed quotes and rpalace special String.
-     * 
+     *
      * @param value
      * @return
      */
@@ -134,9 +134,9 @@ public final class ParameterUtil {
     }
 
     /**
-     * 
+     *
      * zshen Comment method "main". a test for the method toMap.
-     * 
+     *
      * @param args
      */
     @SuppressWarnings("unused")

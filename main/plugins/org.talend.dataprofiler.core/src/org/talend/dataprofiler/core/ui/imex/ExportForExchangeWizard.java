@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ public class ExportForExchangeWizard extends ExportWizard {
     private static Logger log = Logger.getLogger(ExportForExchangeWizard.class);
 
     public ExportForExchangeWizard(String specifiedPath) {
-        setWindowTitle(DefaultMessagesImpl.getString("ExportForExchangeWizard.Title"));//$NON-NLS-1$ 
+        setWindowTitle(DefaultMessagesImpl.getString("ExportForExchangeWizard.Title"));//$NON-NLS-1$
         this.exportPage = new ExportForExchangeWizardPage(specifiedPath);
     }
 
@@ -53,7 +53,7 @@ public class ExportForExchangeWizard extends ExportWizard {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask(DefaultMessagesImpl.getString("ExportForExchangeWizard.ExportItem"), recordsList.size());//$NON-NLS-1$ 
+                monitor.beginTask(DefaultMessagesImpl.getString("ExportForExchangeWizard.ExportItem"), recordsList.size());//$NON-NLS-1$
                 for (String zipFileName : recordsList.keySet()) {
                     writer.setBasePath(writerBashPath.append(zipFileName));
                     writer.write(recordsList.get(zipFileName), monitor);
@@ -73,7 +73,7 @@ public class ExportForExchangeWizard extends ExportWizard {
 
     /**
      * build the export record map.
-     * 
+     *
      * @param records key = export zip file name; value = record list which should be add to the zip file
      * @return
      */

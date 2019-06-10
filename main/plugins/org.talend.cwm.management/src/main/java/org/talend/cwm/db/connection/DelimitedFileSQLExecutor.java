@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements) throws SQLException {
@@ -57,7 +57,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
 
     /**
      * DOC yyin Comment method "useFileInputDelimited".
-     * 
+     *
      * @param analysedElements
      * @param delimitedFileconnection
      * @throws IOException
@@ -171,7 +171,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.cwm.db.connection.ISQLExecutor#getResultSetIterator(orgomg.cwm.foundation.softwaredeployment.DataManager
      * , java.util.List)
@@ -183,7 +183,7 @@ public class DelimitedFileSQLExecutor extends SQLExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(orgomg.cwm.foundation.softwaredeployment.DataManager,
      * java.util.List, java.lang.String)
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -65,7 +65,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * This is a Master Detail Page for <a href="http://www.talendforge.org/bugs/view.php?id=8134">Functional Dependency
  * Analysis</a>.
- * 
+ *
  * @author jet
  */
 public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
@@ -101,7 +101,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#initialize(org.eclipse.ui.forms.editor.FormEditor
      * )
@@ -159,7 +159,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#canRun()
      */
     @Override
@@ -170,7 +170,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#canSave()
      */
     @Override
@@ -181,7 +181,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refresh()
      */
     @Override
@@ -196,7 +196,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#saveAnalysis()
      */
     @Override
@@ -271,7 +271,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -342,7 +342,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
     }
 
     /**
-     * 
+     *
      * DOC zshen DOC mzhao Open column selection dialog for left column set. this method is intended to use from cheat
      * sheets.
      */
@@ -351,7 +351,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
     }
 
     /**
-     * 
+     *
      * DOC zshen DOC mzhao Open column selection dialog for right column set. this method is intended to use from cheat
      * sheets.
      */
@@ -375,7 +375,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateTreeView()
      */
     @Override
@@ -391,7 +391,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getConnectionsWithoutDeleted()
      */
     @Override
@@ -401,7 +401,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getSelectedColumns()
      */
     @Override
@@ -426,7 +426,7 @@ public class FunctionalDependencyAnalysisDetailsPage extends AbstractAnalysisMet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#createRunSampleDataButton(org.eclipse.swt.
      * widgets.Composite)

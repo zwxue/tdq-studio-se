@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
 
     /**
      * DOC yyin MatchKeyAndSurvivorTableComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -80,7 +80,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
 
     /**
      * DOC zhao Comment method "createMatchIntervalComposite".
-     * 
+     *
      */
     protected void createMatchIntervalComposite() {
         Composite matchIntervalComposite = new Composite(this, SWT.NONE);
@@ -126,7 +126,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
 
     /**
      * Getter for matchRule.
-     * 
+     *
      * @return the matchRule
      */
     public MatchRule getMatchRule() {
@@ -135,7 +135,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -151,7 +151,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
 
     /**
      * Sets the isShowInputColumn.
-     * 
+     *
      * @param isShowInputColumn the isShowInputColumn to set
      */
     public void setShowInputColumn(boolean isShowInputColumn) {

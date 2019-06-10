@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -45,7 +45,7 @@ public class MatchRuleDataChart extends Composite {
 
     /**
      * DOC yyi DataChart constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -121,7 +121,7 @@ public class MatchRuleDataChart extends Composite {
 
     /**
      * refresh the chart by old data
-     * 
+     *
      */
     public void refresh() {
         initChartData();
@@ -130,7 +130,7 @@ public class MatchRuleDataChart extends Composite {
 
     /**
      * DOC set spinner value
-     * 
+     *
      * @param times
      */
     public void setTimes(int times) {
@@ -143,7 +143,7 @@ public class MatchRuleDataChart extends Composite {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.swt.widgets.Widget#dispose()
      */
     @Override
@@ -156,7 +156,7 @@ public class MatchRuleDataChart extends Composite {
 
     /**
      * Getter for groupSize2GroupFrequency.
-     * 
+     *
      * @return the groupSize2GroupFrequency
      */
     public Map<Object, Long> getGroupSize2GroupFrequency() {
@@ -164,7 +164,7 @@ public class MatchRuleDataChart extends Composite {
     }
 
     /**
-     * 
+     *
      * create a chart with empty dataset,so as to clear the blocking key chart.
      */
     public void clearChart() {

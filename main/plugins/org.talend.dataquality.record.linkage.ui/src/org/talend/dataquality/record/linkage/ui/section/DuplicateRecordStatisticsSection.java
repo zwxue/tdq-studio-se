@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,7 +36,7 @@ import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by zhao on Aug 19, 2013 Duplicate record statistics section.
- * 
+ *
  */
 public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableSection {
 
@@ -48,7 +48,7 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
 
     /**
      * DOC zhao DuplicateRecordStatisticsSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -101,7 +101,7 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
 
     /**
      * DOC zhao Comment method "setPercentage".
-     * 
+     *
      * @param recordMatchingIndicator
      * @param rowCount
      * @param statsRow
@@ -118,7 +118,7 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubChart(org.eclipse.
      * swt.widgets.Composite)
@@ -132,7 +132,7 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubContent(org.eclipse
      * .swt.widgets.Composite)
@@ -160,7 +160,7 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
 
     /**
      * DOC zhao Comment method "computeMergedRecords".
-     * 
+     *
      * @return
      */
     private Long computeMergedRecords() {
@@ -182,7 +182,7 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#getSectionName()
      */
     @Override
@@ -192,7 +192,7 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#refreshChart()
      */
     @Override
@@ -205,7 +205,7 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded(java.lang
      * .String)
@@ -218,7 +218,7 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createButtons(org.eclipse.swt
      * .widgets.Composite)

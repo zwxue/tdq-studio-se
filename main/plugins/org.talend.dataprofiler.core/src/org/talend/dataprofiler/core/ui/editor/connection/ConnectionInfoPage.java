@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -127,12 +127,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                     } else {
                         MessageDialog.openWarning(
                                 null,
-                                DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
+                                DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
                     }
                 } catch (Exception e2) {
                     MessageDialog.openWarning(
                             null,
-                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", e2.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
+                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", e2.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
 
@@ -222,7 +222,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     /**
      * Change connection informations with server, port etc., and update related analyses.
-     * 
+     *
      * MOD yyi 9082 2010-02-25
      */
     protected void changeConnectionInformations() {
@@ -319,7 +319,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#saveTextChange()
      */
     @Override
@@ -370,7 +370,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
      */
     @Override
@@ -413,7 +413,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
      */
     @Override
@@ -423,7 +423,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
      */
     @Override
@@ -433,7 +433,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
      */
     @Override
@@ -444,7 +444,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     /**
      * get ConnectionRepNode From editorInput
-     * 
+     *
      * @param editorInput
      * @return
      */

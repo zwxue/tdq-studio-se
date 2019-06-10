@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ import org.talend.dataquality.rules.MatchRule;
 
 /**
  * this class is to create a dialog to Edit and Sort Match Rule Name.
- * 
+ *
  */
 public class EditSortMatchRuleNamesDialog extends Dialog {
 
@@ -68,7 +68,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /**
      * Sets the isDirty.
-     * 
+     *
      * @param isDirty the isDirty to set
      */
     public void setDirty(boolean isDirty) {
@@ -77,7 +77,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /**
      * Getter for isDirty.
-     * 
+     *
      * @return the isDirty
      */
     public boolean isDirty() {
@@ -86,7 +86,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /**
      * Getter for resultMatchRuleList.
-     * 
+     *
      * @return the resultMatchRuleList
      */
     public List<MatchRule> getResultMatchRuleList() {
@@ -95,7 +95,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /**
      * EditSortMatchRuleNamesDialog constructor.
-     * 
+     *
      * @param parentShell
      * @param orderMatchRuleList
      */
@@ -113,7 +113,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -132,7 +132,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#createButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -145,7 +145,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /**
      * create Content Composite.
-     * 
+     *
      * @param parent
      */
     private void createContentComposite(Composite parent) {
@@ -166,7 +166,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /**
      * create up/down Buttons.
-     * 
+     *
      * @param parent
      */
     public void createMoveButtons(Composite parent) {
@@ -205,7 +205,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /**
      * create Table Viewer.
-     * 
+     *
      * @param parent
      * @return
      */
@@ -310,7 +310,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets.Shell)
      */
     @Override
@@ -321,7 +321,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -342,7 +342,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /**
      * Move the selected item up or down.
-     * 
+     *
      * @param isMoveUp <code>true</code> if move up, and <code>false</code> if move down
      */
     private void moveItemUpOrDown(boolean isMoveUp) {
@@ -374,7 +374,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override
@@ -392,7 +392,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     /**
      * the class used for the tableview in this dialog.
-     * 
+     *
      */
     class OrderMatchRule {
 

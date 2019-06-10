@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,14 +42,14 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
      */
     abstract protected Item createFileItemByDuplicateFile(IFile newFile, String fileExtension, String newName);
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#isExistedLabel(java.lang.String)
      */
     public boolean isExistedLabel(IFile file, String label) {
@@ -62,7 +62,7 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicateItem(org.talend.core.model.properties
      * .Item, java.lang.String)
@@ -90,7 +90,7 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
 
     /**
      * DOC msjian Comment method "extractFolder".
-     * 
+     *
      * @param oldItem
      * @param oldModelElement
      * @return

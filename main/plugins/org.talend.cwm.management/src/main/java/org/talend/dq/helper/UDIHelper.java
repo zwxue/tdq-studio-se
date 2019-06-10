@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -136,7 +136,7 @@ public final class UDIHelper {
 
     /**
      * Set the category of the IndicatorDefinition, if the category is null set UserDefinedCount category.
-     * 
+     *
      * @param definition
      * @param category
      */
@@ -292,7 +292,7 @@ public final class UDIHelper {
 
     /**
      * if the config information if valid for Java Engine return true, else return false.
-     * 
+     *
      * @param indicatorDefinition
      * @return
      */
@@ -345,10 +345,10 @@ public final class UDIHelper {
     }
 
     /**
-     * 
+     *
      * DOC mzhao feature 11128, If the execute engine and by the same time Java User Defined Indicator is also defined,
      * then compute via Java UDI, here convert common udi to a Java UDI.
-     * 
+     *
      * @param udi
      * @return
      * @throws Exception
@@ -402,7 +402,7 @@ public final class UDIHelper {
 
     /**
      * DOC zshen Comment method "getUDIFromMap".
-     * 
+     *
      * @param indicator
      */
     private static Indicator getUDIFromMap(Indicator indicator) {
@@ -443,7 +443,7 @@ public final class UDIHelper {
 
     /**
      * DOC klliu Comment method "isJavaUDI".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -456,9 +456,9 @@ public final class UDIHelper {
     }
 
     /**
-     * 
+     *
      * zshen Comment method "getLibJarFileList".
-     * 
+     *
      * @return
      */
     private static List<File> getLibJarFileList() {
@@ -497,7 +497,7 @@ public final class UDIHelper {
 
     /**
      * Judge whether current folder is udi jar folder
-     * 
+     *
      * @param folder
      * @return true if it is else false
      */
@@ -509,9 +509,9 @@ public final class UDIHelper {
     }
 
     /**
-     * 
+     *
      * zshen Comment method "getContainJarFile".
-     * 
+     *
      * @param jarPathStr
      * @return
      */
@@ -524,7 +524,7 @@ public final class UDIHelper {
         } else {
             libJarFileList = getLibJarFileListForJobs();
         }
-        for (String containJarName : jarPathStr.split("\\|\\|")) {//$NON-NLS-1$            
+        for (String containJarName : jarPathStr.split("\\|\\|")) {//$NON-NLS-1$
             for (File libJarFile : libJarFileList) {
                 if (libJarFile.getName().equalsIgnoreCase(containJarName)) {
                     fileList.add(libJarFile);
@@ -537,7 +537,7 @@ public final class UDIHelper {
 
     /**
      * Create Templates Properties..
-     * 
+     *
      * @return
      */
     public static Properties getCreateTemplatesProperties() {
@@ -552,7 +552,7 @@ public final class UDIHelper {
 
     /**
      * get Templates Properties which content is used only by use define indicators.
-     * 
+     *
      * @return
      */
     public static Properties getUDITemplatesProperties() {
@@ -564,7 +564,7 @@ public final class UDIHelper {
 
     /**
      * get Query From Templates.
-     * 
+     *
      * @param selectTabNumber
      * @param language
      * @param category
@@ -624,7 +624,7 @@ public final class UDIHelper {
 
     /**
      * check all the indicators, convert common udi to a Java UDI if needed.
-     * 
+     *
      * @param analysis
      */
     public static void updateJUDIsForAnalysis(Analysis analysis) {
@@ -646,9 +646,9 @@ public final class UDIHelper {
     }
 
     /**
-     * 
+     *
      * If oldUDI == null mean that jar is changed so need to update
-     * 
+     *
      * @param udi
      * @return
      */
@@ -664,9 +664,9 @@ public final class UDIHelper {
     }
 
     /**
-     * 
+     *
      * clear special element from JAVAUDIMAP
-     * 
+     *
      * @param indDef
      */
     public static void clearJAVAUDIMAPByIndicatorDefinition(IndicatorDefinition indDef) {

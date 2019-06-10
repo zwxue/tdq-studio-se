@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -97,7 +97,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu DQRuleMasterDetailsPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -150,7 +150,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "creatDQRuleDefinitionSection".
-     * 
+     *
      * @param comp
      */
     private void createDQRuleDefinitionSection(Composite comp) {
@@ -166,7 +166,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "createDQRuleDefinitionComp".
-     * 
+     *
      * @return
      */
     private Composite createDQRuleDefinitionComp() {
@@ -225,7 +225,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "saveDQRule".
-     * 
+     *
      * @return
      */
     private boolean saveDQRule() {
@@ -252,7 +252,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "cleanJoins".
-     * 
+     *
      * @param joinElements
      * @return
      */
@@ -268,7 +268,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "checkValus".
-     * 
+     *
      * @return
      */
     private boolean checkValus() {
@@ -331,7 +331,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "checkAlias".
-     * 
+     *
      * @param alias
      * @return
      */
@@ -369,7 +369,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "createJoinConditionSection".
-     * 
+     *
      * @param comp
      */
     private void createJoinConditionSection(Composite comp) {
@@ -385,7 +385,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "createJoinConditionComp".
-     * 
+     *
      * @return
      */
     private Composite createJoinConditionComp() {
@@ -414,7 +414,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "createButtons".
-     * 
+     *
      * @param parent
      */
     private void createButtons(Composite parent, final JoinConditionTableViewer jcTableViewer) {
@@ -453,7 +453,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "createAddButton".
-     * 
+     *
      * @param parent top composite
      */
     private void createAddButton(Composite parent) {
@@ -480,7 +480,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "creatNewJoinElementLine".
-     * 
+     *
      * @param joinElement
      */
     private void creatNewJoinElementLine(JoinElement joinElement) {
@@ -566,7 +566,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * DOC xqliu Comment method "cloneJoin".
-     * 
+     *
      * @param joinElement
      * @return
      */
@@ -680,7 +680,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
      */
     @Override
@@ -695,7 +695,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
      */
     @Override
@@ -705,7 +705,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
      */
     @Override
@@ -715,7 +715,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
      */
     @Override
@@ -726,7 +726,7 @@ public class DQRuleMasterDetailsPage extends AbstractMetadataFormPage implements
 
     /**
      * get PatternRepNode From editorInput
-     * 
+     *
      * @param editorInput
      * @return
      */

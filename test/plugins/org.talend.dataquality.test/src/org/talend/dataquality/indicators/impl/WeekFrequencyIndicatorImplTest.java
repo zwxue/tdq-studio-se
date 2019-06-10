@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import org.junit.Test;
 
 /**
  * created by talend2 on 2014-10-30 Detailled comment
- * 
+ *
  */
 public class WeekFrequencyIndicatorImplTest {
 
@@ -41,7 +41,7 @@ public class WeekFrequencyIndicatorImplTest {
     /**
      * Test method for
      * {@link org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl#handle(java.lang.Object)}.
-     * 
+     *
      * @throws ParseException
      */
     @Test
@@ -62,7 +62,7 @@ public class WeekFrequencyIndicatorImplTest {
     /**
      * Test method for
      * {@link org.talend.dataquality.indicators.impl.WeekFrequencyIndicatorImpl#getFormatName(java.lang.Object)}.
-     * 
+     *
      * @throws ParseException
      */
     @Test

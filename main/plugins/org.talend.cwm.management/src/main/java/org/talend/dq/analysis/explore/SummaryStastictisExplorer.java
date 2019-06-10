@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,7 +34,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
 
     /**
      * Method "getMatchingRowsStatement".
-     * 
+     *
      * @return the query to get the rows with a matching value
      */
     private String getMatchingRowsStatement() {
@@ -45,9 +45,9 @@ public class SummaryStastictisExplorer extends DataExplorer {
 
     /**
      * zqin use this method in a menu ".
-     * 
+     *
      * View invalid rows" Method "getInvalidRowsStatement".
-     * 
+     *
      * @return the query to get the invalid rows (or null when all rows are valid)
      */
     private String getInvalidRowsStatement() {
@@ -85,7 +85,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
 
     /**
      * DOC scorreia Comment method "getWhereInvalidClause".
-     * 
+     *
      * @param value
      * @param whereClause
      * @param domain
@@ -150,7 +150,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
 
     /**
      * DOC hcheng Comment method "getOutRangeRowsStatement".
-     * 
+     *
      * @return
      */
     private String getOutRangeRowsStatement() {
@@ -171,7 +171,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
 
     /**
      * DOC hcheng Comment method "getInRangeRowsStatement".
-     * 
+     *
      * @return
      */
     private String getInRangeRowsStatement() {

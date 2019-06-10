@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -141,7 +141,7 @@ public final class ConnectionUtils {
 
     /**
      * check whether the connection is available.
-     * 
+     *
      * @param datamanager
      * @param analysisName
      * @return boolean
@@ -161,7 +161,7 @@ public final class ConnectionUtils {
 
     /**
      * This method is used to check conectiton is avalible for analysis or report ,when analysis or report runs.
-     * 
+     *
      * @param analysisDataProvider
      * @return
      */
@@ -255,7 +255,7 @@ public final class ConnectionUtils {
 
     /**
      * if the Connection's type is hive embedded return true.
-     * 
+     *
      * @param analysisDataProvider
      * @return
      */
@@ -271,7 +271,7 @@ public final class ConnectionUtils {
 
     /**
      * if the Connection's type is hive embedded return true.
-     * 
+     *
      * @param metadataConnection
      * @return
      */
@@ -291,7 +291,7 @@ public final class ConnectionUtils {
 
     /**
      * if the Connection's type is General JDBC return true.
-     * 
+     *
      * @param conn a database connection
      * @return
      */
@@ -309,7 +309,7 @@ public final class ConnectionUtils {
 
     /**
      * if the DriverClassName is empty or Jar File Path is invalid return false.
-     * 
+     *
      * @param dbConn a General JDBC database connection
      * @return
      * @throws MalformedURLException
@@ -355,7 +355,7 @@ public final class ConnectionUtils {
 
     /**
      * if the DriverClassName is empty or Jar File Path is invalid return false.
-     * 
+     *
      * @param dbConn a General JDBC or TCOMP JDBC connection
      * @return
      * @throws MalformedURLException
@@ -409,7 +409,7 @@ public final class ConnectionUtils {
 
     /**
      * Method "isValid".
-     * 
+     *
      * @param connection the connection to test
      * @return a return code with the appropriate message (never null)
      */
@@ -419,7 +419,7 @@ public final class ConnectionUtils {
 
     /**
      * Method "closeConnection".
-     * 
+     *
      * @param connection the connection to close.
      * @return a ReturnCode with true if ok, false if problem. {@link ReturnCode#getMessage()} gives the error message
      * when there is a problem.
@@ -430,7 +430,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isOdbcMssql". bug 9822
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -464,7 +464,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isTeradata".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -481,7 +481,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "isMssql".
-     * 
+     *
      * @param connection
      * @return decide to whether is mssql connection
      * @throws SQLException
@@ -500,7 +500,7 @@ public final class ConnectionUtils {
 
     /**
      * mzhao bug: TDQ-4622 Is the connection is an ingres connection?
-     * 
+     *
      * @param connection
      * @return true if connection is ingres, false otherwise
      */
@@ -517,7 +517,7 @@ public final class ConnectionUtils {
 
     /**
      * mzhao bug: TDQ-4622 Is the connection is an informix connection?
-     * 
+     *
      * @param connection
      * @return true if connection is informix, false otherwise
      */
@@ -534,7 +534,7 @@ public final class ConnectionUtils {
 
     /**
      * mzhao bug: TDQ-4622 Is the connection is an DB2 connection?
-     * 
+     *
      * @param connection
      * @return true if connection is DB2, false otherwise
      */
@@ -552,7 +552,7 @@ public final class ConnectionUtils {
 
     /**
      * Comment method "isDB2".
-     * 
+     *
      * @param metadata
      * @return
      * @throws SQLException
@@ -567,7 +567,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isMssql".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -584,7 +584,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC hwang Comment method "isMysql".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -606,7 +606,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isAs400".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -627,7 +627,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC qiongli Comment method "isDelimitedFileConnection".
-     * 
+     *
      * @param dataprovider
      * @return
      */
@@ -637,7 +637,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "isOdbcMssql". feature 10630
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -656,7 +656,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "isOdbcConnection". feature 10630
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -673,7 +673,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isPostgresql".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -691,7 +691,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isPostgresql".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -716,7 +716,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isOdbcPostgresql".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -738,7 +738,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isOdbcOracle".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -759,9 +759,9 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "isOdbcOracle".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -783,7 +783,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isOdbcIngres".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -805,7 +805,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isJdbcIngres".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -827,7 +827,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isSqlite".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -841,7 +841,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "printResultSetColumns".
-     * 
+     *
      * @param rs
      */
     public static void printResultSetColumns(ResultSet rs) {
@@ -858,7 +858,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "getDatabaseType".
-     * 
+     *
      * @param connection
      * @return the database type string or null
      */
@@ -872,7 +872,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "setName".
-     * 
+     *
      * @param conn
      * @param password
      */
@@ -886,7 +886,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "createConnectionParam".
-     * 
+     *
      * @param conn
      * @return
      */
@@ -939,7 +939,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "fillConnectionMetadataInformation".
-     * 
+     *
      * @param conn
      * @return
      */
@@ -980,7 +980,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "createDatabaseVersionString".
-     * 
+     *
      * @param dbConn
      * @return
      */
@@ -994,7 +994,7 @@ public final class ConnectionUtils {
 
     /**
      * retrieve sqlDataType if it have a name is "Null".
-     * 
+     *
      * @param tdTable
      */
     public static void retrieveColumn(MetadataTable tdTable) {
@@ -1053,7 +1053,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "getPackageFilter".
-     * 
+     *
      * @param connectionParam
      * @return
      * @deprecated After branch4.2 we unique the ui for the wizard which to create connection so no retrieveAll and Data
@@ -1093,7 +1093,7 @@ public final class ConnectionUtils {
 
     /**
      * get the DbName from DBConnectionParameter, this value is for package filter only.
-     * 
+     *
      * @param connectionParam
      * @return
      */
@@ -1113,7 +1113,7 @@ public final class ConnectionUtils {
 
     /**
      * Method "getDataType".
-     * 
+     *
      * @param catalogName the catalog (can be null)
      * @param schemaPattern the schema(s) (can be null)
      * @param tablePattern the table(s)
@@ -1159,7 +1159,7 @@ public final class ConnectionUtils {
 
     /**
      * if the connection has sid return false, else return true (don't need the TaggedValue any more).
-     * 
+     *
      * @param element
      * @return
      */
@@ -1203,7 +1203,7 @@ public final class ConnectionUtils {
 
     /**
      * Get the original DatabaseConnection for context mode.
-     * 
+     *
      * @param connection
      * @return
      */
@@ -1223,7 +1223,7 @@ public final class ConnectionUtils {
 
     /**
      * Get the original FileConnection for context mode.
-     * 
+     *
      * @param fileConn
      * @return
      */
@@ -1239,7 +1239,7 @@ public final class ConnectionUtils {
 
     /**
      * if sqlite connection don't set username, set it with a default username.
-     * 
+     *
      * @param connection
      */
     public static void checkUsernameBeforeSaveConnection4Sqlite(Connection connection) {
@@ -1252,9 +1252,9 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
+     *
      * Get connection from data manager.
-     * 
+     *
      * @param datamanager
      * @return
      */
@@ -1269,7 +1269,7 @@ public final class ConnectionUtils {
 
     /**
      * Updata DB_PRODUCT tagged values for connection item in case they are not present in current file.
-     * 
+     *
      * @throws SQLException
      */
     public static synchronized void updataTaggedValueForConnectionItem(Connection dataProvider) {
@@ -1299,7 +1299,7 @@ public final class ConnectionUtils {
 
     /**
      * get the database product version.
-     * 
+     *
      * @param connection
      * @return
      */
@@ -1366,7 +1366,7 @@ public final class ConnectionUtils {
 
     /**
      * get the hadoop cluster ID .
-     * 
+     *
      * @param viewObject
      * @return
      */
@@ -1378,7 +1378,7 @@ public final class ConnectionUtils {
 
     /**
      * find driver jar path from 'temp\dbWizard',if nof found,find it from 'lib\java' and "librariesIndex.xml".
-     * 
+     *
      * @return
      * @throws MalformedURLException
      */
@@ -1425,7 +1425,7 @@ public final class ConnectionUtils {
 
     /**
      * judge if the Connection is a TCOMP JDBC connection
-     * 
+     *
      * @param conn
      * @return
      */
@@ -1439,7 +1439,7 @@ public final class ConnectionUtils {
 
     /**
      * judge if it is a TCOMP JDBC connection according to data type String
-     * 
+     *
      * @param dbType
      * @return
      */
@@ -1462,7 +1462,7 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
+     *
      * @return
      */
     public static IGenericDBService getGenericDBService() {

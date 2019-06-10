@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ public interface IImportWriter {
 
     /**
      * DOC bZhou Comment method "computeInput".
-     * 
+     *
      * @param path
      * @return the item record or null
      */
@@ -35,28 +35,28 @@ public interface IImportWriter {
 
     /**
      * DOC bZhou Comment method "setBasePath".
-     * 
+     *
      * @param basePath
      */
     public void setBasePath(IPath path);
 
     /**
      * DOC bZhou Comment method "getBasePath".
-     * 
+     *
      * @return
      */
     public IPath getBasePath();
 
     /**
      * DOC bZhou Comment method "check".
-     * 
+     *
      * @return
      */
     public List<String> check();
 
     /**
      * Recompute the statu of records
-     * 
+     *
      * @param elements
      * @param checkExisted
      * @return
@@ -65,7 +65,7 @@ public interface IImportWriter {
 
     /**
      * DOC bZhou Comment method "mapping".
-     * 
+     *
      * @param record
      * @return
      */
@@ -73,7 +73,7 @@ public interface IImportWriter {
 
     /**
      * DOC bZhou Comment method "write".
-     * 
+     *
      * @param recored
      * @throws IOException
      * @throws CoreException
@@ -82,7 +82,7 @@ public interface IImportWriter {
 
     /**
      * DOC bZhou Comment method "write".
-     * 
+     *
      * @param records
      * @param monitor
      */
@@ -90,7 +90,7 @@ public interface IImportWriter {
 
     /**
      * Write down all elements into worksapce.
-     * 
+     *
      * @param records All records which will write into worksapce
      * @param monitor The monitor of whole process
      * @param isOverwrite True if conflict record should be overwrite else false
@@ -99,14 +99,14 @@ public interface IImportWriter {
 
     /**
      * DOC bZhou Comment method "migration".
-     * 
+     *
      * @param monitor
      */
     public void migration(IProgressMonitor monitor);
 
     /**
      * DOC bZhou Comment method "finish".
-     * 
+     *
      * @param records
      * @param monitor
      * @throws IOException
@@ -116,14 +116,14 @@ public interface IImportWriter {
 
     /**
      * DOC xqliu Comment method "postFinish".
-     * 
+     *
      * @throws IOException
      */
     public void postFinish() throws IOException;
 
     /**
      * TDQ-16176 each time need to delete the temp folder.
-     * 
+     *
      * @throws IOException
      */
     public void clearTempFolder() throws IOException;

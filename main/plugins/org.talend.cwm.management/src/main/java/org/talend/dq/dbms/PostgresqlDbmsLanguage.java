@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -54,7 +54,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC scorreia PostgresqlDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      * @param majorVersion
      * @param minorVersion
@@ -65,7 +65,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#toQualifiedName(java.lang.String, java.lang.String,
      * java.lang.String)
      */
@@ -77,7 +77,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getPatternFinderDefaultFunction(java.lang.String)
      */
     @Override
@@ -94,7 +94,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#extract(org.talend.dataquality.indicators.DateGrain,
      * java.lang.String)
      */
@@ -105,7 +105,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getSelectRegexp(java.lang.String)
      */
     @Override
@@ -115,7 +115,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
      */
     @Override
@@ -125,7 +125,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
      */
     @Override
@@ -135,7 +135,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
      */
     @Override
@@ -145,7 +145,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
      */
     @Override
@@ -155,7 +155,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override
@@ -165,7 +165,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#supportNonIntegerConstantInGroupBy()
      */
     @Override
@@ -180,7 +180,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
      */
     @Override
@@ -190,7 +190,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getColumnNameInQueryClause(java.lang.String)
      */
     @Override
@@ -200,7 +200,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -214,7 +214,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
      */
     @Override
@@ -224,7 +224,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#createStatementForBigdata(java.sql.Connection)
      */
     @Override

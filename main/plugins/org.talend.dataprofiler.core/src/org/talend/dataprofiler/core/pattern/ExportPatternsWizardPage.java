@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -79,7 +79,7 @@ public class ExportPatternsWizardPage extends WizardPage {
 
     /**
      * DOC klliu ExportPatternsWizardPage constructor comment.
-     * 
+     *
      * @param node
      * @param isForExchange
      */
@@ -100,7 +100,7 @@ public class ExportPatternsWizardPage extends WizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
@@ -131,7 +131,7 @@ public class ExportPatternsWizardPage extends WizardPage {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -195,7 +195,7 @@ public class ExportPatternsWizardPage extends WizardPage {
 
     /**
      * Adds the selection and deselection buttons on the dialog.for 8116.
-     * 
+     *
      * @param composite
      * @return
      */
@@ -220,7 +220,7 @@ public class ExportPatternsWizardPage extends WizardPage {
 
     /**
      * Add the listeners for all select(deselect) button.
-     * 
+     *
      * @param selectButton
      * @param deselectButton
      */

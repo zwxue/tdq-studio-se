@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -417,7 +417,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
 
     /**
      * clear the specified language from the IndicatorDefinition.
-     * 
+     *
      * @param definition
      * @param languages the languages which need to be clear
      */

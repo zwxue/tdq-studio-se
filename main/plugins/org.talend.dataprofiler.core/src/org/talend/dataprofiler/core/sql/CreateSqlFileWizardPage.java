@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,9 +48,9 @@ import org.talend.resource.ResourceManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
- * 
+ *
  */
 public class CreateSqlFileWizardPage extends AbstractWizardPage {
 
@@ -70,7 +70,7 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
 
     /**
      * DOC qzhang CreateSqlFileWizardPage constructor comment.
-     * 
+     *
      * @param folder
      */
     public CreateSqlFileWizardPage(SqlFileParameter parameter) {
@@ -83,7 +83,7 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets .Composite)
      */
     public void createControl(Composite parent) {
@@ -140,7 +140,7 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
              */
             @Override
@@ -152,7 +152,7 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
 
     /**
      * Getter for pathText.
-     * 
+     *
      * @return the pathText
      */
     public Text getPathText() {
@@ -185,7 +185,7 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage#checkFieldsValue()
      */
     @Override
@@ -198,9 +198,9 @@ public class CreateSqlFileWizardPage extends AbstractWizardPage {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "checkDuplicateModelName".
-     * 
+     *
      * @return
      */
     private boolean checkDuplicateName() {

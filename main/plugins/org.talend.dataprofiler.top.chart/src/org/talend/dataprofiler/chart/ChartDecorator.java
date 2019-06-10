@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -139,7 +139,7 @@ public final class ChartDecorator {
 
     /**
      * DOC bZhou Comment method "decorate".
-     * 
+     *
      * @param chart
      */
     public static void decorate(JFreeChart chart, PlotOrientation orientation) {
@@ -212,9 +212,9 @@ public final class ChartDecorator {
     }
 
     /**
-     * 
+     *
      * decorate concept chart on semantic Analysis wizard.
-     * 
+     *
      * @param chart
      * @param orientation
      */
@@ -237,9 +237,9 @@ public final class ChartDecorator {
     }
 
     /**
-     * 
+     *
      * generate a Random Color.
-     * 
+     *
      * @return a object of color which don't contain in list
      */
     private static Color generateRandomColor(List<Color> list) {
@@ -253,7 +253,7 @@ public final class ChartDecorator {
 
     /**
      * DOC xqliu Comment method "decorateColumnDependency".
-     * 
+     *
      * @param chart
      */
     public static void decorateColumnDependency(JFreeChart chart) {
@@ -265,7 +265,7 @@ public final class ChartDecorator {
 
     /**
      * DOC msjian Comment method "decoratePatternMatching".
-     * 
+     *
      * @param chart
      */
     public static void decoratePatternMatching(JFreeChart chart) {
@@ -278,7 +278,7 @@ public final class ChartDecorator {
 
     /**
      * DOC bZhou Comment method "decorateCategoryPlot".
-     * 
+     *
      * @param chart
      */
     public static void decorateCategoryPlot(JFreeChart chart, PlotOrientation orientation) {
@@ -349,9 +349,9 @@ public final class ChartDecorator {
     }
 
     /**
-     * 
+     *
      * if it contians CJK, set Font to "Arial Unicode MS".Or else, the Font is "Tahoma".
-     * 
+     *
      * @param chart
      */
     private static void setLegendFont(JFreeChart chart) {
@@ -380,7 +380,7 @@ public final class ChartDecorator {
 
     /**
      * DOC bZhou Comment method "decorateXYPlot".
-     * 
+     *
      * @param chart
      */
     private static void decorateXYPlot(JFreeChart chart) {
@@ -417,9 +417,9 @@ public final class ChartDecorator {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "decoratePiePlot".
-     * 
+     *
      * @param chart
      */
     private static void decoratePiePlot(JFreeChart chart) {
@@ -453,7 +453,7 @@ public final class ChartDecorator {
 
     /**
      * create bar chart with customized bar render class which can be adapted in JFreeChart class.
-     * 
+     *
      * @param chart
      * @param barRenderer
      */
@@ -486,7 +486,7 @@ public final class ChartDecorator {
 
     /**
      * Added TDQ-8673: set the display decimal format as: x.xx
-     * 
+     *
      * @param chart
      */
     public static void setDisplayDecimalFormat(JFreeChart chart) {
@@ -499,7 +499,7 @@ public final class ChartDecorator {
 
     /**
      * Decorate the benford law chart. in this method the line chart will be overlay on top of bar chart.
-     * 
+     *
      * @param dataset
      * @param barChart
      * @param title
@@ -516,7 +516,7 @@ public final class ChartDecorator {
 
     /**
      * Decorate the benford law chart. in this method the line chart will be overlay on top of bar chart.
-     * 
+     *
      * @param dataset
      * @param barChart
      * @param title
@@ -569,9 +569,9 @@ public final class ChartDecorator {
     }
 
     /**
-     * 
+     *
      * created by mzhao on 2012-9-21 The customer render to paint bar color.
-     * 
+     *
      */
     private static class BenfordLawLineAndShapeRenderer extends BarRenderer {
 
@@ -585,7 +585,7 @@ public final class ChartDecorator {
 
     /**
      * get the dataset of standard points.
-     * 
+     *
      * @param dotChartLabels
      * @param formalValues
      * @return CategoryDataset
@@ -601,7 +601,7 @@ public final class ChartDecorator {
     /**
      * Returns true if this string contains the chinese char values. DOC yyi Comment method
      * "isContainsChinese".2010-09-26:14692.
-     * 
+     *
      * @param str
      * @return
      * @deprecated replace it with isContainCJKCharacter(String str)
@@ -623,9 +623,9 @@ public final class ChartDecorator {
     }
 
     /**
-     * 
+     *
      * if this String contain CJK array.
-     * 
+     *
      * @param array
      * @return
      */
@@ -639,9 +639,9 @@ public final class ChartDecorator {
     }
 
     /**
-     * 
+     *
      * if this String contain CJK char.
-     * 
+     *
      * @param str
      * @return
      */
@@ -675,9 +675,9 @@ public final class ChartDecorator {
     }
 
     /**
-     * 
+     *
      * font for Chinese Japanese and Korean .
-     * 
+     *
      * @param Style
      * @param size
      * @return

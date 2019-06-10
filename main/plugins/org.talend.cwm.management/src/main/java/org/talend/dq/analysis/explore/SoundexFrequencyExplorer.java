@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -68,7 +68,7 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         // MOD mzhao bug 9740 2009-11-10
         String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull()
                 : dbmsLanguage.getSoundexPrefix()
-                        + "("//$NON-NLS-1$ 
+                        + "("//$NON-NLS-1$
                         + function
                         + ")" + dbmsLanguage.equal() + dbmsLanguage.getSoundexPrefix() + "('" + StringEscapeUtils.escapeSql(entity.getKey().toString()) + "')"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
         return clause;
@@ -97,7 +97,7 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.explore.DataExplorer#NotShowMenu()
      */
     @Override

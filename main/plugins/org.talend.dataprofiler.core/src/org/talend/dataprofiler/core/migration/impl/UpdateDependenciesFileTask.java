@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ import org.talend.resource.ResourceManager;
 
 /**
  * @author scorreia
- * 
+ *
  * This migration task updates the dependencies between analyses and patterns. See bug 9497 (and a consequence 9461).
  * This task must be executed before moving all patterns in the "Rules/SQL" folder.
  */
@@ -38,7 +38,7 @@ public class UpdateDependenciesFileTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -51,7 +51,7 @@ public class UpdateDependenciesFileTask extends AbstractWorksapceUpdateTask {
 
     /**
      * Method "updateDependencies" updates dependencies between elements in TOP.
-     * 
+     *
      * @param analysesSubFolder
      * @throws CoreException
      */
@@ -85,7 +85,7 @@ public class UpdateDependenciesFileTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -94,7 +94,7 @@ public class UpdateDependenciesFileTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {

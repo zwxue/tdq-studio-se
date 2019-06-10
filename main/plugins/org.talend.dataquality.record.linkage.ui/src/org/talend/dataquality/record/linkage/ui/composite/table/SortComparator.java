@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -119,7 +119,7 @@ public abstract class SortComparator implements ISortComparator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.table.ISortComparator#compareTwo(java.lang.Object,
      * java.lang.Object)
      */
@@ -139,7 +139,7 @@ public abstract class SortComparator implements ISortComparator {
 
     /**
      * compare the two object
-     * 
+     *
      * @param value1
      * @param value2
      * @return

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ public class ConnectionEditor extends CommonFormEditor {
 
     @Override
     protected void addPages() {
-        masterPage = new ConnectionInfoPage(this, ID, DefaultMessagesImpl.getString("ConnectionEditor.connectionSettings")); //$NON-NLS-1$ 
+        masterPage = new ConnectionInfoPage(this, ID, DefaultMessagesImpl.getString("ConnectionEditor.connectionSettings")); //$NON-NLS-1$
         try {
             addPage(masterPage);
             setPartName(masterPage.getIntactElemenetName());
@@ -122,7 +122,7 @@ public class ConnectionEditor extends CommonFormEditor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
      */
     @Override

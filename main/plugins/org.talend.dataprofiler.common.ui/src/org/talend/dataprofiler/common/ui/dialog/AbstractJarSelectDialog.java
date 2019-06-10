@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -74,7 +74,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author zshen
- * 
+ *
  */
 public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
@@ -131,7 +131,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Constructs an instance of <code>ElementTreeSelectionDialog</code>.
-     * 
+     *
      * @param parent The shell to parent from.
      * @param labelProvider the label provider to render the entries
      * @param contentProvider the content provider to evaluate the tree structure
@@ -151,7 +151,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * DOC zshen Comment method "initfValidator".
-     * 
+     *
      * @return
      */
     protected ISelectionStatusValidator initfValidator() {
@@ -160,7 +160,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * If set, the checked /gray state of containers (inner nodes) is derived from the checked state of its leaf nodes.
-     * 
+     *
      * @param containerMode The containerMode to set
      */
     public void setContainerMode(boolean containerMode) {
@@ -169,7 +169,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Sets the initial selection. Convenience method.
-     * 
+     *
      * @param selection the initial selection.
      */
     public void setInitialSelection(Object selection) {
@@ -178,7 +178,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Sets the message to be displayed if the list is empty.
-     * 
+     *
      * @param message the message to be displayed.
      */
     public void setEmptyListMessage(String message) {
@@ -187,7 +187,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Sets the sorter used by the tree viewer.
-     * 
+     *
      * @param sorter
      * @deprecated since 3.3, use {@link CheckedTreeSelectionDialog#setComparator(ViewerComparator)} instead
      */
@@ -198,7 +198,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Sets the comparator used by the tree viewer.
-     * 
+     *
      * @param comparator
      * @since 3.3
      */
@@ -208,7 +208,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Adds a filter to the tree viewer.
-     * 
+     *
      * @param filter a filter.
      */
     public void addFilter(ViewerFilter filter) {
@@ -220,7 +220,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Sets the tree input.
-     * 
+     *
      * @param input the tree input.
      */
     public void setInput(Object input) {
@@ -229,7 +229,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Expands elements in the tree.
-     * 
+     *
      * @param elements The elements that will be expanded.
      */
     public void setExpandedElements(Object[] elements) {
@@ -238,7 +238,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Sets the size of the tree in unit of characters.
-     * 
+     *
      * @param width the width of the tree.
      * @param height the height of the tree.
      */
@@ -249,7 +249,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Validate the receiver and update the status with the result.
-     * 
+     *
      */
     protected void updateOKStatus() {
         if (!fIsEmpty) {
@@ -267,7 +267,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.window.Window#open()
      */
     @Override
@@ -300,7 +300,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.window.Window#create()
      */
     @Override
@@ -326,7 +326,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -388,7 +388,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
         /**
          * Create the composite.
-         * 
+         *
          * @param parent
          * @param style
          * @param isSelect (if true, createTreeViewer, else createManageTreeViewer)
@@ -428,7 +428,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * If want to select class name need to implement this method
-     * 
+     *
      * @param selectJarCom
      */
     protected Composite createClassNameSelectCom(Composite selectJarCom) {
@@ -468,7 +468,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.dialogs.SelectionDialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -478,7 +478,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Creates the tree viewer.
-     * 
+     *
      * @param parent the parent composite
      * @return the tree viewer
      */
@@ -556,14 +556,14 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * DOC zshen Comment method "getSuperClass".
-     * 
+     *
      * @return
      */
     abstract protected Class<T> getSuperClass();
 
     /**
      * DOC msjian Comment method "createManageTreeViewer".
-     * 
+     *
      * @param parent
      * @return
      */
@@ -594,7 +594,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Returns the tree viewer.
-     * 
+     *
      * @return the tree viewer
      */
     protected CheckboxTreeViewer getTreeViewer() {
@@ -604,7 +604,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Adds the selection and deselection buttons to the dialog.
-     * 
+     *
      * @param composite the parent composite
      * @return Composite the composite the buttons were created in.
      */
@@ -781,7 +781,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * DOC zshen Comment method "getFileHasBeenSelectedMessages".
-     * 
+     *
      * @param delFile
      * @return
      */
@@ -791,7 +791,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * DOC zshen Comment method "getDescriptionMessage".
-     * 
+     *
      * @param name
      * @return
      */
@@ -810,9 +810,9 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
     public abstract ReturnCode checkJarDependency(File delFile);
 
     /**
-     * 
+     *
      * create a IFile from File inputStream.
-     * 
+     *
      * @param sourceFile
      * @param targetIFile
      * @param message
@@ -874,9 +874,9 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
     }
 
     /**
-     * 
+     *
      * get class name which be selected by user
-     * 
+     *
      * @return this method will return the class name which user selected default, this value is StringUtils.EMPTY
      */
     public String getSelectClassName() {
@@ -889,7 +889,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Getter for oldValue.
-     * 
+     *
      * @return the oldValue
      */
     public String getCheckValue() {
@@ -898,7 +898,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * Sets the oldValue.
-     * 
+     *
      * @param oldValue the oldValue to set
      */
     public void setCheckValue(String checkValue) {
@@ -907,7 +907,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#initSelectStatus()
      */
     protected void initSelectStatus() {
@@ -928,7 +928,7 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
 
     /**
      * DOC zshen Comment method "spliteJarFile".
-     * 
+     *
      * @return
      */
     protected abstract String[] spliteJarFile();

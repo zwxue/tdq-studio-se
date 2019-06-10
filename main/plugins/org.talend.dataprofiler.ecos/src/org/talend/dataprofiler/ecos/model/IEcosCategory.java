@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,9 +19,9 @@ import java.util.List;
  * <p>
  * take <a url='http://www.talendforge.org/exchange/top/index.php?cid=1'><code>regex</code></a> for example. It contain
  * name, counter and component.
- * 
+ *
  * @author gyichao
- * 
+ *
  */
 public interface IEcosCategory {
 
@@ -29,28 +29,28 @@ public interface IEcosCategory {
 
     /**
      * The name for Category. can not be null.
-     * 
+     *
      * @return <code>String</code> name of the category.
      */
     String getName();
 
     /**
      * The number of component in the Category. it must greater than 0 or equal to 0.
-     * 
+     *
      * @return <code>int</code> number of children in the category.
      */
     int getCounter();
 
     /**
      * Components in the category.
-     * 
+     *
      * @return {@linkplain IEcosComponent} in {@linkplain List}. empty list if there is no any component.
      */
     List<IEcosComponent> getComponent();
 
     /**
      * get Components in the category depend on isOnFilter.
-     * 
+     *
      * @return {@linkplain IEcosComponent} in {@linkplain List}. empty list if there is no any component.
      */
     List<IEcosComponent> getComponent(boolean isOnFilter);

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,9 +35,9 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.CsvFileTableViewer;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
- * 
+ *
  */
 public class ImportPatternsWizardPage extends WizardPage {
 
@@ -51,7 +51,7 @@ public class ImportPatternsWizardPage extends WizardPage {
 
     /**
      * DOC qzhang ImportPatternsWizardPage constructor comment.
-     * 
+     *
      * @param pageName
      */
     protected ImportPatternsWizardPage() {
@@ -63,7 +63,7 @@ public class ImportPatternsWizardPage extends WizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
@@ -87,7 +87,7 @@ public class ImportPatternsWizardPage extends WizardPage {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse.swt.events.ModifyEvent)
              */
             public void modifyText(ModifyEvent e) {
@@ -100,7 +100,7 @@ public class ImportPatternsWizardPage extends WizardPage {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -143,7 +143,7 @@ public class ImportPatternsWizardPage extends WizardPage {
 
     /**
      * DOC qzhang Comment method "getXLSFile".
-     * 
+     *
      * @return
      */
     public String getSourceFile() {
@@ -152,7 +152,7 @@ public class ImportPatternsWizardPage extends WizardPage {
 
     /**
      * DOC qzhang Comment method "getSkip".
-     * 
+     *
      * @return
      */
     public boolean getSkip() {
@@ -161,7 +161,7 @@ public class ImportPatternsWizardPage extends WizardPage {
 
     /**
      * DOC qzhang Comment method "getRename".
-     * 
+     *
      * @return
      */
     public boolean getRename() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -50,7 +50,7 @@ public class FileSystemExportWriter implements IExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#populate(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
      * [], boolean)
@@ -62,7 +62,7 @@ public class FileSystemExportWriter implements IExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#mapping(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
      * )
@@ -98,7 +98,7 @@ public class FileSystemExportWriter implements IExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
      * [], org.eclipse.core.runtime.IProgressMonitor)
@@ -117,11 +117,11 @@ public class FileSystemExportWriter implements IExportWriter {
 
                 Map<IPath, IPath> toImportMap = mapping(record);
 
-                monitor.subTask(DefaultMessagesImpl.getString("FileSystemExportWriter.Export", record.getName()));//$NON-NLS-1$ 
+                monitor.subTask(DefaultMessagesImpl.getString("FileSystemExportWriter.Export", record.getName()));//$NON-NLS-1$
 
                 if (record.isValid()) {
 
-                    //log.info("Exporting " + record.getFile().getAbsolutePath());//$NON-NLS-1$ 
+                    //log.info("Exporting " + record.getFile().getAbsolutePath());//$NON-NLS-1$
 
                     for (IPath resPath : toImportMap.keySet()) {
                         IPath desPath = toImportMap.get(resPath);
@@ -152,7 +152,7 @@ public class FileSystemExportWriter implements IExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.eclipse.core.runtime.IPath,
      * org.eclipse.core.runtime.IPath)
      */
@@ -163,13 +163,13 @@ public class FileSystemExportWriter implements IExportWriter {
         if (resFile.exists()) {
             FilesUtils.copyFile(resFile, desFile);
         } else {
-            log.warn(DefaultMessagesImpl.getString("FileSystemExportWriter.ExportFail", resFile.getAbsolutePath()));//$NON-NLS-1$ 
+            log.warn(DefaultMessagesImpl.getString("FileSystemExportWriter.ExportFail", resFile.getAbsolutePath()));//$NON-NLS-1$
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#finish(org.talend.dataprofiler.core.ui.imex.model.ItemRecord
      * [])
@@ -189,7 +189,7 @@ public class FileSystemExportWriter implements IExportWriter {
 
     /**
      * DOC bZhou Comment method "writeSysFile".
-     * 
+     *
      * @param file
      * @throws IOException
      * @throws CoreException
@@ -202,7 +202,7 @@ public class FileSystemExportWriter implements IExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#computeInput(org.eclipse.core.runtime.IPath)
      */
     public ItemRecord computeInput(IPath path) {
@@ -219,7 +219,7 @@ public class FileSystemExportWriter implements IExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#setBasePath(org.eclipse.core.runtime.IPath)
      */
     public void setBasePath(IPath path) {
@@ -232,7 +232,7 @@ public class FileSystemExportWriter implements IExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#getBasePath()
      */
     public IPath getBasePath() {
@@ -241,14 +241,14 @@ public class FileSystemExportWriter implements IExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#check()
      */
     public List<String> check() {
         List<String> errors = new ArrayList<String>();
 
         if (basePath == null || !basePath.toFile().exists()) {
-            errors.add(DefaultMessagesImpl.getString("FileSystemExportWriter.RootNotExist"));//$NON-NLS-1$ 
+            errors.add(DefaultMessagesImpl.getString("FileSystemExportWriter.RootNotExist"));//$NON-NLS-1$
         }
 
         return errors;

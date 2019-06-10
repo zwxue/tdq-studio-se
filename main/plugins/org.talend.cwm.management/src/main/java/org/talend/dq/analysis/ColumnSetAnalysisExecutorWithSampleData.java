@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ public class ColumnSetAnalysisExecutorWithSampleData extends ColumnSetAnalysisEx
 
     /**
      * DOC zshen ColumnSetAnalysisExecutorWithSampleData constructor comment.
-     * 
+     *
      * @param isDelimitedFile
      * @param isMdm
      */
@@ -37,7 +37,7 @@ public class ColumnSetAnalysisExecutorWithSampleData extends ColumnSetAnalysisEx
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.ColumnSetAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
@@ -47,7 +47,7 @@ public class ColumnSetAnalysisExecutorWithSampleData extends ColumnSetAnalysisEx
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.ColumnSetAnalysisExecutor#createIndicatorEvaluator(org.talend.dataquality.analysis.Analysis)
      */
     @Override
@@ -57,7 +57,7 @@ public class ColumnSetAnalysisExecutorWithSampleData extends ColumnSetAnalysisEx
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.ColumnSetAnalysisExecutor#initConnection(org.talend.dataquality.analysis.Analysis,
      * org.talend.dq.indicators.ColumnSetIndicatorEvaluator)
      */

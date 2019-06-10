@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by yyin on 2014-9-22 Detailled comment
- * 
+ *
  */
 public class FileDelimitedReader implements IFileReader {
 
@@ -46,7 +46,7 @@ public class FileDelimitedReader implements IFileReader {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.file.IFileReader#init(java.io.File,
      * org.talend.core.model.metadata.builder.connection.DelimitedFileConnection, java.util.List)
      */
@@ -78,7 +78,7 @@ public class FileDelimitedReader implements IFileReader {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.file.IFileReader#hasNext()
      */
     public boolean hasNext() throws IOException {
@@ -87,7 +87,7 @@ public class FileDelimitedReader implements IFileReader {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.file.IFileReader#next()
      */
     public Record next() throws IOException {
@@ -100,7 +100,7 @@ public class FileDelimitedReader implements IFileReader {
 
     /**
      * DOC yyin Comment method "createRichRecord".
-     * 
+     *
      * @param analysedValues
      * @return
      */

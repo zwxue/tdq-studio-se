@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -49,7 +49,7 @@ import orgomg.cwm.objectmodel.core.Package;
 
 /**
  * created by xqliu on 2014-9-9 Detailled comment
- * 
+ *
  */
 public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
 
@@ -61,15 +61,15 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
 
     public static final String PLUGIN_VERSION = VersionUtils.getTalendVersion();; //$NON-NLS-1$
 
-    private static final String VERSION_IN_FILENAME = "-" + PLUGIN_VERSION; //$NON-NLS-1$ 
+    private static final String VERSION_IN_FILENAME = "-" + PLUGIN_VERSION; //$NON-NLS-1$
 
-    public static final String JAR_FILE_NAME = PLUGIN_NAME + ".jar"; //$NON-NLS-1$ 
+    public static final String JAR_FILE_NAME = PLUGIN_NAME + ".jar"; //$NON-NLS-1$
 
-    public static final String JAR_FILE_NAME_WITH_VERSION = PLUGIN_NAME + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ 
+    public static final String JAR_FILE_NAME_WITH_VERSION = PLUGIN_NAME + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$
 
-    public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+    public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    public static final String JAR_NL_FILE_NAME_WITH_VERSION = PLUGIN_NAME + ".nl" + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+    public static final String JAR_NL_FILE_NAME_WITH_VERSION = PLUGIN_NAME + ".nl" + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$
 
     public static final String TALENDDATASET_CLASS_NAME = "net.sourceforge.sqlexplorer.dataset.mapdb.TalendDataSet"; //$NON-NLS-1$
 
@@ -103,11 +103,11 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
     }
 
     /**
-     * 
+     *
      * init the sqlexplorerService.
-     * 
+     *
      * @param isNeedDownload. if the service is not found, "isNeedDownload" will pop the downlaoding dialog.
-     * 
+     *
      */
     @Override
     protected void initService(boolean isNeedDownload) {
@@ -132,7 +132,7 @@ public class SqlExplorerUtils extends AbstractOSGIServiceUtils {
 
     /**
      * this method open DQ responsitory view and run the specified query in Sqlexplorer Editor.
-     * 
+     *
      * @param tdDataProvider
      * @param query
      * @param editorName

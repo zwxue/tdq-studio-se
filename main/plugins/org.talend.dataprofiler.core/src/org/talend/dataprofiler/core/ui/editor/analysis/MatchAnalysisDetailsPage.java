@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -162,7 +162,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * MatchMasterDetailsPage constructor.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -298,7 +298,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * create Matching Key Section.
-     * 
+     *
      */
     private void createMatchingKeySection() {
         matchingKeySection =
@@ -318,7 +318,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * create Blocking Key Section.
-     * 
+     *
      */
     private void createBlockingKeySection() {
         blockingKeySection =
@@ -357,7 +357,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * create DataTable Composite.
-     * 
+     *
      * @param dataparent
      */
     private void createDataTableComposite(Composite dataparent) {
@@ -384,7 +384,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * create Analysis Data Label Composite.
-     * 
+     *
      * @param dataparent
      */
     private void createAnaDataLabelComposite(Composite dataparent) {
@@ -450,7 +450,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * create Button Composite.
-     * 
+     *
      * @param dataparent
      */
     private void createButtonComposite(Composite dataparent) {
@@ -562,7 +562,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * change Column Color By Current selected Keys.
-     * 
+     *
      * @param currentMatchKeyColumn
      */
     protected void changeColumnColorByCurrentKeys(List<String> currentKeyColumn, boolean isMatchKey) {
@@ -719,7 +719,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refreshPreviewData()
      */
     @Override
@@ -735,7 +735,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * create "Refresh Button", and the row control input.
-     * 
+     *
      * @param buttonComposite
      */
     private void createDataQueryButtonComp(Composite parent) {
@@ -797,7 +797,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#setSampleDataShowWayStatus()
      */
     @Override
@@ -894,7 +894,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#openColumnsSelectionDialog(orgomg
      * .cwm.foundation.softwaredeployment.DataManager)
@@ -967,7 +967,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     /**
      * if some columns are deleted : remove the blocking/match key which used this column ; if some column still there :
      * update the index info in their keys; if some new columns added : do nothing
-     * 
+     *
      * @param oldSelectedColumns
      */
     private void updateAllKeys(List<IRepositoryNode> oldSelectedColumns) {
@@ -1014,7 +1014,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * DOC zhao Comment method "addColumnGivenIndex".
-     * 
+     *
      * @param selectedOne
      * @param positionInNewSelectColumns
      */
@@ -1037,7 +1037,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * loop the new selected columns to check if the old one still Contained: find the new position.
-     * 
+     *
      * @param oldSelectNode
      * @return
      */
@@ -1056,7 +1056,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
      * compare two array of objects, if them are same, return false, if any difference, return true. check for the
      * column name of data table: when user select a column named "GID", "GRP_SIZE", "BLOCK_KEY", if has, remove them
      * and give the user a warning
-     * 
+     *
      * @param oldSelectedNodes : original selected columns
      * @param selectedResult : new selected columns
      * @return
@@ -1106,9 +1106,9 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * need to be called after the user selects some columns need to fetch the data and refresh the table
-     * 
+     *
      * @param repositoryNodes
-     * 
+     *
      * @param nodes
      */
     public void setSelectedNodes(IRepositoryNode[] repositoryNodes) {
@@ -1132,7 +1132,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#redrawWarningLabel()
      */
     @Override
@@ -1149,7 +1149,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * Refresh the table with new data
-     * 
+     *
      * @param listOfData
      */
     public void refreshTable(List<Object[]> listOfData) {
@@ -1242,9 +1242,9 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
      * when the user select one column, check: if the column is not selected before, add it(with color changed) else if
      * the column already be selected before, remove it(with color changed) Need to check: canSelectBlockingKey/
      * canSelectMatchingKey firstly,
-     * 
+     *
      * Added: sort by the column. when selecting keys, the sort will not work; when sort, the select keys not work
-     * 
+     *
      * @param rowPosition
      * @param columnPosition
      * @param columnName
@@ -1273,7 +1273,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * handle the add/remove column for the Match Key Selection.
-     * 
+     *
      * @param columnName
      */
     private void handleMatchKeySelection(String columnName) {
@@ -1297,7 +1297,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * create a match key for the selected column and add to current match rule tab.
-     * 
+     *
      * @param columnName
      */
     private void addCurrentKeyFromCurrentMatchRule(String columnName) {
@@ -1310,7 +1310,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * remove the current key from the current Match Rule tab.
-     * 
+     *
      * @param columnName
      */
     private void removeCurrentKeyFromCurrentMatchRule(String columnName) {
@@ -1323,7 +1323,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * DOC yyin Comment method "isKeyAlreadyAdded".
-     * 
+     *
      * @param columnName
      * @return
      * @throws Exception
@@ -1338,7 +1338,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * handle the add/delete column for the BlockKey Selection.
-     * 
+     *
      * @param columnName
      */
     private void handleBlockKeySelection(String columnName) {
@@ -1362,7 +1362,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * fetch the data according to the connection type(db,file,mdm)
-     * 
+     *
      * @return
      */
     private List<Object[]> fetchDataForTable() {
@@ -1391,7 +1391,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * DOC zshen Comment method "getSelectedColumns".
-     * 
+     *
      * @return
      */
     private ModelElement[] getSelectedColumnsFromHandler() {
@@ -1441,7 +1441,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -1478,7 +1478,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#canRun()
      */
     @Override
@@ -1514,7 +1514,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#canSave()
      */
     @Override
@@ -1562,7 +1562,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#saveAnalysis()
      */
     @Override
@@ -1591,7 +1591,7 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
 
     /**
      * change the connection of the analysis after the user change the selected columns
-     * 
+     *
      * @param modelElement
      * @return
      */
@@ -1636,9 +1636,9 @@ public class MatchAnalysisDetailsPage extends AbstractAnalysisMetadataPage imple
     }
 
     /**
-     * 
+     *
      * save/update the selected elements names as TaggedValue.
-     * 
+     *
      * @param iRepositoryNode
      */
     public void updateAnalyzeDataLabel(IRepositoryNode node) {

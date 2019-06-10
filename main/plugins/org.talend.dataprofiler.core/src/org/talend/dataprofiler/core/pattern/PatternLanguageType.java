@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -185,7 +185,7 @@ public enum PatternLanguageType {
 
     /**
      * DOC yyi 2009-09-28 Feature: 9289.
-     * 
+     *
      * @param hasJava set contains Java or not.
      * @return
      */
@@ -205,7 +205,7 @@ public enum PatternLanguageType {
 
     /**
      * DOC zshen 2011-06-29 bug: 22668.
-     * 
+     *
      * @param
      * @return
      */

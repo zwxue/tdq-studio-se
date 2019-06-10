@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
- * 
+ *
  */
 public abstract class ResourceFileMap<T extends ModelElement> {
 
@@ -61,7 +61,7 @@ public abstract class ResourceFileMap<T extends ModelElement> {
 
     /**
      * DOC bZhou Comment method "getFileResource".
-     * 
+     *
      * @param file
      * @return get null if the file is not exist.
      */
@@ -83,7 +83,7 @@ public abstract class ResourceFileMap<T extends ModelElement> {
 
     /**
      * DOC bZhou Comment method "findCorrespondingFile".
-     * 
+     *
      * @param element
      * @return
      */
@@ -107,7 +107,7 @@ public abstract class ResourceFileMap<T extends ModelElement> {
 
     /**
      * DOC bZhou Comment method "getModelElement".
-     * 
+     *
      * @param IFile
      * @return
      */
@@ -117,7 +117,7 @@ public abstract class ResourceFileMap<T extends ModelElement> {
 
     /**
      * DOC bZhou Comment method "getModelElement".
-     * 
+     *
      * @param resource
      * @return
      */
@@ -145,7 +145,7 @@ public abstract class ResourceFileMap<T extends ModelElement> {
 
     /**
      * DOC bZhou Comment method "getAll".
-     * 
+     *
      * @param parentFolder
      * @return
      */
@@ -172,7 +172,7 @@ public abstract class ResourceFileMap<T extends ModelElement> {
 
     /**
      * DOC bZhou Comment method "getAllElement".
-     * 
+     *
      * @return
      */
     public List<T> getAllElement() {
@@ -181,7 +181,7 @@ public abstract class ResourceFileMap<T extends ModelElement> {
 
     /**
      * DOC bZhou Comment method "save".
-     * 
+     *
      * @param dqrule
      * @return
      * @deprecated use {@link AElementPersistance#save(org.talend.core.model.properties.Item, boolean)} class instead

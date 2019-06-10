@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -15,7 +15,7 @@
  * Copyright (c) 2006, 2007 Obeo. All rights reserved. This program and the accompanying materials are made available
  * under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors: Obeo - initial API and implementation
  **********************************************************************************************************************/
 package org.talend.cwm.compare;
@@ -52,7 +52,7 @@ import org.talend.commons.emf.EMFUtil;
 
 /**
  * This application will try and launch an headless model comparison.
- * 
+ *
  * @author Cedric Brun <a href="mailto:cedric.brun@obeo.fr">cedric.brun@obeo.fr</a>
  */
 public final class ExampleLauncher {
@@ -72,7 +72,7 @@ public final class ExampleLauncher {
 
     /**
      * Launcher of this application.
-     * 
+     *
      * @param args Arguments of the launch.
      */
     public static void main(String[] args) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,13 +37,13 @@ import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * created by talend on Nov 25, 2014 Detailled comment
- * 
+ *
  */
 public class FunctionFrequencyStatExplorerTest {
 
     /**
      * DOC talend Comment method "setUpBeforeClass".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @BeforeClass
@@ -52,7 +52,7 @@ public class FunctionFrequencyStatExplorerTest {
 
     /**
      * DOC talend Comment method "tearDownAfterClass".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @AfterClass
@@ -61,7 +61,7 @@ public class FunctionFrequencyStatExplorerTest {
 
     /**
      * DOC talend Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -70,7 +70,7 @@ public class FunctionFrequencyStatExplorerTest {
 
     /**
      * DOC talend Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After

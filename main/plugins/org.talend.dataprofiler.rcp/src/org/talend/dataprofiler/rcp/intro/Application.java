@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -55,7 +55,7 @@ public class Application implements IApplication {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
      */
     @Override
@@ -99,17 +99,17 @@ public class Application implements IApplication {
     }
 
     /**
-     * 
+     *
      * DOC ggu Comment method "checkForBrowser".
      */
     private void checkBrowserSupport() {
         Shell shell = new Shell();
         try {
             Browser browser = new Browser(shell, SWT.BORDER);
-            System.setProperty("USE_BROWSER", Boolean.TRUE.toString()); //$NON-NLS-1$ 
+            System.setProperty("USE_BROWSER", Boolean.TRUE.toString()); //$NON-NLS-1$
             browser.dispose();
         } catch (Throwable t) {
-            System.setProperty("USE_BROWSER", Boolean.FALSE.toString()); //$NON-NLS-1$ 
+            System.setProperty("USE_BROWSER", Boolean.FALSE.toString()); //$NON-NLS-1$
             log.warn(DefaultMessagesImpl.getString("Application.browser"));
         } finally {
             shell.dispose();
@@ -165,7 +165,7 @@ public class Application implements IApplication {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.equinox.app.IApplication#stop()
      */
     @Override

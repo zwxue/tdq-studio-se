@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -132,7 +132,7 @@ public class ExportWizardPage extends WizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
@@ -161,7 +161,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "setDirState".
-     * 
+     *
      * @param state
      */
     protected void setDirState(boolean state) {
@@ -190,7 +190,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC zshen Comment method "getTextContent".
-     * 
+     *
      * @param archTxt2
      * @return
      */
@@ -203,7 +203,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "isDirState".
-     * 
+     *
      * @return
      */
     public boolean isDirState() {
@@ -212,7 +212,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "setArchState".
-     * 
+     *
      * @param state
      */
     protected void setArchState(boolean state) {
@@ -227,7 +227,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "isArchState".
-     * 
+     *
      * @return
      */
     public boolean isArchState() {
@@ -291,7 +291,7 @@ public class ExportWizardPage extends WizardPage {
                 if (result != null) {
                     IPath path = new Path(result);
                     if (StringUtils.isBlank(path.getFileExtension())) {
-                        path = path.addFileExtension("zip");//$NON-NLS-1$ 
+                        path = path.addFileExtension("zip");//$NON-NLS-1$
                     }
 
                     archTxt.setText(path.toOSString());
@@ -334,7 +334,7 @@ public class ExportWizardPage extends WizardPage {
                                 repositoryTree.setChecked(findRecord, checked);
                             } else {
                                 log.error(DefaultMessagesImpl.getString(
-                                        "ExportWizardPage.CanNotFind", file.getAbsolutePath()));//$NON-NLS-1$ 
+                                        "ExportWizardPage.CanNotFind", file.getAbsolutePath()));//$NON-NLS-1$
                             }
                         }
                     } else {
@@ -363,7 +363,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "textModified".
-     * 
+     *
      * @param pathStr
      */
     public void textModified(String pathStr) {
@@ -415,7 +415,7 @@ public class ExportWizardPage extends WizardPage {
                     // TDQ-5909~
                     errors
                             .add(DefaultMessagesImpl.getString(
-                                    "ExportWizardPage.missDepend", record.getName(), dptLabel));//$NON-NLS-1$ 
+                                    "ExportWizardPage.missDepend", record.getName(), dptLabel));//$NON-NLS-1$
                 }
             }
         }
@@ -439,7 +439,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "createRepositoryTree".
-     * 
+     *
      * @param top
      */
     protected void createRepositoryTree(Composite top) {
@@ -482,7 +482,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "createUtilityButtons".
-     * 
+     *
      * @param treeComposite
      */
     protected void createUtilityButtons(Composite treeComposite) {
@@ -617,7 +617,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "createSelectComposite".
-     * 
+     *
      * @param top
      */
     protected void createSelectComposite(Composite top) {
@@ -654,7 +654,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "getElements".
-     * 
+     *
      * @return
      */
     public ItemRecord[] getElements() {
@@ -702,7 +702,7 @@ public class ExportWizardPage extends WizardPage {
 
     /**
      * Getter for writer.
-     * 
+     *
      * @return the writer
      */
     public IExportWriter getWriter() {
@@ -716,7 +716,7 @@ public class ExportWizardPage extends WizardPage {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
          * java.lang.Object)
          */
@@ -728,9 +728,9 @@ public class ExportWizardPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * add related subReport jrxml/jasper file to List.
-     * 
+     *
      * @param record
      * @param itemRecords
      */
@@ -776,9 +776,9 @@ public class ExportWizardPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * check if the output path is correct.
-     * 
+     *
      * @return
      */
     public boolean canFinish() {

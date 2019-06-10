@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -51,7 +51,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "addColumnToAnalyze".
-     * 
+     *
      * @param modelElement
      * @return
      */
@@ -112,7 +112,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "getDatamingType".
-     * 
+     *
      * @param column
      * @return the datamining type literal if any or empty string
      */
@@ -127,7 +127,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "getIndicators".
-     * 
+     *
      * @param modelElement
      * @return the indicators attached to this column
      */
@@ -152,9 +152,9 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
     }
 
     /**
-     * 
+     *
      * zshen Comment method "initializeIndicator".
-     * 
+     *
      * @param indicator
      */
     public void initializeIndicator(Indicator indicator) {
@@ -186,7 +186,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "getIndicatorLeaves" returns the indicators for the given column at the leaf level.
-     * 
+     *
      * @param column
      * @return the indicators attached to this column
      */
@@ -205,7 +205,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "setStringDataFilter".
-     * 
+     *
      * @param datafilterString
      * @return true when a new data filter is created, false if it is only updated
      */
@@ -215,7 +215,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
 
     /**
      * get StringDataFilter with Context.
-     * 
+     *
      * @return
      */
     public String getStringDataFilterwithContext() {
@@ -224,7 +224,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
 
     /**
      * get StringDataFilter without Context.
-     * 
+     *
      * @return
      */
     public String getStringDataFilter() {
@@ -233,7 +233,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
 
     /**
      * DOC xqliu Comment method "setDatamingType".
-     * 
+     *
      * @param dataminingTypeLiteral
      * @param modelElement
      */

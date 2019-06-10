@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,21 +37,21 @@ public abstract class AbstractOSGIServiceUtils {
 
     /**
      * get the plugin name
-     * 
+     *
      * @return
      */
     public abstract String getPluginName();
 
     /**
      * get the related service interface name
-     * 
+     *
      * @return
      */
     public abstract String getServiceName();
 
     /**
      * check if the service installed or not
-     * 
+     *
      * @return
      */
     public abstract boolean isServiceInstalled();
@@ -85,21 +85,21 @@ public abstract class AbstractOSGIServiceUtils {
 
     /**
      * getMissingMessageName.
-     * 
+     *
      * @return
      */
     protected abstract String getMissingMessageName();
 
     /**
      * getRestartMessageName.
-     * 
+     *
      * @return
      */
     protected abstract String getRestartMessageName();
 
     /**
      * DOC yyin Comment method "setService".
-     * 
+     *
      * @param context
      * @param serviceReference
      */

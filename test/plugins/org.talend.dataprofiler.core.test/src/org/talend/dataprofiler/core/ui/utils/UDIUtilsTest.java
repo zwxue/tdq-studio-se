@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -54,7 +54,7 @@ public class UDIUtilsTest {
         assertTrue(UDIUtils.isCurrentLanguageAndVersion(tdExpression, "MySQL", "5.0.2")); //$NON-NLS-1$ //$NON-NLS-2$
         assertFalse(UDIUtils.isCurrentLanguageAndVersion(tdExpression, "MySQL", "5.1.2")); //$NON-NLS-1$ //$NON-NLS-2$
         assertFalse(UDIUtils.isCurrentLanguageAndVersion(tdExpression, "Oracle", "5.0.2")); //$NON-NLS-1$ //$NON-NLS-2$
-        assertFalse(UDIUtils.isCurrentLanguageAndVersion(tdExpression, "Oracle", null)); //$NON-NLS-1$ 
+        assertFalse(UDIUtils.isCurrentLanguageAndVersion(tdExpression, "Oracle", null)); //$NON-NLS-1$
     }
 
     /**
@@ -67,7 +67,7 @@ public class UDIUtilsTest {
         assertTrue(UDIUtils.isCurrentLanguageAndVersion(tdExpression, "MySQL", null)); //$NON-NLS-1$ //$NON-NLS-2$
         tdExpression = UDIUtils.createNewTdExpression("MySQL", "", "select * from test");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         assertTrue(UDIUtils.isCurrentLanguageAndVersion(tdExpression, "MySQL", "")); //$NON-NLS-1$ //$NON-NLS-2$
-        assertTrue(UDIUtils.isCurrentLanguageAndVersion(tdExpression, "MySQL", null)); //$NON-NLS-1$ 
+        assertTrue(UDIUtils.isCurrentLanguageAndVersion(tdExpression, "MySQL", null)); //$NON-NLS-1$
     }
 
     /**
@@ -92,7 +92,7 @@ public class UDIUtilsTest {
 
         assertTrue(UDIUtils.checkExistInList(indicatorDefinition.getViewRowsExpression(), "Oracle", "5.0.2")); //$NON-NLS-1$ //$NON-NLS-2$
         assertFalse(UDIUtils.checkExistInList(indicatorDefinition.getViewRowsExpression(), "MySQL", "5.1.2")); //$NON-NLS-1$ //$NON-NLS-2$
-        assertFalse(UDIUtils.checkExistInList(indicatorDefinition.getViewRowsExpression(), "Oracle", null)); //$NON-NLS-1$ 
+        assertFalse(UDIUtils.checkExistInList(indicatorDefinition.getViewRowsExpression(), "Oracle", null)); //$NON-NLS-1$
     }
 
 }

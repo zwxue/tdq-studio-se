@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,7 +29,7 @@ import org.talend.dataquality.indicators.validation.IDataValidationFactory;
 
 /**
  * created by talend on Nov 4, 2014 Detailled comment
- * 
+ *
  */
 public class ColumnSetDBMapTest {
 
@@ -78,7 +78,7 @@ public class ColumnSetDBMapTest {
     /**
      * Test method for {@link org.talend.dataquality.indicators.mapdb.ColumnSetDBMap#subList(long, long, java.util.Map)}
      * Case 3 fromIndex more than toIndex
-     * 
+     *
      */
     @Test
     public void testSubListLongLongMapOfLongListOfObjectCase3() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -57,7 +57,7 @@ public class PreviewColumnAction extends Action {
                 DbmsLanguage language = DbmsLanguageFactory.createDbmsLanguage(dataprovider);
                 String columnsWithPrefix = language.getQueryColumnsWithPrefix(columns);
                 String columnSetName = language.getQueryColumnSetWithPrefix(columnSetOwner);
-                String query = "select " + columnsWithPrefix + " from " + columnSetName; //$NON-NLS-1$ //$NON-NLS-2$ 
+                String query = "select " + columnsWithPrefix + " from " + columnSetName; //$NON-NLS-1$ //$NON-NLS-2$
                 SqlExplorerUtils.getDefault().runInDQViewer(dataprovider, query, columnSetName);
             } else {
                 MessageDialogWithToggle

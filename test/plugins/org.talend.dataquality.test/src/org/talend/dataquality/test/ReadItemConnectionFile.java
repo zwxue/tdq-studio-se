@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,15 +37,15 @@ import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC scorreia class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
- * 
+ *
  */
 public class ReadItemConnectionFile {
 
     /**
      * DOC scorreia Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -73,7 +73,7 @@ public class ReadItemConnectionFile {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see
              * org.talend.core.model.metadata.builder.connection.util.ConnectionSwitch#caseConnection(org.talend.core
              * .model.metadata.builder.connection.Connection)

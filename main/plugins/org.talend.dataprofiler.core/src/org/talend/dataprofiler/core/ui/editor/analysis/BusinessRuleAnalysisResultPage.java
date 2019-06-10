@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -99,7 +99,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
     /**
      * DOC xqliu TableAnalysisResultPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -241,7 +241,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
                         /**
                          * DOC yyin Comment method "createChartsForRules".
-                         * 
+                         *
                          * @param tableIndicator
                          * @param chartType
                          * @param units
@@ -306,7 +306,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
                         /**
                          * DOC yyin Comment method "createTableForWhereRule".
-                         * 
+                         *
                          * @param chartType
                          * @param tableTopComp
                          * @param analysis
@@ -336,7 +336,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
                         /**
                          * DOC yyin Comment method "createTableViewerForRowCount".
-                         * 
+                         *
                          * @param chartType
                          * @param units
                          * @param tableTopComp
@@ -365,7 +365,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
                         /**
                          * DOC yyin Comment method "createTableComposite".
-                         * 
+                         *
                          * @param composite
                          * @return
                          */
@@ -378,7 +378,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
                         /**
                          * DOC yyin Comment method "createCompositeForTableAndChart".
-                         * 
+                         *
                          * @param subComp
                          * @return
                          */
@@ -391,7 +391,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
                         /**
                          * DOC yyin Comment method "createSubWholeComposite".
-                         * 
+                         *
                          * @param comp
                          * @param chartType
                          * @return
@@ -433,7 +433,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
      * .ui.editor.analysis.AbstractAnalysisMetadataPage)
@@ -535,7 +535,7 @@ public class BusinessRuleAnalysisResultPage extends AbstractAnalysisResultPageWi
 
     /**
      * unregister every dynamic events which registered before executing analysis
-     * 
+     *
      * @param eventReceivers
      */
     public void unRegisterDynamicEvent() {

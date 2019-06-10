@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -544,7 +544,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     /**
      * DOC xqliu Comment method "createPageSizeComp". ADD xqliu 2010-03-10 feature 10834
-     * 
+     *
      * @param comp
      */
     private void createPageSizeComp(Composite comp) {
@@ -702,7 +702,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     /**
      * DOC xqliu Comment method "checkPageSize". ADD xqliu 2010-03-10 feature 10834
-     * 
+     *
      * @param size
      * @return
      */
@@ -720,7 +720,7 @@ public class EditorPreferencePage extends PreferencePage implements IWorkbenchPr
 
     /**
      * DOC xqliu Comment method "getDQRuleSize". ADD xqliu 2010-03-10 feature 10834
-     * 
+     *
      * @return
      */
     public static String getDQRuleSize() {

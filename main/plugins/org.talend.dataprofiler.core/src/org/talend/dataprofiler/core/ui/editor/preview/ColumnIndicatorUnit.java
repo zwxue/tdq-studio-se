@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ public class ColumnIndicatorUnit extends IndicatorUnit {
 
     /**
      * Getter for modelElementIndicator.
-     * 
+     *
      * @return the modelElementIndicator
      */
     public ModelElementIndicator getModelElementIndicator() {
@@ -54,7 +54,7 @@ public class ColumnIndicatorUnit extends IndicatorUnit {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getForms()
      */
     @Override
@@ -74,7 +74,7 @@ public class ColumnIndicatorUnit extends IndicatorUnit {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override

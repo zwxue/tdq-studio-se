@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
 
     /**
      * DOC yyin BenfordLawFrequencyState constructor comment.
-     * 
+     *
      * @param units
      */
     public BenfordLawFrequencyState(List<IndicatorUnit> units) {
@@ -46,7 +46,7 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getDataExplorer()
      */
     public DataExplorer getDataExplorer() {
@@ -55,7 +55,7 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyTypeStates#sortIndicator(org.talend
      * .dq.indicators.ext.FrequencyExt[])
@@ -86,7 +86,7 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
 
     /**
      * DOC yyin Comment method "createChart".
-     * 
+     *
      * @param dataset
      * @return
      */
@@ -106,7 +106,7 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyTypeStates#getTitle()
      */
     @Override

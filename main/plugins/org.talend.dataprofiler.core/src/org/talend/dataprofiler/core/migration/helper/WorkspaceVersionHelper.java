@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ public final class WorkspaceVersionHelper {
 
     /**
      * DOC bZhou Comment method "getVersionFile".
-     * 
+     *
      * @return
      */
     public static IFile getVersionFile() {
@@ -50,9 +50,9 @@ public final class WorkspaceVersionHelper {
     }
 
     /**
-     * 
+     *
      * MOD mzhao Get version file by static way, not by IFile. See feature 6066
-     * 
+     *
      * @return
      */
     public static ProductVersion getVesion() {
@@ -61,7 +61,7 @@ public final class WorkspaceVersionHelper {
 
     /**
      * DOC bZhou Get version file by IFile.
-     * 
+     *
      * @param versionFile
      * @return
      */
@@ -71,7 +71,7 @@ public final class WorkspaceVersionHelper {
 
     /**
      * DOC bZhou Comment method "getVesion".
-     * 
+     *
      * @param versionFile
      * @return
      */
@@ -104,7 +104,7 @@ public final class WorkspaceVersionHelper {
     }
 
     /**
-     * 
+     *
      * MOD mzhao 2009-04-03.
      */
     public static void storeVersion(File file) {
@@ -122,7 +122,7 @@ public final class WorkspaceVersionHelper {
     }
 
     /**
-     * 
+     *
      * MOD mzhao 2009-04-03.
      */
     public static void storeVersion() {

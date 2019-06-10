@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,7 +29,7 @@ public class FolderObjFilter extends AbstractViewerFilter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.views.filters.AbstractViewerFilter#getId()
      */
     @Override
@@ -39,7 +39,7 @@ public class FolderObjFilter extends AbstractViewerFilter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
      * java.lang.Object)
      */
@@ -52,7 +52,7 @@ public class FolderObjFilter extends AbstractViewerFilter {
                 // MOD mzhao 2010-08-12 14891: use same repository API with TOS to persistent metadata
                 if (folder.getProjectRelativePath().toString().startsWith(EResourceConstant.METADATA.getPath())) {
                     String folderName = folder.getName();
-                    if (folderName.equals("bin")) {//$NON-NLS-1$ 
+                    if (folderName.equals("bin")) {//$NON-NLS-1$
                         return false;
                     }
                     if (folderName.equals(EResourceConstant.METADATA.getPath())) {

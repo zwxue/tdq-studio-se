@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -52,7 +52,7 @@ import org.talend.metadata.managment.connection.manager.DatabaseConnConstants;
 
 /**
  * created by qiongli on 2014-5-8 Detailled comment
- * 
+ *
  */
 public class AliasAndManaDriverHelper {
 
@@ -72,7 +72,7 @@ public class AliasAndManaDriverHelper {
     /**
      * create a New ManagerDriver. id is like as "dbType:driverClassName:dbVersion",name is like as "dbType:dbVersion".
      * then regist jdbc driver.
-     * 
+     *
      * @param dbConn
      * @param id
      * @return
@@ -98,9 +98,9 @@ public class AliasAndManaDriverHelper {
     }
 
     /**
-     * 
+     *
      * find a ManaDriver based on driver class name.if not found ,create a new one ManagedDriver.
-     * 
+     *
      * @param connection
      * @param driverManager
      * @return
@@ -126,7 +126,7 @@ public class AliasAndManaDriverHelper {
 
     /**
      * find driver jar path from 'temp\dbWizard',if nof found,find it from 'lib\java' and "librariesIndex.xml".
-     * 
+     *
      * @return
      * @throws MalformedURLException
      */
@@ -175,9 +175,9 @@ public class AliasAndManaDriverHelper {
     }
 
     /**
-     * 
+     *
      * add jars into ManagedDriver attribute.these jars have a real path so that can be accessed.
-     * 
+     *
      * @param connection
      * @param manDr
      * @throws MalformedURLException
@@ -239,9 +239,9 @@ public class AliasAndManaDriverHelper {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "joinSqlId".
-     * 
+     *
      * @param dbConn
      * @return
      */
@@ -280,9 +280,9 @@ public class AliasAndManaDriverHelper {
     }
 
     /**
-     * 
+     *
      * join dbtype:driverClassName:dbVersion as a ManagedDriver id.
-     * 
+     *
      * @param databaseType
      * @param driverClassName
      * @param dbVersion

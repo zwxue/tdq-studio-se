@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getAuthor()
      */
     public String getAuthor() {
@@ -51,7 +51,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getDescription()
      */
     public String getDescription() {
@@ -60,7 +60,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getInstalledLocation()
      */
     public String getInstalledLocation() {
@@ -69,7 +69,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getInstalledRevision()
      */
     public IRevision getInstalledRevision() {
@@ -78,7 +78,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getLatestRevision()
      */
     public IRevision getLatestRevision() {
@@ -87,7 +87,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getName()
      */
     public String getName() {
@@ -96,7 +96,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getRevisions()
      */
     public List<IRevision> getRevisions() {
@@ -109,7 +109,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setAuthor(java.lang.String)
      */
     public void setAuthor(String value) {
@@ -118,7 +118,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setDescription(java.lang.String)
      */
     public void setDescription(String value) {
@@ -128,7 +128,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#getCategory()
      */
     public IEcosCategory getCategry() {
@@ -137,7 +137,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setCategory(java.lang.String)
      */
     public void setCategry(IEcosCategory categry) {
@@ -146,7 +146,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setInstalledLocation(java.lang.String)
      */
     public void setInstalledLocation(String value) {
@@ -155,7 +155,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.ecos.model.IEcosComponent#setInstalledRevision(org.talend.dataprofiler.ecos.model.IRevision
      * )
@@ -166,7 +166,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.ecos.model.IEcosComponent#setLatestRevision(org.talend.dataprofiler.ecos.model.IRevision)
      */
@@ -176,7 +176,7 @@ public class EcosComponent implements IEcosComponent {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IEcosComponent#setName(java.lang.String)
      */
     public void setName(String value) {

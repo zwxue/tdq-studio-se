@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ import org.talend.dataquality.indicators.mapdb.DBMapCompartor.NullCompareStrateg
 
 /**
  * created by talend on Jul 24, 2014 Detailled comment
- * 
+ *
  */
 public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
@@ -115,7 +115,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.AbstractCollection#iterator()
      */
     @Override
@@ -125,7 +125,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.AbstractCollection#size()
      */
     @Override
@@ -135,7 +135,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#isEmpty()
      */
     @Override
@@ -145,7 +145,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#contains(java.lang.Object)
      */
     @Override
@@ -158,7 +158,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#toArray()
      */
     @Override
@@ -168,7 +168,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#toArray(T[])
      */
     @Override
@@ -178,7 +178,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#add(java.lang.Object)
      */
     @Override
@@ -193,7 +193,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#remove(java.lang.Object)
      */
     @Override
@@ -206,7 +206,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#containsAll(java.util.Collection)
      */
     @Override
@@ -216,7 +216,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#addAll(java.util.Collection)
      */
     @Override
@@ -226,7 +226,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#retainAll(java.util.Collection)
      */
     @Override
@@ -236,7 +236,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#removeAll(java.util.Collection)
      */
     @Override
@@ -246,7 +246,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#clear()
      */
     @Override
@@ -260,7 +260,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Set#hashCode()
      */
     @Override
@@ -271,7 +271,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.SortedSet#comparator()
      */
     @Override
@@ -281,7 +281,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.SortedSet#first()
      */
     @Override
@@ -291,7 +291,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.SortedSet#last()
      */
     @Override
@@ -301,7 +301,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#lower(java.lang.Object)
      */
     @Override
@@ -311,7 +311,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#floor(java.lang.Object)
      */
     @Override
@@ -321,7 +321,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#ceiling(java.lang.Object)
      */
     @Override
@@ -331,7 +331,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#higher(java.lang.Object)
      */
     @Override
@@ -341,7 +341,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#pollFirst()
      */
     @Override
@@ -351,7 +351,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#pollLast()
      */
     @Override
@@ -361,7 +361,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#descendingSet()
      */
     @Override
@@ -371,7 +371,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#descendingIterator()
      */
     @Override
@@ -381,7 +381,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#subSet(java.lang.Object, boolean, java.lang.Object, boolean)
      */
     @Override
@@ -391,7 +391,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#headSet(java.lang.Object, boolean)
      */
     @Override
@@ -401,7 +401,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#tailSet(java.lang.Object, boolean)
      */
     @Override
@@ -411,7 +411,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#subSet(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -421,7 +421,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#headSet(java.lang.Object)
      */
     @Override
@@ -431,7 +431,7 @@ public class DBSet<E> extends AbstractDB<E> implements NavigableSet<E> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableSet#tailSet(java.lang.Object)
      */
     @Override

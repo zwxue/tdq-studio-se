@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -68,7 +68,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "initRepListFile".
-     * 
+     *
      * @param reportFile
      * @throws Exception
      * @deprecated
@@ -103,7 +103,7 @@ public final class ReportFileHelper {
 
     /**
      * get the link file which link to the report generate doc file.
-     * 
+     *
      * @param fileName report generate doc file name
      * @return
      */
@@ -113,7 +113,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "recordReportFiles".
-     * 
+     *
      * @param reportFile
      * @param fileName
      * @param filePath
@@ -138,7 +138,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "saveReportListFile".
-     * 
+     *
      * @param reportListFile
      * @param repList
      * @throws IOException
@@ -188,12 +188,12 @@ public final class ReportFileHelper {
 
     /**
      * get the report doc folder name from the report's preperty.
-     * 
+     *
      * @param repProp
      * @return
      */
     public static String getSimpleName(Property repProp) {
-        return repProp.getLabel() + "_" + repProp.getVersion(); //$NON-NLS-1$ 
+        return repProp.getLabel() + "_" + repProp.getVersion(); //$NON-NLS-1$
     }
 
     /**
@@ -240,7 +240,7 @@ public final class ReportFileHelper {
 
     /**
      * set the relationship of main-sub report.
-     * 
+     *
      * @return
      */
     public static Map<String, List<String>> getMainSubRepMap() {
@@ -281,7 +281,7 @@ public final class ReportFileHelper {
 
     /**
      * get the report generate doc folder.
-     * 
+     *
      * @param reportFile report IFile
      * @return
      */
@@ -298,7 +298,7 @@ public final class ReportFileHelper {
 
     /**
      * get the report generate doc folder.
-     * 
+     *
      * @param repNode the report repository node
      * @return
      */
@@ -308,7 +308,7 @@ public final class ReportFileHelper {
 
     /**
      * if the report's name changed, need to rename the report generated doc folder also.
-     * 
+     *
      * @param parentFolder
      * @param oldFolderName
      * @param repItem
@@ -354,7 +354,7 @@ public final class ReportFileHelper {
 
     /**
      * copy the files under old folder to new folder.
-     * 
+     *
      * @param oldFolder
      * @param newFolder
      */
@@ -377,7 +377,7 @@ public final class ReportFileHelper {
 
     /**
      * get the link files which link to the Report Generated Doc File.
-     * 
+     *
      * @param file Report file
      * @return
      */
@@ -401,7 +401,7 @@ public final class ReportFileHelper {
 
     /**
      * get the link files which link to the Report Generated Doc File.
-     * 
+     *
      * @param findAllRecycleBinNodes RepositoryNode list(can be any type)
      * @return
      */
@@ -424,7 +424,7 @@ public final class ReportFileHelper {
 
     /**
      * remove the link files which link to the Report Generated Doc File.
-     * 
+     *
      * @param repDocLinkFiles
      */
     public static void removeRepDocLinkFiles(List<IFile> repDocLinkFiles) {
@@ -441,7 +441,7 @@ public final class ReportFileHelper {
 
     /**
      * delete the related output folder of report.
-     * 
+     *
      * @param reportFile
      * @throws PersistenceException
      */
@@ -486,7 +486,7 @@ public final class ReportFileHelper {
 
     /**
      * get the IFile of the Report.
-     * 
+     *
      * @param findAllRecycleBinNodes
      * @return
      */
@@ -509,7 +509,7 @@ public final class ReportFileHelper {
 
     /**
      * delete the related output folder of reports.
-     * 
+     *
      * @param repFiles
      */
     public static void deleteRepOutputFolders(List<IFile> repFiles) {
@@ -524,7 +524,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "getOriginalOutoutFolderPath".
-     * 
+     *
      * @param srcFolder
      * @param file
      * @param tempFolderName
@@ -541,7 +541,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "getSourceFolder".
-     * 
+     *
      * @param file
      * @param srcFolder
      * @param tarFolder
@@ -560,7 +560,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "moveHiddenFolders".
-     * 
+     *
      * @param srcFolder
      * @param tarFolder
      */
@@ -587,7 +587,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "getTargetFile".
-     * 
+     *
      * @param file
      * @param srcFolder
      * @param tarFolder
@@ -606,7 +606,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "buildRepListParams".
-     * 
+     *
      * @param name
      * @param path
      * @param createTime
@@ -622,7 +622,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "getReportListParameters".
-     * 
+     *
      * @param reportListFile
      * @return
      * @throws IOException
@@ -654,7 +654,7 @@ public final class ReportFileHelper {
 
     /**
      * remove the extension of full name to get the simple name of a report file.
-     * 
+     *
      * @param reportFileName
      * @return
      */
@@ -671,7 +671,7 @@ public final class ReportFileHelper {
 
     /**
      * return the .report.list file of the report.
-     * 
+     *
      * @param reportFile
      * @return
      */
@@ -684,7 +684,7 @@ public final class ReportFileHelper {
 
     /**
      * return the latest report.
-     * 
+     *
      * @param reportFile
      * @return ReportListParameters
      */
@@ -704,7 +704,7 @@ public final class ReportFileHelper {
 
     /**
      * get the .report.list file for the report, if it doesn't exist, create it.
-     * 
+     *
      * @param reportFile the IFile of report
      * @return
      */
@@ -722,7 +722,7 @@ public final class ReportFileHelper {
 
     /**
      * create the hidden Generated Doc Folder, create the .report.list file.
-     * 
+     *
      * @param reportFile the report IFile
      * @return
      * @throws PersistenceException
@@ -765,7 +765,7 @@ public final class ReportFileHelper {
 
     /**
      * get the generated doc file list.
-     * 
+     *
      * @param reportFile the report IFile
      * @return never null
      */
@@ -801,7 +801,7 @@ public final class ReportFileHelper {
     /**
      * delete the folder under TDQ_Data Profiling/Reports from the project and the disk, don't refresh the parent
      * folder, the caller should refresh the parent by hand to change the svn info.
-     * 
+     *
      * @param folder
      */
     private static void deleteFolder(File folder) {
@@ -841,7 +841,7 @@ public final class ReportFileHelper {
 
     /**
      * DOC xqliu Comment method "moveReportGeneratedDocFolder".
-     * 
+     *
      * @param srcFolder
      * @param tarFolder
      * @throws PersistenceException

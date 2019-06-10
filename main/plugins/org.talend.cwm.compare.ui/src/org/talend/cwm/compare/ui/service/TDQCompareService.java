@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,15 +28,15 @@ public class TDQCompareService implements ITDQCompareService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQCompareService#reloadDatabase(org.talend.core.model.properties.ConnectionItem)
      */
     /**
-     * 
+     *
      * Comment method "reloadDatabase".
-     * 
+     *
      * @param connectionItem
-     * 
+     *
      */
     public ReturnCode reloadDatabase(ConnectionItem connectionItem) {
         ReturnCode retCode = new ReturnCode(Boolean.TRUE);

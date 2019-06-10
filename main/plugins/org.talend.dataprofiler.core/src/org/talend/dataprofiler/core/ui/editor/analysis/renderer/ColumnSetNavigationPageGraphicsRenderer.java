@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -69,13 +69,13 @@ public class ColumnSetNavigationPageGraphicsRenderer extends AbstractPageControl
 
     /**
      * Create the UI like this :
-     * 
+     *
      * <p>
-     * 
+     *
      * <pre>
      * Results 1-5 of 10          Previous 1 2 ...10 Next
      * </pre>
-     * 
+     *
      * </p>
      */
     @Override
@@ -93,7 +93,7 @@ public class ColumnSetNavigationPageGraphicsRenderer extends AbstractPageControl
 
     /**
      * Create result label "Results 1-5 of 10"
-     * 
+     *
      * @param parent
      */
     private void createEmptyLeftContainer(Composite parent) {
@@ -105,7 +105,7 @@ public class ColumnSetNavigationPageGraphicsRenderer extends AbstractPageControl
 
     /**
      * Create result label "Results 1-5 of 10"
-     * 
+     *
      * @param parent
      */
     private void createLeftContainer(Composite parent) {
@@ -123,7 +123,7 @@ public class ColumnSetNavigationPageGraphicsRenderer extends AbstractPageControl
 
     /**
      * Create page links "Previous 1 2 ...10 Next" with {@link GC}.
-     * 
+     *
      * @param parent
      */
     private void createRightContainer(Composite parent) {
@@ -222,7 +222,7 @@ public class ColumnSetNavigationPageGraphicsRenderer extends AbstractPageControl
 
     /**
      * Returns the {@link GC} navigation page.
-     * 
+     *
      * @return
      */
     public NavigationPageGraphics getNavigationPage() {
@@ -231,7 +231,7 @@ public class ColumnSetNavigationPageGraphicsRenderer extends AbstractPageControl
 
     /**
      * Configure navigation page.
-     * 
+     *
      * @param configurator
      */
     public void setConfigurator(INavigationPageGraphicsConfigurator configurator) {
@@ -240,7 +240,7 @@ public class ColumnSetNavigationPageGraphicsRenderer extends AbstractPageControl
 
     /**
      * Getter for keepLeft.
-     * 
+     *
      * @return the keepLeft
      */
     public boolean isKeepLeft() {
@@ -249,7 +249,7 @@ public class ColumnSetNavigationPageGraphicsRenderer extends AbstractPageControl
 
     /**
      * Sets the keepLeft.
-     * 
+     *
      * @param keepLeft the keepLeft to set
      */
     public void setKeepLeft(boolean keepLeft) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,9 +40,9 @@ import com.talend.csv.CSVWriter.QuoteStatus;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z bzhou $
- * 
+ *
  */
 public final class FileUtils {
 
@@ -66,9 +66,9 @@ public final class FileUtils {
 
     /**
      * DOC bZhou Comment method "getName".
-     * 
+     *
      * This method get the name of a file, without the file extension.
-     * 
+     *
      * @param file
      * @return
      */
@@ -79,9 +79,9 @@ public final class FileUtils {
 
     /**
      * DOC bZhou Comment method "getExtension".
-     * 
+     *
      * This method get the extension of a file.
-     * 
+     *
      * @param file
      * @return
      */
@@ -92,7 +92,7 @@ public final class FileUtils {
 
     /**
      * DOC bZhou Comment method "getFilesByExtension".
-     * 
+     *
      * @param parentFolder
      * @param extensions
      * @return
@@ -120,7 +120,7 @@ public final class FileUtils {
 
     /**
      * DOC sgandon Comment method "getAllFilesFromFolder".
-     * 
+     *
      * @param sampleFolder
      * @param arrayList
      * @param filenameFilter
@@ -141,7 +141,7 @@ public final class FileUtils {
 
     /**
      * create a CSVWriter with necessory setting.
-     * 
+     *
      * @param reportListFile
      * @return
      * @throws FileNotFoundException
@@ -158,9 +158,9 @@ public final class FileUtils {
     }
 
     /**
-     * 
+     *
      * Create CsvReader by special file and delimitedFileconnection
-     * 
+     *
      * @param file the file which CsvReader need to read
      * @param delimitedFileconnection the instance of file connection
      * @return instance of CSVReader
@@ -177,9 +177,9 @@ public final class FileUtils {
     }
 
     /**
-     * 
+     *
      * Create CsvReader by special delimitedFileconnection
-     * 
+     *
      * @param delimitedFileconnection the instance of file connection
      * @return instance of CSVReader
      * @throws UnsupportedEncodingException
@@ -204,7 +204,7 @@ public final class FileUtils {
 
     /**
      * create a default CSVReader, the separator is \t
-     * 
+     *
      * @param file
      * @return
      * @throws UnsupportedEncodingException
@@ -219,9 +219,9 @@ public final class FileUtils {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "initializeCsvReader".
-     * 
+     *
      * @param csvReader
      * @param connection
      */

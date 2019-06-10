@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,7 +39,7 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
 
     /**
      * DOC talend AnalysisFolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -52,7 +52,7 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
@@ -62,7 +62,7 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
      */
     @Override
@@ -116,7 +116,7 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
 
     /**
      * get all children under the folder.
-     * 
+     *
      * @param withDelete include deleted ones
      * @return
      */
@@ -158,7 +158,7 @@ public class AnalysisFolderRepNode extends DQFolderRepNode {
 
     /**
      * get all children under the folder.
-     * 
+     *
      * @param withDelete include deleted ones
      * @return
      */

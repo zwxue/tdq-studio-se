@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ public class IndicatorEvaluatorWithSampleData extends IndicatorEvaluator {
 
     /**
      * DOC zshen IndicatorEvaluatorWithSampleData constructor comment.
-     * 
+     *
      * @param analysis
      */
     public IndicatorEvaluatorWithSampleData(Analysis analysis) {
@@ -39,7 +39,7 @@ public class IndicatorEvaluatorWithSampleData extends IndicatorEvaluator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#createStatement()
      */
     @Override
@@ -49,7 +49,7 @@ public class IndicatorEvaluatorWithSampleData extends IndicatorEvaluator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#selectCatalog(java.lang.String)
      */
     @Override
@@ -60,7 +60,7 @@ public class IndicatorEvaluatorWithSampleData extends IndicatorEvaluator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#checkConnection()
      */
     @Override
@@ -71,7 +71,7 @@ public class IndicatorEvaluatorWithSampleData extends IndicatorEvaluator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.IndicatorEvaluator#sortColumnName(java.util.Set, java.lang.String)
      */
     @Override

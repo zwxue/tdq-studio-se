@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /**
      * DOC bZhou FolderSelectionDialog constructor comment.
-     * 
+     *
      * @param parent
      * @param labelProvider
      * @param contentProvider
@@ -42,7 +42,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /**
      * DOC bZhou FolderSelectionDialog constructor comment.
-     * 
+     *
      * @param parent
      */
     public FolderSelectionDialog(Shell parent) {
@@ -51,7 +51,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     protected Control createDialogArea(Composite parent) {
@@ -65,7 +65,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent
      * )

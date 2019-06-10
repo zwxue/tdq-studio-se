@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ public final class TableUtils {
 
     /**
      * add "Right-click for actions" Tooltip.
-     * 
+     *
      * @param table
      */
     public static void addActionTooltip(final Table table) {
@@ -158,7 +158,7 @@ public final class TableUtils {
 
     /**
      * add threshold Tooltip etc for table.
-     * 
+     *
      * @param table
      */
     public static void addTooltipForTable(final Table table) {
@@ -263,7 +263,7 @@ public final class TableUtils {
 
     /**
      * find the table folder node under selectedHive node. currently, only under default db. Added TDQ-10328
-     * 
+     *
      * @param hiveConnectionItem2
      * @return
      */
@@ -287,7 +287,7 @@ public final class TableUtils {
 
     /**
      * find the pointed table node under the selected Hive connection. currently, only for default.Added TDQ-10328
-     * 
+     *
      * @param hiveNode
      * @param tableName
      * @return

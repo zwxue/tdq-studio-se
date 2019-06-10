@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -82,7 +82,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
- * 
+ *
  * DOC mzhao Handle resource unload events from TOS.
  */
 public class TDQResourceChangeHandler extends AbstractResourceChangesService {
@@ -283,7 +283,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     /**
      * replace the oldVersion with newVersion in the file.
-     * 
+     *
      * @param name
      * @param clientFile
      * @param oldVersion
@@ -305,7 +305,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     /**
      * DOC xqliu Comment method "reloadFile".
-     * 
+     *
      * @param file
      */
     private void reloadFile(File file) {
@@ -316,7 +316,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.core.repository.utils.AbstractResourceChangesService#saveResourceByEMFShared(org.talend.core.model
      * .properties.Item)
@@ -390,9 +390,9 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
     }
 
     /**
-     * 
+     *
      * get all nodes that can be depended in recycle bin.
-     * 
+     *
      * @param parent
      * @return List: AllNodesCanBeDepended
      */

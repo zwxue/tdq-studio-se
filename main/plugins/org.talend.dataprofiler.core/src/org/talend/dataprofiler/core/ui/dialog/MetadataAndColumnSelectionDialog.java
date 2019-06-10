@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class MetadataAndColumnSelectionDialog extends ColumnsSelectWithConstrain
     /**
      * MetadataAndColumnSelectionDialog constructor: the last parameter:false means no need to:addConnFilterListener, in
      * the super class.
-     * 
+     *
      * @param parent
      */
     public MetadataAndColumnSelectionDialog(Shell parent, String title, List<IRepositoryNode> checkedRepoNodes, String message) {
@@ -77,7 +77,7 @@ public class MetadataAndColumnSelectionDialog extends ColumnsSelectWithConstrain
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#updateOKStatus()
      */
     @Override

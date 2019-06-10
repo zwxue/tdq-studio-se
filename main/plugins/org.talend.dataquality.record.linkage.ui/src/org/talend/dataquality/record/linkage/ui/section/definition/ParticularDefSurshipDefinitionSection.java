@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -52,7 +52,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /**
      * ParticularDefaultSurvivorshipSection constructor method.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -103,7 +103,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /**
      * Get table composite which contain table viewer
-     * 
+     *
      * @param ruleComp
      * @return
      */
@@ -163,7 +163,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /**
      * Getter for particular defaultSurvivorshipKeys.
-     * 
+     *
      * @return the particular defaultSurvivorshipKeys
      */
     public List<ParticularDefaultSurvivorshipDefinitions> getParticularDefaultSurvivorshipKeys() {
@@ -175,7 +175,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -204,7 +204,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -231,7 +231,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /**
      * import the DefaultSurvivorshipFunctions, if overwrite, clear the DefaultSurvivorshipFunctions before import.
-     * 
+     *
      * @param matchRuleDef
      * @param overwrite
      */
@@ -264,7 +264,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /**
      * Check validity of function
-     * 
+     *
      * @param functionType the type of function
      * @param matchedColumnName the name of column
      * @param dataType the data type of column
@@ -282,7 +282,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#setColumnValueIfMatch(org.talend.dataquality
      * .rules.KeyDefinition)
@@ -306,7 +306,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#getMappingName(org.talend.dataquality
      * .rules.KeyDefinition)
@@ -318,7 +318,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#checkResultStatus()
      */
     @Override
@@ -340,7 +340,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
             if (checkColumnNameIsEmpty(pdsd)) {
                 returnCode.setOk(false);
-                returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.emptyColumn.message", getSectionName())); //$NON-NLS-1$ 
+                returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.emptyColumn.message", getSectionName())); //$NON-NLS-1$
                 return returnCode;
             }
         }
@@ -349,7 +349,7 @@ public class ParticularDefSurshipDefinitionSection extends AbstractMatchAnaysisT
 
     /**
      * DOC zshen Comment method "checkColumnName".
-     * 
+     *
      * @param bdk
      */
     protected boolean checkColumnNameIsEmpty(BlockKeyDefinition bdk) {

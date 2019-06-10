@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -54,7 +54,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dq.analysis.ColumnAnalysisSqlExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
@@ -72,7 +72,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "instantiateQuery".
-     * 
+     *
      * @param indicator
      */
     private void instantiateQuery(Indicator indicator) {
@@ -179,7 +179,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "initializeNumericFunctions".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -196,7 +196,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "initializeNumericFunctions".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -213,7 +213,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "getTableName".
-     * 
+     *
      * @param analyzedColumns
      * @return the quoted table name
      */
@@ -226,7 +226,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      */
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#runAnalysis(org.talend.dataquality.analysis.Analysis,
      * java.lang.String)
      */
@@ -289,7 +289,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "createGroupBy".
-     * 
+     *
      * @param nominalColumns
      * @return
      */
@@ -309,7 +309,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "createSelect".
-     * 
+     *
      * @param nominalColumns
      * @param computedColumns
      * @return
@@ -335,7 +335,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "executeQuery".
-     * 
+     *
      * @param indicator
      * @param connection
      * @param query
@@ -356,7 +356,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dq.analysis.ColumnAnalysisExecutor#checkAnalyzedElements(org.talend.dataquality.analysis.Analysis,
      * org.talend.dataquality.analysis.AnalysisContext)
@@ -368,7 +368,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.ColumnAnalysisExecutor#check(org.talend.dataquality.analysis.Analysis)
      */
     @Override
@@ -382,7 +382,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             for (Indicator indicator : indicators) {
                 if (indicator instanceof AllMatchIndicator) {
                     // MOD qiongli 2011-6-16 bug 21768,column set dosen't support pattern in sql engine.
-                    setError(Messages.getString("MultiColumnAnalysisExecutor.noSupportSqlEngine")); //$NON-NLS-1$ 
+                    setError(Messages.getString("MultiColumnAnalysisExecutor.noSupportSqlEngine")); //$NON-NLS-1$
                     return false;
                 }
             }

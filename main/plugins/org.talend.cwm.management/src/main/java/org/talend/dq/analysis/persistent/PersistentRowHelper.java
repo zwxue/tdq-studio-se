@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,7 +20,7 @@ import java.io.ObjectOutputStream;
 
 /**
  * created by zhao on Oct 16, 2013 Detailled comment
- * 
+ *
  */
 public class PersistentRowHelper {
 
@@ -49,7 +49,7 @@ public class PersistentRowHelper {
 
     /**
      * DOC zhao Comment method "writeString".
-     * 
+     *
      * @param line
      * @param dos
      * @throws IOException
@@ -76,7 +76,7 @@ public class PersistentRowHelper {
 
     /**
      * DOC zhao Comment method "readString".
-     * 
+     *
      * @param dis
      * @throws IOException
      */

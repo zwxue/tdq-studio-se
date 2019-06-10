@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,10 +26,10 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dq.helper.SqlExplorerUtils;
 
 /**
- * 
+ *
  * zshen help to get driver for top.
- * 
- * 
+ *
+ *
  */
 public class TOPDriverService implements IDriverService {
 
@@ -38,7 +38,7 @@ public class TOPDriverService implements IDriverService {
 
     /**
      * zshen get driver by metadataConnection information.
-     * 
+     *
      * @param metadataConnection contain the information which about driver.
      * @return if can't find the driver will get a null.
      */

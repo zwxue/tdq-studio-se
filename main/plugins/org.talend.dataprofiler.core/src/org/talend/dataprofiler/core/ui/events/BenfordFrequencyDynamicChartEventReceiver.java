@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,7 +21,7 @@ import org.talend.dq.indicators.ext.FrequencyExt;
 
 /**
  * created by yyin on 2014-7-11 Detailled comment
- * 
+ *
  */
 public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicChartEventReceiver {
 
@@ -58,7 +58,7 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
 
     /**
      * Getter for secondDataset.
-     * 
+     *
      * @return the secondDataset
      */
     public Object getSecondDataset() {
@@ -67,7 +67,7 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
 
     /**
      * Sets the secondDataset.
-     * 
+     *
      * @param secondDataset the secondDataset to set
      */
     public void setSecondDataset(Object secondDataset) {

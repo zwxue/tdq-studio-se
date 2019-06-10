@@ -18,21 +18,21 @@
          <attribute name="point" type="string" use="required">
             <annotation>
                <documentation>
-                  
+
                </documentation>
             </annotation>
          </attribute>
          <attribute name="id" type="string">
             <annotation>
                <documentation>
-                  
+
                </documentation>
             </annotation>
          </attribute>
          <attribute name="name" type="string">
             <annotation>
                <documentation>
-                  
+
                </documentation>
                <appInfo>
                   <meta.attribute translatable="true"/>
@@ -47,7 +47,7 @@
          <attribute name="class" type="string" use="required">
             <annotation>
                <documentation>
-                  
+
                </documentation>
                <appInfo>
                   <meta.attribute kind="java" basedOn="org.talend.core.IService"/>
@@ -57,7 +57,7 @@
          <attribute name="serviceId" type="string" use="required">
             <annotation>
                <documentation>
-                  
+
                </documentation>
             </annotation>
          </attribute>
@@ -84,22 +84,22 @@
    public void method2();
    }
    and puts the ISampleService in the org.talend.amc.
-  
+
  2 Creates the concrete class implements the ISampleService,and the plug-in you want to  regisger.
- 
+
    ConcreteService implements ISampleService(){
    public void method1(){}
    public void method2(){}
    }
-   
+
    Puts the ConcreteService in the plug-in you want to  regisger.
-   
+
  3 Defines the extension point in the plugin.xml of the plug-in you want to  regisger.
     &lt;extension
          point=&quot;org.talend.dataprofiler.core.service&quot;&gt;
       &lt;Service class=&quot;ConcreteService&quot;
                 serviceId=&quot;org.talend.amc.ui.branding.IBrandingService&quot;/&gt;
-    &lt;/extension&gt;   
+    &lt;/extension&gt;
 ]
       </documentation>
    </annotation>
@@ -129,7 +129,7 @@
       <documentation>
          Talend Community Edition
 
-Copyright (C) 2006-2016 Talend - www.talend.com
+Copyright (C) 2006-2019 Talend - www.talend.com
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

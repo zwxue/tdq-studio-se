@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -51,7 +51,7 @@ public class DQMatchEngineFactory implements IMatchEngine.Factory {
      * Constructor that instantiate a {@link DefaultMatchEngine} that will use identifiers as specified by the given
      * {@code useIDs} enumeration. This match engine will use a the standalone weight provider registry {@link
      * WeightProviderDescriptorRegistryImpl.createStandaloneInstance()}.
-     * 
+     *
      * @param useIDs the kinds of matcher to use.
      */
     public DQMatchEngineFactory(UseIdentifiers useIDs) {
@@ -61,7 +61,7 @@ public class DQMatchEngineFactory implements IMatchEngine.Factory {
     /**
      * Constructor that instantiate a {@link DefaultMatchEngine} that will use identifiers as specified by the given
      * {@code useIDs} enumeration.
-     * 
+     *
      * @param useIDs the kinds of matcher to use.
      * @param registry A match engine needs a WeightProvider in case of this match engine do not use identifiers.
      */
@@ -74,7 +74,7 @@ public class DQMatchEngineFactory implements IMatchEngine.Factory {
 
     /**
      * Constructor that instantiate a {@link DefaultMatchEngine} with the given parameters.
-     * 
+     *
      * @param matcher The matcher that will be in charge of pairing EObjects together for this comparison process.
      * @param comparisonFactory factory that will be use to instantiate Comparison as return by match() methods.
      */
@@ -84,7 +84,7 @@ public class DQMatchEngineFactory implements IMatchEngine.Factory {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see org.eclipse.emf.compare.match.IMatchEngine.Factory#getMatchEngine()
      */
     @Override
@@ -94,7 +94,7 @@ public class DQMatchEngineFactory implements IMatchEngine.Factory {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see org.eclipse.emf.compare.match.IMatchEngine.Factory#getRanking()
      */
     @Override
@@ -104,7 +104,7 @@ public class DQMatchEngineFactory implements IMatchEngine.Factory {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see org.eclipse.emf.compare.match.IMatchEngine.Factory#setRanking(int)
      */
     @Override
@@ -114,7 +114,7 @@ public class DQMatchEngineFactory implements IMatchEngine.Factory {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see org.eclipse.emf.compare.match.IMatchEngine.Factory#isMatchEngineFactoryFor(org.eclipse.emf.compare.scope.IComparisonScope)
      */
     @Override
@@ -124,7 +124,7 @@ public class DQMatchEngineFactory implements IMatchEngine.Factory {
 
     /**
      * The match engine needs a WeightProvider in case of this match engine do not use identifiers.
-     * 
+     *
      * @param registry the registry to associate with the match engine.
      */
     void setWeightProviderRegistry(WeightProvider.Descriptor.Registry registry) {

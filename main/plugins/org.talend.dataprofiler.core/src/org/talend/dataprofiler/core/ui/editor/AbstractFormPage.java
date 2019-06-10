@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -57,7 +57,7 @@ public abstract class AbstractFormPage extends FormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.forms.editor.FormPage#initialize(org.eclipse.ui.forms.editor.FormEditor)
      */
     @Override
@@ -69,7 +69,7 @@ public abstract class AbstractFormPage extends FormPage {
 
     /**
      * DOC bZhou Comment method "createSection".
-     * 
+     *
      * @param form
      * @param parent
      * @param title
@@ -81,7 +81,7 @@ public abstract class AbstractFormPage extends FormPage {
 
     /**
      * DOC bZhou Comment method "createSection".
-     * 
+     *
      * @param form
      * @param parent
      * @param title
@@ -122,7 +122,7 @@ public abstract class AbstractFormPage extends FormPage {
 
     /**
      * get the section's Expanded Status.
-     * 
+     *
      * @param sectionTitle
      * @return
      */
@@ -167,7 +167,7 @@ public abstract class AbstractFormPage extends FormPage {
 
     /**
      * DOC bZhou Comment method "registerSection".
-     * 
+     *
      * @param composite
      */
     public void registerSection(ExpandableComposite composite) {
@@ -177,7 +177,7 @@ public abstract class AbstractFormPage extends FormPage {
 
     /**
      * Getter for expandCompositeList.
-     * 
+     *
      * @return the expandCompositeList
      */
     public List<ExpandableComposite> getExpandCompositeList() {
@@ -206,7 +206,7 @@ public abstract class AbstractFormPage extends FormPage {
 
     /**
      * DOC bZhou Comment method "setDirty".
-     * 
+     *
      * @param isDirty
      */
     public abstract void setDirty(boolean isDirty);

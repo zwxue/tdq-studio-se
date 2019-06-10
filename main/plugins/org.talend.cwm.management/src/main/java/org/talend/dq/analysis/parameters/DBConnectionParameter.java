@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,9 +16,9 @@ import java.util.Properties;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ *
  */
 public class DBConnectionParameter extends ConnectionParameter {
 
@@ -82,7 +82,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Getter for retrieveAllMetadata.
-     * 
+     *
      * @return the retrieveAllMetadata
      */
     public boolean isRetrieveAllMetadata() {
@@ -91,7 +91,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Sets the retrieveAllMetadata.
-     * 
+     *
      * @param retrieveAllMetadata the retrieveAllMetadata to set
      */
     public void setRetrieveAllMetadata(boolean retrieveAllMetadata) {
@@ -131,7 +131,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Getter for jdbcUrl.
-     * 
+     *
      * @return the jdbcUrl
      */
     public String getJdbcUrl() {
@@ -140,7 +140,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Sets the jdbcUrl.
-     * 
+     *
      * @param jdbcUrl the jdbcUrl to set
      */
     public void setJdbcUrl(String jdbcUrl) {
@@ -149,7 +149,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Getter for driverClassName.
-     * 
+     *
      * @return the driverClassName
      */
     public String getDriverClassName() {
@@ -158,7 +158,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Sets the driverClassName.
-     * 
+     *
      * @param driverClassName the driverClassName to set
      */
     public void setDriverClassName(String driverClassName) {
@@ -167,7 +167,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Getter for parameters.
-     * 
+     *
      * @return the parameters
      */
     public Properties getParameters() {
@@ -176,7 +176,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Sets the parameters.
-     * 
+     *
      * @param parameters the parameters to set
      */
     public void setParameters(Properties parameters) {
@@ -185,7 +185,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Getter for host.
-     * 
+     *
      * @return the host
      */
     public String getHost() {
@@ -194,7 +194,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Sets the host.
-     * 
+     *
      * @param host the host to set
      */
     public void setHost(String host) {
@@ -203,7 +203,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Getter for port.
-     * 
+     *
      * @return the port
      */
     public String getPort() {
@@ -212,7 +212,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Sets the port.
-     * 
+     *
      * @param port the port to set
      */
     public void setPort(String port) {
@@ -221,7 +221,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Getter for dbName.
-     * 
+     *
      * @return the dbName
      */
     public String getDbName() {
@@ -230,7 +230,7 @@ public class DBConnectionParameter extends ConnectionParameter {
 
     /**
      * Sets the dbName.
-     * 
+     *
      * @param dbName the dbName to set
      */
     public void setDbName(String dbName) {
@@ -238,9 +238,9 @@ public class DBConnectionParameter extends ConnectionParameter {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "getaDDParameter".
-     * 
+     *
      * @return
      */
     public String getADDParameter() {
@@ -248,9 +248,9 @@ public class DBConnectionParameter extends ConnectionParameter {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "setADDParameter".
-     * 
+     *
      * @param aDDParameter
      */
     public void setADDParameter(String aDDParameter) {

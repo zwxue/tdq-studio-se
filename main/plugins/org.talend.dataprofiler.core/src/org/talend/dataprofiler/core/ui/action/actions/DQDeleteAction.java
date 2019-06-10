@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -117,7 +117,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * Getter for showFilteredOutWarning.
-     * 
+     *
      * @return the showFilteredOutWarning
      */
     public boolean isShowFilteredOutWarning() {
@@ -126,7 +126,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * Sets the showFilteredOutWarning.
-     * 
+     *
      * @param showFilteredOutWarning the showFilteredOutWarning to set
      */
     public void setShowFilteredOutWarning(boolean showFilteredOutWarning) {
@@ -198,7 +198,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.repository.ui.actions.DeleteAction#doRun()
      */
     @Override
@@ -286,7 +286,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * get the nodes with filtered children from the RecycleBinNode.
-     * 
+     *
      * @param nodes
      * @return
      */
@@ -356,7 +356,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * Judge if the node is an analysis or NOT
-     * 
+     *
      * @param node
      * @return true when the node is an analysis
      */
@@ -369,7 +369,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * Judge if the node is a report or NOT
-     * 
+     *
      * @param node
      * @return true when the node is a report
      */
@@ -382,7 +382,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * judge if the deleted hive connection is created from a Hadoop Cluster
-     * 
+     *
      * @param node
      * @return true- if is a hive and created from a Hadoop cluster
      */
@@ -484,10 +484,10 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * Judge if the node has dependencies. and if the node has depends, add the depends with this node into map
-     * 
+     *
      * Because find the depends should only be executed once in this delete action, so if the node has some depends,
      * will store it in a map here.
-     * 
+     *
      * @param subNode
      * @return
      */
@@ -525,7 +525,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * logical delete the selected nodes
-     * 
+     *
      */
     private void logicDelete() {
         for (int i = selectedNodes.size() - 1; i >= 0; i--) {
@@ -554,7 +554,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * DOC yyin Comment method "isJrxml".
-     * 
+     *
      * @param node
      * @return
      */
@@ -567,7 +567,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * DOC gdbu Comment method "setNextFilteredNode".
-     * 
+     *
      * @param node
      */
     private void setPreviousFilteredNode(IRepositoryNode node) {
@@ -590,7 +590,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * DOC qiongli Comment method "physicalDeleteDependencies".
-     * 
+     *
      * @param dependences
      * @return
      */
@@ -646,7 +646,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * logical delete the element,return boolean to indcate if delete successfully.
-     * 
+     *
      * @param tempNode
      * @return
      */
@@ -690,7 +690,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * DOC qiongli :excute super method run().
-     * 
+     *
      * @param currentNode:null for logical delete a selected element by UI.none-null for physical delete or logical
      * delete dependecy.
      */
@@ -745,7 +745,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * refresh Parent Node.
-     * 
+     *
      * @param parent
      */
     private void refreshParentNode(IRepositoryNode parent) {
@@ -760,7 +760,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * physical delete generating report file.
-     * 
+     *
      * @param repFileNode
      * @throws PersistenceException
      */
@@ -843,7 +843,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /**
      * DOC xqliu Comment method "checkSourceFilesEditorOpening".
-     * 
+     *
      * @param deleteElements
      * @return
      */
@@ -881,7 +881,7 @@ public class DQDeleteAction extends DeleteAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.ui.actions.DeleteAction#synchUI(org.talend.repository.ui.actions.DeleteActionCache)
      */
     @Override

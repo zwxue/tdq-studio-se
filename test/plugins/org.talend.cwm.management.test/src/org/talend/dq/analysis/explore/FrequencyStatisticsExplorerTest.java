@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -56,7 +56,7 @@ public class FrequencyStatisticsExplorerTest {
 
     /**
      * DOC msjian Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -71,7 +71,7 @@ public class FrequencyStatisticsExplorerTest {
 
     /**
      * DOC msjian Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After
@@ -103,7 +103,7 @@ public class FrequencyStatisticsExplorerTest {
 
     /**
      * DOC yyin Comment method "creatFrenquceIndicator".
-     * 
+     *
      * @return
      */
     private LowFrequencyIndicator creatFrenquceIndicator(String columnName, String tdSqlName, int javaType) {

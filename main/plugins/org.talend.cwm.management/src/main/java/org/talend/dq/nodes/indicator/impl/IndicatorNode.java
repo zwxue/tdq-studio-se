@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * @author rli
- * 
+ *
  */
 public class IndicatorNode extends AbstractNode {
 
@@ -44,7 +44,7 @@ public class IndicatorNode extends AbstractNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.indicator.AbstractIndicatorNode#hasChildren()
      */
     @Override
@@ -54,7 +54,7 @@ public class IndicatorNode extends AbstractNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.indicator.AbstracNode#getLabel()
      */
     @Override
@@ -72,7 +72,7 @@ public class IndicatorNode extends AbstractNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.indicator.IIndicatorNode#getImage()
      */
     public String getImageName() {

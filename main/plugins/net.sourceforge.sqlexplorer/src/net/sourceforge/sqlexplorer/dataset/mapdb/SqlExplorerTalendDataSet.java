@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,7 +16,7 @@ import net.sourceforge.sqlexplorer.dataset.DataSet;
 
 /**
  * this is only used by sqlexplorer.
- * 
+ *
  */
 public class SqlExplorerTalendDataSet extends DataSet {
 
@@ -30,7 +30,7 @@ public class SqlExplorerTalendDataSet extends DataSet {
 
     /**
      * ParentTalendDataSet constructor.
-     * 
+     *
      * @param columnLabels
      * @param data
      * @param pageSize
@@ -43,7 +43,7 @@ public class SqlExplorerTalendDataSet extends DataSet {
 
     /**
      * get Current Page DataSet.
-     * 
+     *
      * @return
      */
     public DataSet getCurrentPageDataSet() {
@@ -52,7 +52,7 @@ public class SqlExplorerTalendDataSet extends DataSet {
 
     /**
      * Sets the startIndex.
-     * 
+     *
      * @param startIndex the startIndex to set
      */
     public void setStartIndex(long startIndex) {
@@ -61,7 +61,7 @@ public class SqlExplorerTalendDataSet extends DataSet {
 
     /**
      * Sets the endIndex.
-     * 
+     *
      * @param endIndex the endIndex to set
      */
     public void setEndIndex(long endIndex) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class EdgeDisplayPredicate implements Predicate {
 
     /**
      * DOC bZhou Comment method "filterSmall".
-     * 
+     *
      * @param degree
      */
     public void filterSmall(int degree) {
@@ -51,7 +51,7 @@ public class EdgeDisplayPredicate implements Predicate {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.apache.commons.collections.Predicate#evaluate(java.lang.Object)
      */
     public boolean evaluate(Object object) {

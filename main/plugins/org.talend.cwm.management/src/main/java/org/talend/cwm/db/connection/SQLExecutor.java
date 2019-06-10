@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,7 +26,7 @@ import org.talend.dq.helper.StoreOnDiskUtils;
 
 /**
  * created by zhao on Oct 20, 2013 Detailled comment
- * 
+ *
  */
 public abstract class SQLExecutor implements ISQLExecutor {
 
@@ -56,7 +56,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.ISQLExecutor#getLimit()
      */
     public int getLimit() {
@@ -65,7 +65,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.ISQLExecutor#setLimit(int)
      */
     public void setLimit(int limit) {
@@ -74,7 +74,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.ISQLExecutor#isShowRandomData()
      */
     public Boolean isShowRandomData() {
@@ -83,7 +83,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.ISQLExecutor#setShowRandomData(java.lang.Boolean)
      */
     public void setShowRandomData(Boolean isShowRandomData) {
@@ -92,7 +92,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.ISQLExecutor#initStoreOnDiskHandler(org.talend.dataquality.analysis.Analysis,
      * org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.Map)
      */
@@ -138,7 +138,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     /**
      * Sets the storeOnDisk.
-     * 
+     *
      * @param storeOnDisk the storeOnDisk to set
      */
     public void setStoreOnDisk(Boolean storeOnDisk) {
@@ -147,7 +147,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.db.connection.ISQLExecutor#isStoreOnDisk()
      */
     public Boolean isStoreOnDisk() {
@@ -156,7 +156,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
 
     /**
      * Getter for storeOnDiskHandler.
-     * 
+     *
      * @return the storeOnDiskHandler
      */
     public Object getStoreOnDiskHandler() {

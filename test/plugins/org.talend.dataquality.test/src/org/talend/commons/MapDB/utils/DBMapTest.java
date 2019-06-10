@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.talend.dataquality.indicators.validation.IDataValidationFactory;
 
 /**
  * created by talend on Jul 15, 2014 Detailled comment
- * 
+ *
  */
 public class DBMapTest {
 
@@ -300,7 +300,7 @@ public class DBMapTest {
 
     /**
      * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#subList(long, long, Map)}. case 1 normal
-     * 
+     *
      */
     @Test
     public void testSubListLongLongMapCase1() {
@@ -316,7 +316,7 @@ public class DBMapTest {
     /**
      * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#subList(long, long, Map)}. case 2 indexMap
      * is null
-     * 
+     *
      */
     @Test
     public void testSubListLongLongMapCase2() {
@@ -332,7 +332,7 @@ public class DBMapTest {
     /**
      * Test method for {@link org.talend.dataquality.indicators.mapdb.DBMap#subList(long, long, Map)}. Case 3 fromIndex
      * more than toIndex
-     * 
+     *
      */
     @Test
     public void testSubListLongLongMapCase3() {
@@ -349,7 +349,7 @@ public class DBMapTest {
      * Test method for
      * {@link org.talend.dataquality.indicators.mapdb.DBMap#subList(long, long, Map, org.talend.cwm.indicator.DataValidation)}
      * Case 1 fromIndex more than toIndex
-     * 
+     *
      */
     @Test
     public void testSubListLongLongMapDataValidationCase() {

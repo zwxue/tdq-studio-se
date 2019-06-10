@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,7 +36,7 @@ public enum EEcosCategory {
 
     /**
      * Getter for name.
-     * 
+     *
      * @return the name
      */
     public String getName() {
@@ -45,7 +45,7 @@ public enum EEcosCategory {
 
     /**
      * Getter for resource.
-     * 
+     *
      * @return the resource
      */
     public EResourceConstant getResource() {
@@ -54,7 +54,7 @@ public enum EEcosCategory {
 
     /**
      * DOC bZhou Comment method "getEcosCategory".
-     * 
+     *
      * @param categoryName
      * @return
      */

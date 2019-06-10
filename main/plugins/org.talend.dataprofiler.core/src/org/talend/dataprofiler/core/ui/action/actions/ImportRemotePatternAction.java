@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -80,7 +80,7 @@ public class ImportRemotePatternAction extends Action {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -164,7 +164,7 @@ public class ImportRemotePatternAction extends Action {
 
     /**
      * Notify after download complete.
-     * 
+     *
      * @param extension
      */
     void extensionDownloadCompleted(IEcosComponent extension) {
@@ -270,7 +270,7 @@ public class ImportRemotePatternAction extends Action {
 
         /**
          * DOC xqliu Comment method "isSameSize".
-         * 
+         *
          * @param localFile local file
          * @param urlFile url file
          * @throws IOException
@@ -288,7 +288,7 @@ public class ImportRemotePatternAction extends Action {
 
         /**
          * get the revision of the IEcosComponent, if there exist more than one, show a dialog for user to select.
-         * 
+         *
          * @param extension
          * @return
          * @throws InterruptedException
@@ -310,7 +310,7 @@ public class ImportRemotePatternAction extends Action {
 
         /**
          * Check if the component folder really exist, as the user may delete the folder from filesystem.
-         * 
+         *
          * @param installedLocation
          * @return
          */
@@ -408,7 +408,7 @@ public class ImportRemotePatternAction extends Action {
 
         /**
          * DOC xqliu SelectRevisionDialog constructor comment.
-         * 
+         *
          * @param parentShell
          * @param revisions
          */

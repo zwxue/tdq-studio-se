@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,9 +23,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
- * 
+ *
  */
 public final class DQDeleteHelper {
 
@@ -33,9 +33,9 @@ public final class DQDeleteHelper {
     }
 
     /**
-     * 
+     *
      * if these items in recycle bin are depended by others which is not in recycle bin,show a warning and return.
-     * 
+     *
      * @param allNodes
      * @param isCurrentPerspectiveDQ
      * @return these list will be used to pop a dialog and display the detail nodes which are depended by others.

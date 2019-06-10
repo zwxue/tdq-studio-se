@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ import org.talend.dataquality.indicators.validation.DataValidationImpl;
 
 /**
  * created by talend on Aug 25, 2014 Detailled comment
- * 
+ *
  */
 public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
 
@@ -41,7 +41,7 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.commons.MapDB.utils.DBMap#subList(long, long, java.util.Map)
      */
     @Override
@@ -103,7 +103,7 @@ public class ColumnSetDBMap extends DBMap<List<Object>, Long> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.commons.MapDB.utils.AbstractDB#subList(long, long, java.util.Map,
      * org.talend.commons.MapDB.utils.DataValidation)
      */

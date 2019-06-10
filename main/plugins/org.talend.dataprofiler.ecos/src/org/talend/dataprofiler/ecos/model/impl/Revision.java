@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#getComponent()
      */
     public IEcosComponent getComponent() {
@@ -47,7 +47,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#getDate()
      */
     public Date getDate() {
@@ -56,7 +56,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#getDescription()
      */
     public String getDescription() {
@@ -65,7 +65,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#getFileName()
      */
     public String getFileName() {
@@ -74,7 +74,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#getId()
      */
     public int getId() {
@@ -83,7 +83,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#getName()
      */
     public String getName() {
@@ -92,7 +92,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#getUrl()
      */
     public String getUrl() {
@@ -101,7 +101,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#setComponent(org.talend.dataprofiler.ecos.model.IEcosComponent)
      */
     public void setComponent(IEcosComponent value) {
@@ -110,7 +110,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#setDate(java.util.Date)
      */
     public void setDate(Date value) {
@@ -119,7 +119,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#setDescription(java.lang.String)
      */
     public void setDescription(String value) {
@@ -128,7 +128,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#setFileName(java.lang.String)
      */
     public void setFileName(String value) {
@@ -137,7 +137,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#setId(int)
      */
     public void setId(int value) {
@@ -146,7 +146,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#setName(java.lang.String)
      */
     public void setName(String value) {
@@ -155,7 +155,7 @@ public class Revision implements IRevision {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.ecos.model.IRevision#setUrl(java.lang.String)
      */
     public void setUrl(String value) {

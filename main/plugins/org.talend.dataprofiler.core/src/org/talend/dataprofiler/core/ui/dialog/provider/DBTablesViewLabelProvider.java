@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.talend.resource.ResourceManager;
 
 /**
  * @author rli
- * 
+ *
  */
 public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
 
@@ -40,7 +40,7 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getColumnImage(java.lang.Object, int)
      */
     @Override
@@ -50,7 +50,7 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getColumnText(java.lang.Object, int)
      */
     @Override

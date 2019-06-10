@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -496,7 +496,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
     /**
      * DOC zshen Comment method "redrawPagationComposite".
-     * 
+     *
      * @param parent
      */
     private void redrawPagationComposite(Composite parent, List<Map<Integer, RegexpMatchingIndicator>> patternList,
@@ -530,7 +530,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
     /**
      * DOC talend Comment method "createColumns".
-     * 
+     *
      * @param columnsElementViewer2
      * @param controller
      */
@@ -565,9 +565,9 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
     }
 
     /**
-     * 
+     *
      * DOC hcheng Comment method "addColumnSorters".For 8267.
-     * 
+     *
      * @param tableViewer
      * @param tableColumns
      * @param sorters
@@ -667,7 +667,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.CellLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
          */
         @Override
@@ -682,7 +682,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
@@ -691,7 +691,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -702,7 +702,7 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
      * .ui.editor.analysis.AbstractAnalysisMetadataPage)
@@ -759,9 +759,9 @@ public class ColumnSetAnalysisResultPage extends AbstractAnalysisResultPageWithC
     }
 
     /**
-     * 
+     *
      * zshen Comment method "getMatchColor".
-     * 
+     *
      * @param element
      * @param columnIndex
      * @return get the color of the element.

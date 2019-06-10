@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -17,7 +17,7 @@ import org.junit.Test;
 
 /**
  * @author scorreia
- * 
+ *
  * This class must be run as a plugin junit. In the launch configuration, remove the .nl in order to test with the
  * messages.properties file and not with a message_XX.properties file.
  */

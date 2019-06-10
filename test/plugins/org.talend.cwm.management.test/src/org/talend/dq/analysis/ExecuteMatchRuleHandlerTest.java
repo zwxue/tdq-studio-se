@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -43,7 +43,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * created by zshen on Jan 2, 2014 Detailled comment
- * 
+ *
  */
 public class ExecuteMatchRuleHandlerTest {
 
@@ -59,7 +59,7 @@ public class ExecuteMatchRuleHandlerTest {
      * Test method for
      * {@link org.talend.dq.analysis.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
      * .
-     * 
+     *
      * no block key one match key
      */
     @Test
@@ -134,7 +134,7 @@ public class ExecuteMatchRuleHandlerTest {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.talend.dataquality.record.linkage.grouping. MatchGroupResultConsumer#handle(java.lang.Object)
              */
             @Override
@@ -150,7 +150,7 @@ public class ExecuteMatchRuleHandlerTest {
      * Test method for
      * {@link org.talend.dq.analysis.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
      * .
-     * 
+     *
      * one block key one match key
      */
     @Test
@@ -238,7 +238,7 @@ public class ExecuteMatchRuleHandlerTest {
      * Test method for
      * {@link org.talend.dq.analysis.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
      * .
-     * 
+     *
      * one block key, two match rule
      */
     @Test
@@ -340,7 +340,7 @@ public class ExecuteMatchRuleHandlerTest {
      * Test method for
      * {@link org.talend.dq.analysis.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
      * .
-     * 
+     *
      * same to case 3 but the match rule order is exchange
      */
     @Test

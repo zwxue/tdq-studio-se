@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,18 +16,18 @@ import java.io.Serializable;
 
 /**
  * created by talend on Aug 5, 2014 Detailled comment
- * 
+ *
  */
 public final class TupleEmpty implements Comparable<Object>, Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -6654296341607063353L;
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override
@@ -37,7 +37,7 @@ public final class TupleEmpty implements Comparable<Object>, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -50,7 +50,7 @@ public final class TupleEmpty implements Comparable<Object>, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -60,7 +60,7 @@ public final class TupleEmpty implements Comparable<Object>, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     public int compareTo(Object o) {

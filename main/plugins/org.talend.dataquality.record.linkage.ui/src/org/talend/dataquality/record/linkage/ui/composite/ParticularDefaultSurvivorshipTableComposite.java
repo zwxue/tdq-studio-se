@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,7 +29,7 @@ public class ParticularDefaultSurvivorshipTableComposite extends
 
     /**
      * Constructor of ParticularDefaultSurvivorship Table Composite
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -47,7 +47,7 @@ public class ParticularDefaultSurvivorshipTableComposite extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override
@@ -57,7 +57,7 @@ public class ParticularDefaultSurvivorshipTableComposite extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.DefaultSurvivorshipTableComposite#setInput(org.eclipse.emf.common
      * .util
@@ -69,7 +69,7 @@ public class ParticularDefaultSurvivorshipTableComposite extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTable()
      */
     @Override
@@ -82,7 +82,7 @@ public class ParticularDefaultSurvivorshipTableComposite extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#removeKeyDefinition(java.lang.
      * Object,
@@ -96,7 +96,7 @@ public class ParticularDefaultSurvivorshipTableComposite extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#removeKeyDefinition(java.lang.
      * String,
@@ -109,7 +109,7 @@ public class ParticularDefaultSurvivorshipTableComposite extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#moveDownKeyDefinition(java.lang.
      * Object,

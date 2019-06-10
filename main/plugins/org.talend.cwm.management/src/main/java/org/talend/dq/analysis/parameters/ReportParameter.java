@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,9 +18,9 @@ import org.talend.dataquality.analysis.Analysis;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ *
  */
 public class ReportParameter extends ConnectionParameter {
 
@@ -40,7 +40,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Getter for header.
-     * 
+     *
      * @return the header
      */
     public String getHeader() {
@@ -49,7 +49,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Sets the header.
-     * 
+     *
      * @param header the header to set
      */
     public void setHeader(String header) {
@@ -58,7 +58,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Getter for footer.
-     * 
+     *
      * @return the footer
      */
     public String getFooter() {
@@ -67,7 +67,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Sets the footer.
-     * 
+     *
      * @param footer the footer to set
      */
     public void setFooter(String footer) {
@@ -76,7 +76,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Getter for analysises.
-     * 
+     *
      * @return the analysises
      */
     public List<Analysis> getAnalysises() {
@@ -85,7 +85,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Sets the analysises.
-     * 
+     *
      * @param analysises the analysises to set
      */
     public void setAnalysises(List<Analysis> analysises) {
@@ -94,7 +94,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Getter for refresh.
-     * 
+     *
      * @return the refresh
      */
     public boolean isRefresh() {
@@ -103,7 +103,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Sets the refresh.
-     * 
+     *
      * @param refresh the refresh to set
      */
     public void setRefresh(boolean refresh) {
@@ -112,7 +112,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Getter for format.
-     * 
+     *
      * @return the format
      */
     public String getFormat() {
@@ -121,7 +121,7 @@ public class ReportParameter extends ConnectionParameter {
 
     /**
      * Sets the format.
-     * 
+     *
      * @param format the format to set
      */
     public void setFormat(String format) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC scorreia SQLiteDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      * @param majorVersion
      * @param minorVersion
@@ -49,7 +49,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getPatternFinderDefaultFunction(java.lang.String)
      */
     @Override
@@ -70,7 +70,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
     // ADD by msjian 2011-7-20 22517: no such function: CHAR_LENGTH for SQLite
     /**
      * Method "charLength".
-     * 
+     *
      * @param columnName
      * @return CHAR_LENGTH(columnName)
      */
@@ -81,7 +81,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
      */
     @Override
@@ -97,7 +97,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullRows()
      */
     @Override
@@ -113,7 +113,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
      */
     @Override
@@ -127,7 +127,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
      * DatabaseConnection)
      */
@@ -138,7 +138,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getSchemaNameFromContext(org.talend.core.model.metadata.builder.connection.
      * DatabaseConnection)
      */
@@ -149,7 +149,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalogOrSchemaName(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -159,7 +159,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -169,7 +169,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getSchema(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -179,7 +179,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
      */
     @Override
@@ -189,7 +189,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection, int)
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,13 +23,13 @@ import org.talend.dq.indicators.ext.FrequencyExt;
 
 /**
  * created by yyin on 2014-12-3 Detailled comment
- * 
+ *
  */
 public class BinFrequencyStatisticsTableState extends FrequencyTableState {
 
     /**
      * DOC yyin BinFrequencyStatisticsTableState constructor comment.
-     * 
+     *
      * @param units
      */
     public BinFrequencyStatisticsTableState(List<IndicatorUnit> units) {
@@ -38,7 +38,7 @@ public class BinFrequencyStatisticsTableState extends FrequencyTableState {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.preview.model.states.table.FrequencyTableState#sortIndicator(org.talend
      * .dq.indicators.ext.FrequencyExt[])

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ public class TextStatisticsState extends AbstractChartTypeStates {
     @Override
     public Object getChart(Object dataset) {
         Object chart = TOPChartUtils.getInstance().createBarChart(
-                DefaultMessagesImpl.getString("TextStatisticsState.TextStatistics"), dataset, false); //$NON-NLS-1$ 
+                DefaultMessagesImpl.getString("TextStatisticsState.TextStatistics"), dataset, false); //$NON-NLS-1$
         TOPChartUtils.getInstance().setDisplayDecimalFormatOfChart(chart);
         return chart;
     }
@@ -78,7 +78,7 @@ public class TextStatisticsState extends AbstractChartTypeStates {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChart(org.talend.dataprofiler
      * .common.ui.editor.preview.ICustomerDataset)

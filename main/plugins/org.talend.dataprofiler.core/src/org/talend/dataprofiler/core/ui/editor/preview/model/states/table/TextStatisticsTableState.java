@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,13 +30,13 @@ import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by yyin on 2014-12-2 Detailled comment
- * 
+ *
  */
 public class TextStatisticsTableState extends AbstractTableTypeStates {
 
     /**
      * DOC yyin TextStatisticsTableState constructor comment.
-     * 
+     *
      * @param units
      */
     public TextStatisticsTableState(List<IndicatorUnit> units) {
@@ -45,7 +45,7 @@ public class TextStatisticsTableState extends AbstractTableTypeStates {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.table.AbstractTableTypeStates#getDataEntity()
      */
     @Override
@@ -57,7 +57,7 @@ public class TextStatisticsTableState extends AbstractTableTypeStates {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.table.AbstractTableTypeStates#getDataExplorer()
      */
     @Override

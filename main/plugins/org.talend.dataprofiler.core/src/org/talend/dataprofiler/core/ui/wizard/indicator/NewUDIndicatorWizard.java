@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -82,7 +82,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     /**
      * DOC xqliu Comment method "recordModificationDate".
-     * 
+     *
      * @param indicatorDefinition
      */
     private void recordModificationDate(IndicatorDefinition indicatorDefinition) {
@@ -106,7 +106,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataprofiler.core.ui.wizard.AbstractWizard#fillMetadataToCWMResource(orgomg.cwm.objectmodel.core.
      * ModelElement)
      */
@@ -155,7 +155,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.repository.model.IRepositoryNode)
      */
     @Override

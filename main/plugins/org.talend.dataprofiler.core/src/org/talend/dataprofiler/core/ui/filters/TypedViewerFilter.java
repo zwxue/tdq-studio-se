@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ public class TypedViewerFilter extends ViewerFilter {
 
     /**
      * Creates a filter that only allows elements of gives types.
-     * 
+     *
      * @param acceptedTypes The types of accepted elements
      */
     public TypedViewerFilter(Class<Object>[] acceptedTypes) {
@@ -36,7 +36,7 @@ public class TypedViewerFilter extends ViewerFilter {
 
     /**
      * Creates a filter that only allows elements of gives types, but not from a list of rejected elements.
-     * 
+     *
      * @param acceptedTypes Accepted elements must be of this types
      * @param rejectedElements Element equals to the rejected elements are filtered out
      */

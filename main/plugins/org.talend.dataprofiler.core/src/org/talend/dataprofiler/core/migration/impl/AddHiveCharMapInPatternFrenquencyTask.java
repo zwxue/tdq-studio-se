@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * @author msjian
- * 
+ *
  * TDQ-12897: This migration task adds CharacterMapping for hive/impala for (low)PatternFrenquency indicators.
  */
 public class AddHiveCharMapInPatternFrenquencyTask extends AbstractWorksapceUpdateTask {
@@ -41,7 +41,7 @@ public class AddHiveCharMapInPatternFrenquencyTask extends AbstractWorksapceUpda
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -74,7 +74,7 @@ public class AddHiveCharMapInPatternFrenquencyTask extends AbstractWorksapceUpda
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -83,7 +83,7 @@ public class AddHiveCharMapInPatternFrenquencyTask extends AbstractWorksapceUpda
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {

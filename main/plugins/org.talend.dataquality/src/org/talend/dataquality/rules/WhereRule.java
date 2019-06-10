@@ -1,7 +1,7 @@
 /**
  * // ============================================================================
  * //
- * // Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+ * // Copyright (C) 2006-2019 Talend Inc. - www.talend.com
  * //
  * // This source code is available under agreement available at
  * // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -11,7 +11,7 @@
  * // 9 rue Pages 92150 Suresnes, France
  * //
  * // ============================================================================
- * 
+ *
  *
  * $Id$
  */
@@ -26,7 +26,7 @@ import org.eclipse.emf.common.util.EList;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * This kind of rule contains a "where" clause which may be used to compute user defined indicators. 
+ * This kind of rule contains a "where" clause which may be used to compute user defined indicators.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -74,7 +74,7 @@ public interface WhereRule extends SpecifiedDQRule {
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * <!-- begin-model-doc -->
-     * The join expression to be used in the generated SQL statement. 
+     * The join expression to be used in the generated SQL statement.
      * <!-- end-model-doc -->
      * @return the value of the '<em>Join Expression</em>' attribute.
      * @see #setJoinExpression(String)

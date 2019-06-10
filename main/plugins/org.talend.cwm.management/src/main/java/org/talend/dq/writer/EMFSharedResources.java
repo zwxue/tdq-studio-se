@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -68,7 +68,7 @@ public final class EMFSharedResources {
 
     /**
      * Getter for instance.
-     * 
+     *
      * @return the instance
      */
     public static synchronized EMFSharedResources getInstance() {
@@ -80,7 +80,7 @@ public final class EMFSharedResources {
 
     /**
      * DOC bZhou Comment method "reloadResource".
-     * 
+     *
      * @param uri
      */
     public synchronized Resource reloadResource(URI uri) {
@@ -90,7 +90,7 @@ public final class EMFSharedResources {
 
     /**
      * reload resource of softwareDeployment
-     * 
+     *
      * @param uri
      */
     public synchronized Resource reloadsoftwareDeploymentResource() {
@@ -115,7 +115,7 @@ public final class EMFSharedResources {
 
     /**
      * Method "unloadResource" unload and remove the specification resource from the resource set.
-     * 
+     *
      * @param uriString the uri sting of resource.
      */
     public synchronized void unloadResource(String uriString) {
@@ -130,7 +130,7 @@ public final class EMFSharedResources {
 
     /**
      * Method "addEObjectToResourceSet".
-     * 
+     *
      * @param filePath the file path to the resource which contains the given object
      * @param eObject an EMF object to save in the appropriate resource
      * @return true when ok
@@ -154,9 +154,9 @@ public final class EMFSharedResources {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "createResource".
-     * 
+     *
      * @param uri
      * @return
      */
@@ -166,7 +166,7 @@ public final class EMFSharedResources {
 
     /**
      * Method "saveAll" saves all the resources of the resourceSet.
-     * 
+     *
      * @return true when ok
      */
     public synchronized boolean saveAll() {
@@ -175,7 +175,7 @@ public final class EMFSharedResources {
 
     /**
      * Method "saveResource" saves the resources of the resourceSet.
-     * 
+     *
      * @return true when ok
      */
     public boolean saveResource(Resource resource) {
@@ -189,7 +189,7 @@ public final class EMFSharedResources {
 
     /**
      * Save the resource to destinationUri and saved the related resources.
-     * 
+     *
      * @param res
      * @param destinationUri
      * @return
@@ -222,10 +222,10 @@ public final class EMFSharedResources {
 
     /**
      * DOC scorreia Comment method "getSharedEmfUtil".
-     * 
+     *
      * @return
      * @deprecated do not use directly EMFUtil.
-     * 
+     *
      */
     @Deprecated
     public static EMFUtil getSharedEmfUtil() {
@@ -233,9 +233,9 @@ public final class EMFSharedResources {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "setUsePlatformRelativePath".
-     * 
+     *
      * @param usePlatformRelativePath
      */
     public void setUsePlatformRelativePath(boolean usePlatformRelativePath) {
@@ -243,9 +243,9 @@ public final class EMFSharedResources {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "addPoolToResourceSet".
-     * 
+     *
      * @param eObject
      * @param path
      */
@@ -255,7 +255,7 @@ public final class EMFSharedResources {
 
     /**
      * Method "getLastErrorMessage".
-     * 
+     *
      * @return the last error message or null when none exists.
      */
     public String getLastErrorMessage() {
@@ -274,7 +274,7 @@ public final class EMFSharedResources {
 
     /**
      * Getter for softwareDeploymentResource.
-     * 
+     *
      * @return the softwareDeploymentResource
      */
     public Resource getSoftwareDeploymentResource() {
@@ -295,7 +295,7 @@ public final class EMFSharedResources {
 
     /**
      * DOC scorreia Comment method "initSoftwareDeploymentResource".
-     * 
+     *
      * @return
      */
     private Resource initSoftwareDeploymentResource() {

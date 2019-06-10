@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ public class ImportInfoDialog extends MessageDialog {
 
     /**
      * DOC Administrator ImportInfoDialog constructor comment.
-     * 
+     *
      * @param parentShell
      * @param dialogTitle
      * @param dialogTitleImage
@@ -55,7 +55,7 @@ public class ImportInfoDialog extends MessageDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.MessageDialog#createCustomArea(org.eclipse. swt.widgets.Composite)
      */
     @Override
@@ -99,7 +99,7 @@ public class ImportInfoDialog extends MessageDialog {
                         Image errorImg = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_ERROR_TSK);
                         rcItem.setImage(errorImg);
                         imageLabel.setImage(getWarningImage());
-                        messageLabel.setText(DefaultMessagesImpl.getString("ImportInfoDialog.ERROR_TSK"));//$NON-NLS-1$ 
+                        messageLabel.setText(DefaultMessagesImpl.getString("ImportInfoDialog.ERROR_TSK"));//$NON-NLS-1$
                     }
                     rcItem.setText(rc.getMessage());
                 }
@@ -111,7 +111,7 @@ public class ImportInfoDialog extends MessageDialog {
 
     /**
      * DOC yyi Comment method "openInformationDialog".
-     * 
+     *
      * @param information
      */
     public static void openImportInformation(Shell parent, String message, String[] information) {
@@ -126,7 +126,7 @@ public class ImportInfoDialog extends MessageDialog {
 
     /**
      * yyi 2009-09-30 feature:9106.
-     * 
+     *
      * @param parent
      * @param message
      * @param information
@@ -144,7 +144,7 @@ public class ImportInfoDialog extends MessageDialog {
 
     /**
      * DOC yyi Comment method "openInformationDialog".
-     * 
+     *
      * @param information
      */
     public static void openImportInformation(Shell parent, String message, ReturnCode[] information) {

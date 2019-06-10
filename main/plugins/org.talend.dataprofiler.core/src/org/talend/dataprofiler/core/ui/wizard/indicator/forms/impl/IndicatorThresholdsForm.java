@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -322,7 +322,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     /**
      * DOC yyi Comment method "checkIndicatorFields".
-     * 
+     *
      * @return
      */
     protected ReturnCode checkIndicatorFields() {
@@ -392,7 +392,7 @@ public class IndicatorThresholdsForm extends AbstractIndicatorForm {
 
     /**
      * DOC yyi Comment method "checkIndicatorInPrecentFields".
-     * 
+     *
      * @return
      */
     protected ReturnCode checkIndicatorInPrecentFields() {

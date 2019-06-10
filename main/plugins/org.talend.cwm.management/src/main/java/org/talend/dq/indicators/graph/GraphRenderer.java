@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import edu.uci.ics.jung.visualization.PluggableRenderer;
 
 /**
  * @author scorreia
- * 
+ *
  * Getting renderers.
  */
 public class GraphRenderer {
@@ -64,7 +64,7 @@ public class GraphRenderer {
         show_vertex = new VertexDisplayPredicate(false);
 
         pr = new PluggableRenderer();
-        
+
         pr.setVertexStrokeFunction(vsh);
         pr.setVertexStringer(vs_none);
         pr.setVertexFontFunction(ff);

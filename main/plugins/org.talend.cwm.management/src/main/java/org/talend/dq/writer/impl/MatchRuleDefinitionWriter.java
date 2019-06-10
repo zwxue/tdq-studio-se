@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by zshen on Aug 20, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleDefinitionWriter extends AElementPersistance {
 
@@ -40,7 +40,7 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#notifyResourceChanges()
      */
     @Override
@@ -51,7 +51,7 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -61,7 +61,7 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#getFileExtension()
      */
     @Override
@@ -71,7 +71,7 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean)
      */
     @Override
@@ -105,7 +105,7 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
 
     /**
      * copy the block/match keys from matchRule to ruleDefinition.
-     * 
+     *
      * @param ruleDefinition: created one
      * @param matchRule: exported one from the match analysis
      */
@@ -131,7 +131,7 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#removeDependencies(org.talend.core.model.properties.Item)
      */
     @Override

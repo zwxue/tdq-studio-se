@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,7 +21,7 @@ import java.util.Set;
  * FileInputDelimited is dedicated to Talend's tFileInputDelimited component. It wraps all parameters in
  * tFileInputDelimted, so it makes the generated code much easier and cleaner. This class is not recommended to use in
  * other circumstance.<br/>
- * 
+ *
  * @author gke
  */
 public class FileInputDelimited {
@@ -40,7 +40,7 @@ public class FileInputDelimited {
 
     /**
      * This constructor is only for compatibility with the old usecase.(Before add the function support split Record.)
-     * 
+     *
      */
     public FileInputDelimited(String file, String encoding, String fieldSeparator, String rowSeparator, boolean skipEmptyRow,
             int header, int footer, int limit, int random) throws IOException {
@@ -50,7 +50,7 @@ public class FileInputDelimited {
     /**
      * The constructor's parameter wraps all parameters' value, and a pretreatment was made according the value of
      * header, footer, limit and random.
-     * 
+     *
      * @param file
      * @param encoding
      * @param fieldSeparator
@@ -129,7 +129,7 @@ public class FileInputDelimited {
 
     /**
      * Skip to the next record, get ready before get new record's value.
-     * 
+     *
      * @return whether a next record is available.
      * @throws IOException
      */
@@ -162,7 +162,7 @@ public class FileInputDelimited {
 
     /**
      * See DelimitedDataReader.get(columnIndex)
-     * 
+     *
      * @param columnIndex
      * @return
      * @throws IOException
@@ -181,7 +181,7 @@ public class FileInputDelimited {
     }
 
     /**
-     * 
+     *
      * @return number of rows get by tFileInputDelimited
      */
     public int getRowNumber() {
@@ -198,7 +198,7 @@ public class FileInputDelimited {
 
     /**
      * check the first limit number of records, and fetch the max columns, this is only for GUI wizard.
-     * 
+     *
      */
     public static int getMaxColumnCount(String fileName, String encoding, String fieldDelimiter, String recordDelimiter,
             boolean needSkipEmptyRecord, boolean splitRecord, int headerRows, int limit) throws IOException {

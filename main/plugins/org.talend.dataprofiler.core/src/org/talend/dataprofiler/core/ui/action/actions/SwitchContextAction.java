@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ public class SwitchContextAction extends Action {
 
     /*
      * MOD yyin 20120917 TDQ-5362, do NOT reload DB when switching context.
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -68,7 +68,7 @@ public class SwitchContextAction extends Action {
                 if (isUpdated) {
 
                     if (log.isDebugEnabled()) {
-                        log.debug(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", chooseContext, "successful"));//$NON-NLS-1$ //$NON-NLS-2$ 
+                        log.debug(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", chooseContext, "successful"));//$NON-NLS-1$ //$NON-NLS-2$
                     }
 
                     // ADD msjian TDQ-8834 2014-4-10: after switch the context, update the sql explore alias
@@ -81,7 +81,7 @@ public class SwitchContextAction extends Action {
                 } else {
                     MessageDialog.openWarning(CorePlugin.getDefault().getWorkbench().getDisplay().getActiveShell(), "", //$NON-NLS-1$
                             DefaultMessagesImpl.getString("SwitchContextAction.nullParameterError")); //$NON-NLS-1$
-                    log.error(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", chooseContext, "failed"));//$NON-NLS-1$ //$NON-NLS-2$ 
+                    log.error(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", chooseContext, "failed"));//$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
         }

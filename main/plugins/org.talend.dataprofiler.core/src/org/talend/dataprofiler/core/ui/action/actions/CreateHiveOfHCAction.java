@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ public class CreateHiveOfHCAction extends AbstractMetadataCreationAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction#createWizard()
      */
     @Override
@@ -53,7 +53,7 @@ public class CreateHiveOfHCAction extends AbstractMetadataCreationAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction#getActionLabel()
      */
     @Override
@@ -63,7 +63,7 @@ public class CreateHiveOfHCAction extends AbstractMetadataCreationAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction#getConnectionItem()
      */
     @Override
@@ -78,7 +78,7 @@ public class CreateHiveOfHCAction extends AbstractMetadataCreationAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractMetadataCreationAction#getActionImage()
      */
     @Override

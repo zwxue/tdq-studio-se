@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -111,7 +111,7 @@ import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * Detail view of the Data profiler.
- * 
+ *
  * @author qzhang
  */
 public class RespositoryDetailView extends ViewPart implements ISelectionListener {
@@ -237,7 +237,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui. IWorkbenchPart,
      * org.eclipse.jface.viewers.ISelection)
      */
@@ -383,7 +383,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC klliu Comment method "createDFconnectionName".
-     * 
+     *
      * @param label
      */
     private void createDFconnectionName(String label) {
@@ -393,7 +393,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC bZhou Comment method "createEcosComponent".
-     * 
+     *
      * @param component
      */
     private void createEcosComponent(IEcosComponent component) {
@@ -705,7 +705,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC xqliu Comment method "createDescription".
-     * 
+     *
      * @param dataProvider
      * @deprecated use createDescription(Property prop) instead of it
      */
@@ -717,7 +717,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC xqliu Comment method "createPurpose".
-     * 
+     *
      * @param dataProvider
      * @deprecated use createPurpose(Property prop) instead of it
      */
@@ -729,7 +729,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * create the Description's Label and Text by the Property.
-     * 
+     *
      * @param prop
      */
     private void createDescription(Property prop) {
@@ -739,7 +739,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * create the Purpose's Label and Text by the Property.
-     * 
+     *
      * @param prop
      */
     private void createPurpose(Property prop) {

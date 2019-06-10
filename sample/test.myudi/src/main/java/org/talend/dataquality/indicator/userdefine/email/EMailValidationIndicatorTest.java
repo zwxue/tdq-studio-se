@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,20 +19,20 @@ import org.junit.Test;
 
 /**
  * created by zhao on 2012-8-27 Detailled comment
- * 
+ *
  */
 public class EMailValidationIndicatorTest {
 
     private EMailValidationIndicator emailValidationIndicator = null;
 
     private final static String[] emails = new String[] {
-            "mzhao@talend.cn", "xxxmzhao@talend.com", "minglee.zhao@gmail.com", "paslor@126.com", "paslor@hotmail.com", "mzhao@Talxxx.com", null, "", " ", "a@", "@b", "@hotmail.com" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ 
+            "mzhao@talend.cn", "xxxmzhao@talend.com", "minglee.zhao@gmail.com", "paslor@126.com", "paslor@hotmail.com", "mzhao@Talxxx.com", null, "", " ", "a@", "@b", "@hotmail.com" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$
 
     private final static boolean[] valid = { false, true, true, true, false, false, false, false, false, false, false, false };
 
     /**
      * DOC zhao Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before

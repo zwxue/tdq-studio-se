@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
- * 
+ *
  * DOC mzhao UIPagination class global comment. Detailled comment
  */
 public abstract class PaginationInfo implements IPagination {
@@ -40,7 +40,7 @@ public abstract class PaginationInfo implements IPagination {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.pagination.IPagination#renderContents()
      */
     public void renderContents() {
@@ -53,7 +53,7 @@ public abstract class PaginationInfo implements IPagination {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.pagination.IPagination#dispose()
      */
     public void dispose() {

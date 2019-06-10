@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -50,7 +50,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ *
  */
 public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
@@ -60,7 +60,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen BlockingKeySection constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param toolkit
@@ -72,7 +72,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#getSectionName()
      */
     @Override
@@ -128,7 +128,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubChart(org.eclipse.swt.widgets
      * .Composite)
@@ -146,7 +146,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#RefreshChart()
      */
     @Override
@@ -179,7 +179,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     /**
      * DOC zshen Comment method "computeRusult". <br>
      * TODO Handle the return value: return the result directly instead of action instance.
-     * 
+     *
      * @return
      */
     protected BlockingKeyHandler computeResult() {
@@ -200,7 +200,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "hasBlockingKey".
-     * 
+     *
      * @return
      */
     private boolean hasBlockingKey() {
@@ -230,7 +230,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded(java.lang
      * .String)
@@ -252,7 +252,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
      */
     @Override
@@ -263,7 +263,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#removeTableItem()
      */
     @Override
@@ -287,7 +287,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -312,7 +312,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * /* (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -338,7 +338,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * get all columns which is selected as blocking key
-     * 
+     *
      * @return
      */
     public List<String> getSelectedColumnAsBlockKeys() {
@@ -356,7 +356,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     /**
      * if overwrite: need to delete all current keyss, and insert the keys according to the parameter:matchRule; else:
      * only add the keys in the parameter matchrule, to the current keys.
-     * 
+     *
      * @param matchRule
      * @param overwrite
      */
@@ -394,7 +394,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#checkResultStatus()
      */
     @Override
@@ -435,7 +435,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     }
 
     /**
-     * 
+     *
      * clear blocking key chart.
      */
     @Override

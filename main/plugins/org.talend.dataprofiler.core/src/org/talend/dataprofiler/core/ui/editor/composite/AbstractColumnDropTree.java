@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -140,7 +140,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * Getter for MasterPage.
-     * 
+     *
      * @return the MasterPage
      */
     public AbstractAnalysisMetadataPage getMasterPage() {
@@ -149,7 +149,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * DOC msjian Comment method "getTheSuitedComposite".
-     * 
+     *
      * @param e
      * @return
      */
@@ -161,7 +161,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * DOC qzhang Comment method "createOneUnit".
-     * 
+     *
      * @param treeItem
      * @param indicatorUnit
      */
@@ -187,7 +187,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt .events.MouseEvent)
              */
             @Override
@@ -211,7 +211,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt .events.MouseEvent)
              */
             @Override
@@ -282,7 +282,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * remove special indicatorUnit which in the ModelElementIndicator.
-     * 
+     *
      * @param meIndicator remove from here
      * @param inidicatorUnit should be removed
      */
@@ -291,11 +291,11 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
     }
 
     /**
-     * 
+     *
      * remove all the indicatorUnit which in the ModelElementIndicator.
-     * 
+     *
      * @param meIndicator
-     * 
+     *
      */
     protected void deleteIndicatorItems(ModelElementIndicator meIndicator) {
         for (IndicatorUnit indiUnit : meIndicator.getIndicatorUnits()) {
@@ -305,7 +305,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * open Indicator Option Dialog.
-     * 
+     *
      * @param shell
      * @param indicatorItem
      * @return
@@ -328,17 +328,17 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * DOC msjian Comment method "openNoIndicatorOptionsMessageDialog".
-     * 
+     *
      * @param shell
      */
     public void openNoIndicatorOptionsMessageDialog(Shell shell) {
         MessageDialogWithToggle.openInformation(shell, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ 
+                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$
     }
 
     /**
      * DOC xqliu Comment method "getIndicatorIamge".
-     * 
+     *
      * @param indicatorUnit
      * @return
      */
@@ -353,7 +353,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * ADD yyi 2010-04-20 12173:update indicator name.
-     * 
+     *
      * @param unit
      * @return
      */
@@ -379,7 +379,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * DOC msjian Comment method "hasIndicatorParameters".
-     * 
+     *
      * @param indicatorUnit
      * @return
      */
@@ -532,7 +532,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * ADD yyi 2011-07-18 17740: hide text parameter tree node for splited length indicators
-     * 
+     *
      * @param indicatorUnit
      * @return
      */
@@ -579,7 +579,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TalendObserver)
@@ -591,7 +591,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TalendObserver)
@@ -605,7 +605,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
      */
     public void clearObserver() {
@@ -617,7 +617,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
      */
     public void notifyObservers() {
@@ -632,7 +632,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#initObserverable()
      */
     private void initObserverable() {
@@ -644,7 +644,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
      */
     public void update(Map<String, Integer> columnIndexMap) {
@@ -653,7 +653,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(int)
      */
     public void update(int EventType) {
@@ -662,7 +662,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * DOC talend Comment method "reorderModelElement".
-     * 
+     *
      * @param currentModelElementIndicators
      */
     public ModelElementIndicator[] reorderModelElement(ModelElementIndicator[] currentModelElementIndicators,
@@ -677,7 +677,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * DOC rli Comment method "deleteTreeElements".
-     * 
+     *
      * @param deleteModelElementIndiciator
      */
     public void deleteModelElementItems(ModelElementIndicator deleteModelElementIndiciator) {
@@ -698,7 +698,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
 
     /**
      * DOC msjian Comment method "initializedConnection". for 6560
-     * 
+     *
      * @param indicators
      */
     void initializedConnection(ModelElementIndicator[] indicators) {

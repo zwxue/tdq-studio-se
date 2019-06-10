@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -72,7 +72,7 @@ import org.talend.dataprofiler.service.utils.ValueAggregator;
 
 /**
  * @author scorreia
- * 
+ *
  * Chart factory adapted for TOP.
  */
 public final class TopChartFactory {
@@ -101,10 +101,10 @@ public final class TopChartFactory {
     /**
      * Creates a bubble chart with default settings. The chart is composed of an {@link XYPlot}, with a {@link NumberAxis} for the
      * domain axis, a {@link NumberAxis} for the range axis, and an {@link XYBubbleRenderer} to draw the data items.
-     * 
+     *
      * This method is copied from
      * {@link org.jfree.chart.ChartFactory#createBubbleChart(String, String, String, XYZDataset, PlotOrientation, boolean, boolean, boolean)}
-     * 
+     *
      * @param title the chart title (<code>null</code> permitted).
      * @param xAxisLabel a label for the X-axis (<code>null</code> permitted).
      * @param yAxisLabel a label for the Y-axis (<code>null</code> permitted).
@@ -113,7 +113,7 @@ public final class TopChartFactory {
      * @param legend a flag specifying whether or not a legend is required.
      * @param tooltips configure chart to generate tool tips?
      * @param urls configure chart to generate URLs?
-     * 
+     *
      * @return A bubble chart.
      */
     public static JFreeChart createBubbleChart(String title, String xAxisLabel, String yAxisLabel, XYZDataset dataset,
@@ -241,7 +241,7 @@ public final class TopChartFactory {
 
             /**
              * DOC xqliu : calculate the size of bubble. for bug 8035 2009-07-06.
-             * 
+             *
              * @param z multiple of bubble's default size
              * @return
              */
@@ -274,7 +274,7 @@ public final class TopChartFactory {
 
     /**
      * Method "createBubbleChart".
-     * 
+     *
      * @param indic the indicator
      * @param numericColumn the analyzed numeric column
      * @return the bubble chart
@@ -294,7 +294,7 @@ public final class TopChartFactory {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.jfree.chart.labels.StandardXYZToolTipGenerator#createItemArray(org.jfree.data.xy.XYZDataset,
              * int, int)
              */
@@ -320,9 +320,9 @@ public final class TopChartFactory {
     }
 
     /**
-     * 
+     *
      * DOC zhaoxinyi Comment method "createGanttChart".
-     * 
+     *
      * @return
      */
 
@@ -349,9 +349,9 @@ public final class TopChartFactory {
     }
 
     /**
-     * 
+     *
      * mzhao create bar chart with default bar render class.
-     * 
+     *
      * @param titile
      * @param dataset
      * @param showLegend
@@ -371,7 +371,7 @@ public final class TopChartFactory {
 
     /**
      * create bar chart.
-     * 
+     *
      * @param titile
      * @param dataset
      * @return
@@ -382,7 +382,7 @@ public final class TopChartFactory {
 
     /**
      * create bar chart.
-     * 
+     *
      * @param titile
      * @param dataset
      * @return
@@ -416,9 +416,9 @@ public final class TopChartFactory {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "createMatchRuleBarChart".
-     * 
+     *
      * @param title
      * @param dataset
      * @return
@@ -459,7 +459,7 @@ public final class TopChartFactory {
 
     /**
      * DOC talend Comment method "getCurrentColorList".
-     * 
+     *
      * @param columnKeys
      * @return
      */
@@ -564,7 +564,7 @@ public final class TopChartFactory {
 
     /**
      * DOC Zqin Comment method "createBoxAndWhiskerChart".
-     * 
+     *
      * @param title
      * @param dataset
      * @return
@@ -595,7 +595,7 @@ public final class TopChartFactory {
 
     /**
      * DOC Zqin Comment method "createStackedBarChart".
-     * 
+     *
      * @param titile
      * @param dataset
      * @param orientation
@@ -608,7 +608,7 @@ public final class TopChartFactory {
 
     /**
      * DOC xqliu Comment method "createStackedBarChart".
-     * 
+     *
      * @param title
      * @param dataset
      * @param showLegend
@@ -621,7 +621,7 @@ public final class TopChartFactory {
 
     /**
      * DOC xqliu Comment method "createStackedBarChart".
-     * 
+     *
      * @param title
      * @param dataset
      * @param orientation
@@ -635,7 +635,7 @@ public final class TopChartFactory {
 
     /**
      * DOC xqliu Comment method "createStackedBarChart".
-     * 
+     *
      * @param title
      * @param domainAxisLabel
      * @param rangeAxisLabel
@@ -682,7 +682,7 @@ public final class TopChartFactory {
 
     /**
      * DOC xqliu Comment method "createLineChart".
-     * 
+     *
      * @param title
      * @param dataset
      * @param showLegend
@@ -710,9 +710,9 @@ public final class TopChartFactory {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "createPieChart".
-     * 
+     *
      * @param title
      * @param dataset
      * @param showLegend

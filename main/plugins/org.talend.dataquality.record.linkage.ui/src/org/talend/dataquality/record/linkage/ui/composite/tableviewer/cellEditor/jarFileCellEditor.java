@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,13 +31,13 @@ import org.talend.resource.ResourceManager;
 
 /**
  * open fileDialog
- * 
+ *
  */
 public class jarFileCellEditor extends DialogCellEditor {
 
     /**
-     * 
-     * 
+     *
+     *
      * @param parent
      */
     public jarFileCellEditor(Composite parent) {
@@ -45,8 +45,8 @@ public class jarFileCellEditor extends DialogCellEditor {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param parent
      * @param style
      */
@@ -56,7 +56,7 @@ public class jarFileCellEditor extends DialogCellEditor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.DialogCellEditor#openDialogBox(org.eclipse.swt.widgets.Control)
      */
     @Override
@@ -72,9 +72,9 @@ public class jarFileCellEditor extends DialogCellEditor {
     }
 
     /**
-     * 
+     *
      * zshen Comment method "createUdiJarCheckedTreeSelectionDialog".
-     * 
+     *
      * @param JarProject
      * @return
      */
@@ -106,7 +106,7 @@ public class jarFileCellEditor extends DialogCellEditor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.DialogCellEditor#updateContents(java.lang.Object)
      */
     @Override

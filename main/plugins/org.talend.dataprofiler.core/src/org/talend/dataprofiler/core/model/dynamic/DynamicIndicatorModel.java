@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,7 +20,7 @@ import org.talend.dq.indicators.preview.EIndicatorChartType;
 
 /**
  * created by yyin on 2014-7-3 Detailled comment
- * 
+ *
  */
 public class DynamicIndicatorModel {
 
@@ -45,7 +45,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Getter for indicatorList.
-     * 
+     *
      * @return the indicatorList
      */
     public List<Indicator> getIndicatorList() {
@@ -54,7 +54,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Sets the indicatorList.
-     * 
+     *
      * @param indicatorList the indicatorList to set
      */
     public void setIndicatorList(List<Indicator> indicatorList) {
@@ -63,7 +63,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Getter for summaryIndicators.
-     * 
+     *
      * @return the summaryIndicators
      */
     public List<Indicator> getSummaryIndicators() {
@@ -72,7 +72,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Sets the summaryIndicators.
-     * 
+     *
      * @param summaryIndicators the summaryIndicators to set
      */
     public void setSummaryIndicators(List<Indicator> summaryIndicators) {
@@ -81,7 +81,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Getter for chartType.
-     * 
+     *
      * @return the chartType
      */
     public EIndicatorChartType getChartType() {
@@ -90,7 +90,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Sets the chartType.
-     * 
+     *
      * @param chartType the chartType to set
      */
     public void setChartType(EIndicatorChartType chartType) {
@@ -99,7 +99,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Getter for dataset.
-     * 
+     *
      * @return the dataset
      */
     public Object getDataset() {
@@ -108,7 +108,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Sets the dataset.
-     * 
+     *
      * @param dataset the dataset to set
      */
     public void setDataset(Object dataset) {
@@ -117,7 +117,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Getter for tableViewer.
-     * 
+     *
      * @return the tableViewer
      */
     public TableViewer getTableViewer() {
@@ -126,7 +126,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Sets the tableViewer.
-     * 
+     *
      * @param tableViewer the tableViewer to set
      */
     public void setTableViewer(TableViewer tableViewer) {
@@ -135,7 +135,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Getter for bawParentChartComp.
-     * 
+     *
      * @return the bawParentChartComp
      */
     public Object getBawParentChartComp() {
@@ -144,7 +144,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Sets the bawParentChartComp.
-     * 
+     *
      * @param bawParentChartComp the bawParentChartComp to set
      */
     public void setBawParentChartComp(Object bawParentChartComp) {
@@ -163,7 +163,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Getter for secondDataset.
-     * 
+     *
      * @return the secondDataset
      */
     public Object getSecondDataset() {
@@ -172,7 +172,7 @@ public class DynamicIndicatorModel {
 
     /**
      * Sets the secondDataset.
-     * 
+     *
      * @param secondDataset the secondDataset to set
      */
     public void setSecondDataset(Object secondDataset) {

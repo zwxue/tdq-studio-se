@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,9 +21,9 @@ import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ *
  */
 public class ConnectionParameter {
 
@@ -122,7 +122,7 @@ public class ConnectionParameter {
 
     /**
      * Getter for folderProvider.
-     * 
+     *
      * @return the folderProvider
      */
     public FolderProvider getFolderProvider() {
@@ -131,7 +131,7 @@ public class ConnectionParameter {
 
     /**
      * Sets the folderProvider.
-     * 
+     *
      * @param folderProvider the folderProvider to set
      */
     public void setFolderProvider(FolderProvider folderProvider) {

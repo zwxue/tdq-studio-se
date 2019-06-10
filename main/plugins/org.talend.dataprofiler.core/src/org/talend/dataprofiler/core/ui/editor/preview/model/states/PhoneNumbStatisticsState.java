@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
 
     /**
      * DOC qiongli PhoneNumbStatisticsState constructor comment.
-     * 
+     *
      * @param units
      */
     public PhoneNumbStatisticsState(List<IndicatorUnit> units) {
@@ -41,7 +41,7 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getCustomerDataset()
      */
     public ICustomerDataset getCustomerDataset() {
@@ -63,7 +63,7 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChart()
      */
     public Object getChart() {
@@ -73,7 +73,7 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getExampleChart()
      */
     public Object getExampleChart() {
@@ -83,7 +83,7 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getDataExplorer()
      */
     public DataExplorer getDataExplorer() {
@@ -92,7 +92,7 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getReferenceLink()
      */
     public String getReferenceLink() {

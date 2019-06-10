@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC xqliu Comment method "initReplaceStringMapMdm".
-     * 
+     *
      * @return
      */
     private Map<String, String> initReplaceStringMapMdm() {
@@ -53,7 +53,7 @@ public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -77,7 +77,7 @@ public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -86,7 +86,7 @@ public class RefactMdmMetadataTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {

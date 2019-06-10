@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,24 +32,24 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 /**
  * Menu manager for perspective switching. <br/>
  */
-public class PerspectiveMenuManager extends MenuManager {	
-	
+public class PerspectiveMenuManager extends MenuManager {
+
     /**
      * Constructs a new PerspectiveMenuManager.
      */
     public PerspectiveMenuManager() {
         super("&Perspective", DefaultMessagesImpl.getString("PerspectiveMenuManager.perspective"));  //$NON-NLS-1$ //$NON-NLS-2$
-        
+
 
         addMenuListener(new MenuFiller());
-        
+
         setRemoveAllWhenShown(true);
         add(new ChangePerspectiveAction(DefaultMessagesImpl.getString("PerspectiveMenuManager.dummy"))); //$NON-NLS-1$
     }
 
     /**
      * @author rli
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class PerspectiveData {
@@ -70,7 +70,7 @@ public class PerspectiveMenuManager extends MenuManager {
 			return dataprofilerPerspectiveName;
 		}
 	}
-    
+
     public PerspectiveData[] getTalendPerspectives(IConfigurationElement[] talendPpElements) {
         String talendPpId = null;
         List<PerspectiveData> talendPpList = new ArrayList<PerspectiveData>();
@@ -96,7 +96,7 @@ public class PerspectiveMenuManager extends MenuManager {
          */
         public void menuAboutToShow(IMenuManager manager) {
             IPerspectiveRegistry registry = PlatformUI.getWorkbench().getPerspectiveRegistry();
-            
+
             IWorkbench workbench = PlatformUI.getWorkbench();
             IWorkbenchPage page = workbench.getActiveWorkbenchWindow().getActivePage();
             String activePersp = page.getPerspective().getId();
@@ -104,7 +104,7 @@ public class PerspectiveMenuManager extends MenuManager {
             IConfigurationElement[] talendPpElements = extensionRegistry
                     .getExtensionPoint("org.talend.dataprofiler.core.dataprofilerperspectives").getConfigurationElements(); //$NON-NLS-1$
             PerspectiveData[] perspectiveIds = getTalendPerspectives(talendPpElements);
-            
+
             for (PerspectiveData perspectiveData : perspectiveIds) {
                 // Search perspective name & icon
                 IPerspectiveDescriptor desc = registry.findPerspectiveWithId(perspectiveData.getRefPerspectiveId());
@@ -113,7 +113,7 @@ public class PerspectiveMenuManager extends MenuManager {
                     perspAction.setText(perspectiveData.getDataprofilerPerspectiveName());
                     perspAction.setToolTipText(desc.getDescription());
                     perspAction.setImageDescriptor(desc.getImageDescriptor());
-                    perspAction.setChecked(desc.getId().equals(activePersp));                
+                    perspAction.setChecked(desc.getId().equals(activePersp));
                     manager.add(perspAction);
                 }
             }

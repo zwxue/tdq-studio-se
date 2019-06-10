@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ import org.talend.dataquality.rules.KeyDefinition;
 /**
  * created by zhao on Aug 16, 2013 Abstract table compoiste. Blocking key, matching key survivorship key table are
  * intended to be extended.
- * 
+ *
  */
 public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implements PropertyChangeListener {
 
@@ -46,7 +46,7 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
 
     /**
      * DOC zshen MatchRuleComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -65,7 +65,7 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
 
     /**
      * Sets the columnMap.
-     * 
+     *
      * @param columnMap the columnMap to set
      */
     public void setColumnList(List<MetadataColumn> columnList) {
@@ -135,7 +135,7 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
 
     /**
      * Getter for isAddColumn.
-     * 
+     *
      * @return the isAddColumn
      */
     public boolean isAddColumn() {
@@ -144,7 +144,7 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
 
     /**
      * Sets the isAddColumn.
-     * 
+     *
      * @param isAddColumn the isAddColumn to set
      */
     public void setAddColumn(boolean isAddColumn) {

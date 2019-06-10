@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * created by yyin on 2014-7-11 Detailled comment
- * 
+ *
  */
 public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceiver {
 
@@ -141,7 +141,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
 
     /**
      * Clear DataEntity becuase of there maybe have a empty string when init it.
-     * 
+     *
      * @param customerdataset
      */
     private void clearDataEntity(Object customerdataset) {
@@ -205,7 +205,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
 
     /**
      * DOC yyin Comment method "handleFrequency".
-     * 
+     *
      * @param frequencyExt
      * @param indicator
      * @return
@@ -216,7 +216,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
 
     /**
      * DOC yyin Comment method "addValueToDataset".
-     * 
+     *
      * @param customerdataset
      * @param indicator
      * @param freqExt

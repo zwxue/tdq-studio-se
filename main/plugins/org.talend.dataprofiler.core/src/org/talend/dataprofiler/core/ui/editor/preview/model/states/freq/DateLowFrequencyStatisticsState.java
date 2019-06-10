@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
 
     /**
      * DOC yyi DateLowFrequencyStatisticsState constructor comment.
-     * 
+     *
      * @param units
      */
     public DateLowFrequencyStatisticsState(List<IndicatorUnit> units) {
@@ -44,7 +44,7 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyTypeStates#getCustomerDataset()
      */
     @Override

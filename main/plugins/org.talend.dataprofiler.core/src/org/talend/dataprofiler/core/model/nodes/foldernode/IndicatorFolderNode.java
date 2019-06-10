@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,7 +31,7 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
 
     /**
      * DOC bZhou IndicatorFolderNode constructor comment.
-     * 
+     *
      * @param name
      */
     public IndicatorFolderNode(String name) {
@@ -42,7 +42,7 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.foldernode.AbstractFolderNode#loadChildren()
      */
     @Override
@@ -55,7 +55,7 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.model.IWorkbenchAdapter#getChildren(java.lang.Object)
      */
     public Object[] getChildren(Object o) {
@@ -64,7 +64,7 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.model.IWorkbenchAdapter#getImageDescriptor(java.lang.Object)
      */
     public ImageDescriptor getImageDescriptor(Object object) {
@@ -73,7 +73,7 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.model.IWorkbenchAdapter#getLabel(java.lang.Object)
      */
     public String getLabel(Object o) {
@@ -82,7 +82,7 @@ public class IndicatorFolderNode extends AbstractFolderNode implements IWorkbenc
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.model.IWorkbenchAdapter#getParent(java.lang.Object)
      */
     public Object getParent(Object o) {

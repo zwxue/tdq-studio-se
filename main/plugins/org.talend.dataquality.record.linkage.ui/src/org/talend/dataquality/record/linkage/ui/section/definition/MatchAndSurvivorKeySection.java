@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -52,7 +52,7 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
 
     /**
      * DOC yyin MatchAndSurvivorKeySection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -66,7 +66,7 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
 
     /**
      * DOC zshen BlockingKeyDefinitionSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -85,7 +85,7 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
 
     /**
      * DOC yyin Comment method "createTableComposite".
-     * 
+     *
      * @param ruleComp
      * @param data
      * @param gridLayout
@@ -98,7 +98,7 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getMatchRuleComposite(org.eclipse.swt.custom
      * .CTabItem)
@@ -110,7 +110,7 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
 
     /**
      * DOC zhao Comment method "createGroupQualityThreshold".
-     * 
+     *
      * @param parent
      */
     @Override
@@ -149,7 +149,7 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#getSectionName()
      */
     @Override
@@ -159,7 +159,7 @@ public class MatchAndSurvivorKeySection extends AnaMatchSurvivorSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded(java.lang
      * .String)

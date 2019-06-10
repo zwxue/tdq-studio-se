@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC scorreia TeradataDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      * @param majorVersion
      * @param minorVersion
@@ -44,7 +44,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC yyi 2011-07-07 22246:view rows for average length for Oracle
-     * 
+     *
      * @return average length sql statement
      */
     @Override
@@ -58,7 +58,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
      */
     @Override
@@ -73,7 +73,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
      */
     @Override
@@ -87,7 +87,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullRows()
      */
     @Override
@@ -103,7 +103,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
      */
     @Override
@@ -113,7 +113,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getColumnNameInQueryClause(java.lang. String)
      */
     @Override
@@ -123,7 +123,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getTopNQuery(java.lang.String, int)
      */
     @Override
@@ -133,12 +133,12 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
             return query + n;
         }
         Matcher m = SELECT_PATTERN.matcher(query);
-        return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+        return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.
      * core.model.metadata.builder.connection. DatabaseConnection)
      */
@@ -160,7 +160,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
      */
     @Override

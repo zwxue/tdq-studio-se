@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -100,7 +100,7 @@ import orgomg.cwm.resource.relational.RelationalPackage;
 
 /**
  * @author scorreia
- * 
+ *
  * Generates the SQL queries for each indicator and each column to be analyzed. Then executes the queries and stores the
  * results.
  */
@@ -116,7 +116,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
@@ -155,11 +155,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * Method "createSqlQuery".
-     * 
+     *
      * @param dataFilterExpression
      * @param analysis
      * @param indicator
-     * 
+     *
      * @throws ParseException
      * @throws AnalysisExecutionException
      */
@@ -270,7 +270,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC talend Comment method "getCompletedQuery".
-     * 
+     *
      * @param indicator
      * @param tdColumn
      * @param colName
@@ -421,7 +421,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC talend Comment method "getColumnNameWithFunction".
-     * 
+     *
      * @param indicator
      * @param colName
      * @param language
@@ -447,7 +447,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC talend Comment method "checkHavePatterns".
-     * 
+     *
      * @param indicator
      * @param language
      * @return
@@ -471,7 +471,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC talend Comment method "getColumnName".
-     * 
+     *
      * @param indicator
      * @param tdColumn
      * @return
@@ -497,7 +497,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC talend Comment method getTdColumn.
-     * 
+     *
      * @param indicator
      */
     private TypedReturnCode<TdColumn> getTdColumn(Indicator indicator) {
@@ -522,7 +522,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC talend Comment method "getIndicatorDefinition".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -605,9 +605,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * table has two differents aliases and the columns must be prefixed with the alias of the table. Each where clause
      * must be duplicated. For example, the clause "AGE > 10" must be duplicated to give "a.AGE > 10" and "b.AGE" when
      * table aliases are "a" and "b".
-     * 
+     *
      * @param completedSqlString the SQL query
-     * 
+     *
      * @param whereExpression some where clauses
      * @param tdColumn the analyzed column
      * @return a list of new where clauses (or the one given as argument)
@@ -645,7 +645,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getTableTableAliasA".
-     * 
+     *
      * @param completedSqlString
      * @param quotedColName
      * @return
@@ -672,7 +672,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getTopN".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -683,13 +683,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "replaceVariables".
-     * 
+     *
      * @param sqlGenericString
      * @param colName
      * @param table
      * @param patterns
      * @return
-     * 
+     *
      */
     private String replaceVariables(String sqlGenericString, String colName, String table, List<String> patterns) {
         assert (patterns.size() != 0);
@@ -698,7 +698,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getPatterns".
-     * 
+     *
      * @param indicator
      * @return the patterns or null if none has been found
      */
@@ -722,9 +722,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     private static final String COMMA = " , "; //$NON-NLS-1$
 
     /**
-     * 
+     *
      * DOC mzhao bug 12675: Drill down of date type not correct. Here would not use alias.
-     * 
+     *
      * @param sqlExpression
      * @param colName
      * @param table
@@ -770,7 +770,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * Method "unquote" remove surrounding identifier quotes.
-     * 
+     *
      * @param colName a name with quotes (or without)
      * @return the name without the quotes.
      */
@@ -781,7 +781,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * Method "comma" puts a comma before a non empty string.
-     * 
+     *
      * @param previousContent
      * @return either previousContent or " , " + previousContent
      */
@@ -791,7 +791,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getFinalSqlStringStatement".
-     * 
+     *
      * @param dataFilterExpression
      * @param whereExpression
      * @param completedSqlString
@@ -804,7 +804,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getUnionCompletedString".
-     * 
+     *
      * @param indicator
      * @param sqlExpression
      * @param colName
@@ -851,7 +851,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getCompletedSingleSelect".
-     * 
+     *
      * @param indicator
      * @param sqlExpression
      * @param colName
@@ -884,7 +884,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "removeGroupBy".
-     * 
+     *
      * @param sqlGenericExpression
      * @return
      */
@@ -896,7 +896,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     /**
      * Method "replaceCountByZeroCount" replaces "COUNT(*)" by "CASE WHEN completedRange THEN COUNT(*) ELSE 0 END" in
      * the given SQL statement completedSqlString.
-     * 
+     *
      * @param completedSqlString
      * @param completedRange
      * @return the new SQL statement
@@ -907,7 +907,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getBinsAsString".
-     * 
+     *
      * @param ranges
      * @return
      */
@@ -926,7 +926,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getCompletedString".
-     * 
+     *
      * @param indicator
      * @param sqlExpression
      * @param colName
@@ -960,7 +960,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getNbReturnedRows".
-     * 
+     *
      * @param indicator
      * @param count
      * @return
@@ -978,7 +978,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * See http://en.wikipedia.org/wiki/Quartile Method "getLimitFirstArg".
-     * 
+     *
      * @param indicator
      * @param count
      * @return the number of rows to skip in order to compute the quartiles. In case of an odd number of rows, one row
@@ -1015,7 +1015,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * Method "getCount".
-     * 
+     *
      * @param analysis
      * @param colName the column name should be surrounded by the SQL quotes
      * @param table the table name should be surrounded by the SQL quotes
@@ -1036,7 +1036,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getCount".
-     * 
+     *
      * @param cachedAnalysis2
      * @param colName
      * @param quote
@@ -1064,19 +1064,19 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         org.talend.utils.sql.ConnectionUtils.closeConnection(connection);
 
         if (myResultSet.isEmpty() || myResultSet.size() > 1) {
-            log.error(Messages.getString("ColumnAnalysisSqlExecutor.TOOMANYRESULTOBTAINED") + myResultSet);//$NON-NLS-1$  
+            log.error(Messages.getString("ColumnAnalysisSqlExecutor.TOOMANYRESULTOBTAINED") + myResultSet);//$NON-NLS-1$
             return -1L;
         }
         // MOD zshen exchange OracleODBC will get a double value to int.Else Have a NumberFormatException at here.
-        return Long.valueOf(String.valueOf(myResultSet.get(0)[0]).split("\\.")[0]);//$NON-NLS-1$  
+        return Long.valueOf(String.valueOf(myResultSet.get(0)[0]).split("\\.")[0]);//$NON-NLS-1$
         // ~
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * DOC scorreia Comment method "replaceVariablesLow".
-     * 
+     *
      * @param sqlGenericString
      * @param arguments
      * @return
@@ -1088,9 +1088,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * Method "surroundSingleQuotes".
-     * 
+     *
      * see http://java.sun.com/j2se/1.4.2/docs/api/java/text/MessageFormat.html
-     * 
+     *
      * @param sqlGenericString
      * @return
      */
@@ -1100,7 +1100,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#runAnalysis(org.talend.dataquality.analysis.Analysis,
      * java.lang.String)
      */
@@ -1137,7 +1137,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC xqliu Comment method "runAnalysisIndicators".
-     * 
+     *
      * @param connection
      * @param elementToIndicator
      * @param indicators
@@ -1164,7 +1164,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             Expression query = dbms().getInstantiatedExpression(indicator);
             if (query == null || !executeQuery(indicator, connection, query.getBody())) {
                 traceError("Query not executed for indicator: \"" + AnalysisExecutorHelper.getIndicatorName(indicator) + "\" " //$NON-NLS-1$//$NON-NLS-2$
-                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody())); //$NON-NLS-1$//$NON-NLS-2$  
+                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody())); //$NON-NLS-1$//$NON-NLS-2$
                 runStatus = Boolean.FALSE;
             } else {
                 // set computation done
@@ -1179,7 +1179,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * add mapping of analyzed elements to their indicators.
-     * 
+     *
      * @param elementToIndicator
      * @param indicator
      */
@@ -1198,7 +1198,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * 
+     *
      * @param parent
      * @param connection
      * @param elementToIndicator
@@ -1230,7 +1230,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         /*
          * (non-Jsdoc)
-         * 
+         *
          * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
          */
         @Override
@@ -1262,7 +1262,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC xqliu Comment method "runAnalysisIndicatorsParallel".
-     * 
+     *
      * @param analysis
      * @param elementToIndicator
      * @param indicators
@@ -1355,7 +1355,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "setRowCountAndNullCount".
-     * 
+     *
      * @param elementToIndicator
      */
     protected void setRowCountAndNullCount(Map<ModelElement, List<Indicator>> elementToIndicator) {
@@ -1382,7 +1382,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC bZhou Comment method "needPercentage".
-     * 
+     *
      * @param ind
      * @return
      */
@@ -1395,7 +1395,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * Method "getCatalogName".
-     * 
+     *
      * @param analyzedElement
      * @return the catalog or schema quoted name
      */
@@ -1403,7 +1403,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         Package schema = super.schemata.get(analyzedElement);
         if (schema == null) {
             if (!isSchemataProxy()) {
-                log.error(Messages.getString("ColumnAnalysisSqlExecutor.NOSCHEMAFOUNDFORCOLUMN") + " " + ((analyzedElement != null) ? analyzedElement.getName() : "Unknow column"));//$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$  
+                log.error(Messages.getString("ColumnAnalysisSqlExecutor.NOSCHEMAFOUNDFORCOLUMN") + " " + ((analyzedElement != null) ? analyzedElement.getName() : "Unknow column"));//$NON-NLS-1$  //$NON-NLS-2$ //$NON-NLS-3$
             }
             return null;
         }
@@ -1419,7 +1419,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "executeQuery".
-     * 
+     *
      * @param indicator
      * @param connection
      * @param queryStmt
@@ -1430,8 +1430,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
             log.info(Messages.getString(
-                    "ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", AnalysisExecutorHelper.getIndicatorName(indicator)) //$NON-NLS-1$ 
-                    + "\t" + Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$ //$NON-NLS-2$ 
+                    "ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", AnalysisExecutorHelper.getIndicatorName(indicator)) //$NON-NLS-1$
+                    + "\t" + Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$ //$NON-NLS-2$
         }
         // give result to indicator so that it handles the results
         boolean ret = false;
@@ -1460,7 +1460,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     /**
-     * 
+     *
      * @param catalogName (can be null)
      * @param connection
      * @param queryStmt
@@ -1494,7 +1494,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 // get the results
                 ResultSet resultSet = statement.getResultSet();
                 if (resultSet == null) {
-                    String mess = Messages.getString("ColumnAnalysisSqlExecutor.NORESULTSETFORTHISSTATEMENT") + queryStmt;//$NON-NLS-1$  
+                    String mess = Messages.getString("ColumnAnalysisSqlExecutor.NORESULTSETFORTHISSTATEMENT") + queryStmt;//$NON-NLS-1$
                     log.warn(mess);
                     return null;
                 }
@@ -1532,7 +1532,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
     /**
      * DOC xqliu Comment method "canParallel".
-     * 
+     *
      * @return
      */
     private boolean canParallel(Connection connection) {
@@ -1546,7 +1546,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
             // ADD msjian 2011-6-24 22483 fixed: fixed "java.sql.SQLException: database is locked"
             // because the sqlite db is not supported the parallel very well
-            if ("SQLite".equals(connection.getMetaData().getDatabaseProductName())) { //$NON-NLS-1$ 
+            if ("SQLite".equals(connection.getMetaData().getDatabaseProductName())) { //$NON-NLS-1$
                 return false;
             }
             if (ExtractMetaDataUtils.getInstance().isHiveConnection(connection)) {

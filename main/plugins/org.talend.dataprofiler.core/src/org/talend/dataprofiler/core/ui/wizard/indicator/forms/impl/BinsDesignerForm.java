@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -74,7 +74,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFields()
      */
     @Override
@@ -164,7 +164,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFieldsListeners()
      */
     @Override
@@ -332,7 +332,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
      */
     @Override
@@ -400,7 +400,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
      */
     @Override
@@ -410,7 +410,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
      */
     @Override
@@ -430,7 +430,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     /**
      * DOC zqin BinsDesignerForm class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class BinsLableProvider extends LabelProvider implements ITableLabelProvider {
@@ -456,7 +456,7 @@ public class BinsDesignerForm extends AbstractIndicatorForm {
 
     /**
      * DOC zqin BinsDesignerForm class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class BinsContentProvider implements IStructuredContentProvider {

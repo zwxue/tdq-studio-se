@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ public class ImportParserRuleWizardPage extends WizardPage {
 
     /**
      * DOC klliu ImportParserRuleWizardPage constructor comment.
-     * 
+     *
      * @param pageName
      */
     protected ImportParserRuleWizardPage() {
@@ -124,7 +124,7 @@ public class ImportParserRuleWizardPage extends WizardPage {
 
     /**
      * DOC klliu Comment method "getXLSFile".
-     * 
+     *
      * @return
      */
     public String getSourceFile() {
@@ -133,7 +133,7 @@ public class ImportParserRuleWizardPage extends WizardPage {
 
     /**
      * DOC klliu Comment method "getSkip".
-     * 
+     *
      * @return
      */
     public boolean getSkip() {
@@ -142,7 +142,7 @@ public class ImportParserRuleWizardPage extends WizardPage {
 
     /**
      * DOC klliu Comment method "getRename".
-     * 
+     *
      * @return
      */
     public boolean getRename() {

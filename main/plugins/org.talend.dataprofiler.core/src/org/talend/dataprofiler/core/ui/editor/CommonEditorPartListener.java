@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -43,9 +43,9 @@ import org.talend.resource.EResourceConstant;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
- * 
+ *
  */
 public class CommonEditorPartListener extends PartListener {
 
@@ -114,7 +114,7 @@ public class CommonEditorPartListener extends PartListener {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.PartListener#partDeactivated(org.eclipse.ui.IWorkbenchPart)
      */
     @SuppressWarnings("restriction")
@@ -174,7 +174,7 @@ public class CommonEditorPartListener extends PartListener {
     /**
      * lock the sql source file when opening it. and if in remote "ask user" mode, and not locked, then make the editor
      * not editable
-     * 
+     *
      * @param part
      */
     private void lockFile(IWorkbenchPart part) {
@@ -194,7 +194,7 @@ public class CommonEditorPartListener extends PartListener {
      * Unlock the sql source file of two types: 1) directly opened sql file from the view, which use TDQFileEditorInput;
      * 2) created by "Preview Table" and saved, which use SQLEditorInput(create) and FileEditorInput(save) (inside the
      * sql explorer, can not be replaced by TDQFileEditorInput)
-     * 
+     *
      * @param part
      */
     private void unlockFile(IWorkbenchPart part) {

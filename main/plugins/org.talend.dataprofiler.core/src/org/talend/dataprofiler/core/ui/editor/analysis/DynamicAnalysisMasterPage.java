@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -76,7 +76,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
     /**
      * DOC yyin DynamicAnalysisMasterPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -255,7 +255,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
     /**
      * DOC yyin Comment method "createEventReceiver".
-     * 
+     *
      * @param categoryDataset
      * @param index
      * @param oneIndicator
@@ -315,7 +315,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
     /**
      * unregister every dynamic events which registered before executing analysis
-     * 
+     *
      * @param eventReceivers
      */
     public void unRegisterDynamicEvent() {

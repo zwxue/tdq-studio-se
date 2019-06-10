@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,7 +39,7 @@ public class DBSchemaRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getObject()
      */
     @Override
@@ -49,7 +49,7 @@ public class DBSchemaRepNode extends DQRepositoryNode {
 
     /**
      * DOC klliu DBSchemaRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -68,7 +68,7 @@ public class DBSchemaRepNode extends DQRepositoryNode {
 
     /**
      * create the node of parent.
-     * 
+     *
      * @param object
      * @return
      */
@@ -86,7 +86,7 @@ public class DBSchemaRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.DQRepositoryNode#getParentViewObject()
      */
     @Override

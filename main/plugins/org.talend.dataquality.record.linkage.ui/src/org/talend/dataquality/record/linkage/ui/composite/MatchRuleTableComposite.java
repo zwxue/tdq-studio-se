@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,7 +29,7 @@ import org.talend.dataquality.rules.MatchRule;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<MatchKeyDefinition> {
 
@@ -39,7 +39,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
 
     /**
      * DOC zshen MatchRuleComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -50,7 +50,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
 
     /**
      * DOC zhao Comment method "setInput".
-     * 
+     *
      * @param matchRule
      */
     public void setInput(MatchRule matchRule) {
@@ -87,7 +87,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
 
     /**
      * DOC zhao Comment method "createMatchIntervalComposite".
-     * 
+     *
      */
     protected void createMatchIntervalComposite() {
         Composite matchIntervalComposite = new Composite(this, SWT.NONE);
@@ -129,7 +129,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
 
     /**
      * Getter for matchRule.
-     * 
+     *
      * @return the matchRule
      */
     public MatchRule getMatchRule() {
@@ -138,7 +138,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override

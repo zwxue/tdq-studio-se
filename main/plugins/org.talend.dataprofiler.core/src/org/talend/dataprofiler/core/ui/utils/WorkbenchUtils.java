@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -114,7 +114,7 @@ public final class WorkbenchUtils {
 
     /**
      * DOC bZhou Comment method "changePerspective".
-     * 
+     *
      * @param perspectiveID
      */
     public static void changePerspective(final String perspectiveID) {
@@ -201,9 +201,9 @@ public final class WorkbenchUtils {
     }
 
     /**
-     * 
+     *
      * if it is TDQ_Data Profiling,TDQ_Libraries or metadata.
-     * 
+     *
      * @param folderItem
      * @return
      */
@@ -219,9 +219,9 @@ public final class WorkbenchUtils {
     }
 
     /**
-     * 
+     *
      * Add qiongli: get the detail ERepositoryObjectType of folderItem.
-     * 
+     *
      * @param folderItem
      * @return
      */
@@ -294,7 +294,7 @@ public final class WorkbenchUtils {
 
     /**
      * judgement one string equals another string dependency on the OS's case sensitive type.
-     * 
+     *
      * @param str1
      * @param str2
      * @return
@@ -315,7 +315,7 @@ public final class WorkbenchUtils {
     }
 
     /**
-     * 
+     *
      * Refresh the analysis and Connection which is openning
      */
     @Deprecated
@@ -329,7 +329,7 @@ public final class WorkbenchUtils {
     /**
      * close and open the editors same method {@link CorePlugin}.getDefault().itemIsOpening() MOD TDQ-8360 20140410
      * yyin: will only operate the analysis who is related and has opened (by its observer --added when opening)
-     * 
+     *
      * @param iEditorReference
      */
     private static void closeAndOpenEditor(List<IEditorReference> iEditorReference) {
@@ -361,9 +361,9 @@ public final class WorkbenchUtils {
     }
 
     /**
-     * 
+     *
      * Refresh the analysis which is openning
-     * 
+     *
      * @param String analysisName: can be StringUtils.EMPTY
      */
     public static void refreshCurrentAnalysisEditor(String analysisName) {
@@ -402,7 +402,7 @@ public final class WorkbenchUtils {
         }
         return returnCode;
     }
-    
+
     public static void nodifyDependedAnalysis(ConnectionItem connectionItem) {
         // Added TDQ-8360 20140410 yyin: notify each depended analysis
         EList<Dependency> clientDependencies = connectionItem.getConnection().getSupplierDependency();
@@ -419,9 +419,9 @@ public final class WorkbenchUtils {
     }
 
     /**
-     * 
+     *
      * Get Editors which is is same as editorID --used for the analysis editor only
-     * 
+     *
      * @param editorID
      * @param analysisName
      * @return
@@ -481,9 +481,9 @@ public final class WorkbenchUtils {
     }
 
     /**
-     * 
+     *
      * DOC qiongli TDQ-3317:move this method from ReloadDatabaseAction. to this class .
-     * 
+     *
      * @param oldDataProvider
      * @throws PartInitException
      */
@@ -566,7 +566,7 @@ public final class WorkbenchUtils {
 
     /**
      * DOC yyin Comment method "getTempAnalysis".
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -588,7 +588,7 @@ public final class WorkbenchUtils {
      * Reload the metadata table of the current file connection, when the file connection changed schema: if the
      * analysis 's analyzed columns are in the changed schema: compare the columns, remain the columns with same name,
      * remove the columns not in new schema, and add the new columns in new schema. TDQ-8360 20140324 yyin
-     * 
+     *
      * @param MetadataTable with new schema
      */
     public static void reloadMetadataOfDelimitedFile(MetadataTable metadataTable) throws BusinessException {
@@ -606,7 +606,7 @@ public final class WorkbenchUtils {
     /**
      * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
      * get the viewPart and focus it. if the viewPart closed, it will be opened.
-     * 
+     *
      * @param viewId the identifier of viewPart
      * @return
      */
@@ -617,7 +617,7 @@ public final class WorkbenchUtils {
     /**
      * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
      * get the viewPart and focus it. if the viewPart closed, it will return null too.
-     * 
+     *
      * @param viewId the identifier of viewPart
      * @param openIfClose decide whether we will open the view when it is closing
      * @return
@@ -629,7 +629,7 @@ public final class WorkbenchUtils {
     /**
      * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
      * get the viewPart and focus it or not. if the viewPart closed, it will return null too.
-     * 
+     *
      * @param viewId the identifier of viewPart
      * @param openIfClose decide whether we will open the view when it is closing
      * @param bringToTop decide whether we will bring the part To Top
@@ -665,7 +665,7 @@ public final class WorkbenchUtils {
     /**
      * use this method to set ImageHyperlink's image insteadof using ImageHyperlink.setImage() to avoid new Image()
      * NOTE: this method only can be used when the ImageHyperlink is alway enable.
-     * 
+     *
      * @param imageHyperlink
      * @param image
      */

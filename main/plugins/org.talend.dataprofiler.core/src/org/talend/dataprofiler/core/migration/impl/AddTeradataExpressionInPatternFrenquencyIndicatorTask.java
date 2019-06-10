@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * @author scorreia
- * 
+ *
  * This migration task removes the call to the Oracle TRIM function when computing the length indicators
  */
 public class AddTeradataExpressionInPatternFrenquencyIndicatorTask extends AbstractWorksapceUpdateTask {
@@ -45,7 +45,7 @@ public class AddTeradataExpressionInPatternFrenquencyIndicatorTask extends Abstr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -80,7 +80,7 @@ public class AddTeradataExpressionInPatternFrenquencyIndicatorTask extends Abstr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -89,7 +89,7 @@ public class AddTeradataExpressionInPatternFrenquencyIndicatorTask extends Abstr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {

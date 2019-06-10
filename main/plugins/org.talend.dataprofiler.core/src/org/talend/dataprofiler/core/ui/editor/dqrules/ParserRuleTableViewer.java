@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -81,7 +81,7 @@ public class ParserRuleTableViewer {
 
     /**
      * DOC klliu Comment method "createTable".
-     * 
+     *
      * @param parent
      */
     private Table createTable(Composite parent) {
@@ -131,7 +131,7 @@ public class ParserRuleTableViewer {
 
     /**
      * DOC klliu Comment method "addTdExpression".
-     * 
+     *
      * @return
      */
     public TdExpression addTdExpression() {
@@ -177,7 +177,7 @@ public class ParserRuleTableViewer {
 
     /**
      * DOC klliu Comment method "getSelection".
-     * 
+     *
      * @return
      */
     public ISelection getSelection() {
@@ -186,7 +186,7 @@ public class ParserRuleTableViewer {
 
     /**
      * DOC klliu Comment method "removeTdExpression".
-     * 
+     *
      * @param tdExpression
      */
     public void removeTdExpression(TdExpression tdExpression) {
@@ -200,7 +200,7 @@ public class ParserRuleTableViewer {
     }
 
     /**
-     * 
+     *
      * zshen remove all of expression on the tableViewer.
      */
     public void removeAllTdExpression() {
@@ -212,7 +212,7 @@ public class ParserRuleTableViewer {
     }
 
     /**
-     * 
+     *
      * zshen add one expression List on the tableViewer.
      */
     public void addAllTdExpression(List<TdExpression> movedElements) {
@@ -224,7 +224,7 @@ public class ParserRuleTableViewer {
 
     /**
      * DOC klliu Comment method "moveTdExpression".
-     * 
+     *
      * @param tdExpression
      */
     public void moveTdExpression(TdExpression tdExpression, int type) {
@@ -332,7 +332,7 @@ public class ParserRuleTableViewer {
 
     /**
      * DOC klliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      */
     private final static class TdExpressionContentProvider implements IStructuredContentProvider {
 
@@ -362,7 +362,7 @@ public class ParserRuleTableViewer {
 
     /**
      * DOC klliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      */
     private static class TdExpressionLabelProvider extends LabelProvider implements ITableLabelProvider {
 

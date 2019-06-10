@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -80,7 +80,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.impl.MetadataTableImpl#getColumns()
      */
     @Override
@@ -97,7 +97,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#getProperties()
      */
     @Override
@@ -107,7 +107,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#setProperties(java.util.HashMap)
      */
     @Override
@@ -118,7 +118,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#getId()
      */
     @Override
@@ -128,7 +128,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#setId(java.lang.String)
      */
     @Override
@@ -139,7 +139,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#getComment()
      */
     @Override
@@ -149,7 +149,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#setComment(java.lang.String)
      */
     @Override
@@ -159,7 +159,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#getLabel()
      */
     @Override
@@ -169,7 +169,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#setLabel(java.lang.String)
      */
     @Override
@@ -180,7 +180,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#isReadOnly()
      */
     @Override
@@ -190,7 +190,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#setReadOnly(boolean)
      */
     @Override
@@ -200,7 +200,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#isSynchronised()
      */
     @Override
@@ -210,7 +210,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#setSynchronised(boolean)
      */
     @Override
@@ -220,7 +220,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#isDivergency()
      */
     @Override
@@ -230,7 +230,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.AbstractMetadataObject#setDivergency(boolean)
      */
     @Override
@@ -240,7 +240,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getName()
      */
     @Override
@@ -250,7 +250,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#setName(java.lang.String)
      */
     @Override
@@ -260,7 +260,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getVisibility()
      */
     @Override
@@ -270,7 +270,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#setVisibility(orgomg.cwm.objectmodel.core.VisibilityKind)
      */
     @Override
@@ -280,7 +280,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getClientDependency()
      */
     @Override
@@ -290,7 +290,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getSupplierDependency()
      */
     @Override
@@ -300,7 +300,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getConstraint()
      */
     @Override
@@ -310,7 +310,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getNamespace()
      */
     @Override
@@ -320,7 +320,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#setNamespace(orgomg.cwm.objectmodel.core.Namespace)
      */
     @Override
@@ -330,7 +330,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getImporter()
      */
     @Override
@@ -340,7 +340,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getStereotype()
      */
     @Override
@@ -350,7 +350,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#setStereotype(orgomg.cwm.objectmodel.core.Stereotype)
      */
     @Override
@@ -360,7 +360,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getTaggedValue()
      */
     @Override
@@ -370,7 +370,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getDocument()
      */
     @Override
@@ -380,7 +380,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getDescription()
      */
     @Override
@@ -390,7 +390,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getResponsibleParty()
      */
     @Override
@@ -400,7 +400,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getElementNode()
      */
     @Override
@@ -410,7 +410,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getSet()
      */
     @Override
@@ -420,7 +420,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getRenderedObject()
      */
     @Override
@@ -430,7 +430,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getVocabularyElement()
      */
     @Override
@@ -440,7 +440,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getMeasurement()
      */
     @Override
@@ -450,7 +450,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getChangeRequest()
      */
     @Override
@@ -460,7 +460,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.ModelElement#getDasdlProperty()
      */
     @Override
@@ -470,7 +470,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eClass()
      */
     @Override
@@ -480,7 +480,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eResource()
      */
     @Override
@@ -490,7 +490,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eContainer()
      */
     @Override
@@ -500,7 +500,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eContainingFeature()
      */
     @Override
@@ -510,7 +510,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eContainmentFeature()
      */
     @Override
@@ -520,7 +520,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eContents()
      */
     @Override
@@ -530,7 +530,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eAllContents()
      */
     @Override
@@ -540,7 +540,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eIsProxy()
      */
     @Override
@@ -550,7 +550,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eCrossReferences()
      */
     @Override
@@ -560,7 +560,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eGet(org.eclipse.emf.ecore.EStructuralFeature)
      */
     @Override
@@ -570,7 +570,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eGet(org.eclipse.emf.ecore.EStructuralFeature, boolean)
      */
     @Override
@@ -580,7 +580,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eSet(org.eclipse.emf.ecore.EStructuralFeature, java.lang.Object)
      */
     @Override
@@ -590,7 +590,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eIsSet(org.eclipse.emf.ecore.EStructuralFeature)
      */
     @Override
@@ -600,7 +600,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eUnset(org.eclipse.emf.ecore.EStructuralFeature)
      */
     @Override
@@ -610,7 +610,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.ecore.EObject#eInvoke(org.eclipse.emf.ecore.EOperation, org.eclipse.emf.common.util.EList)
      */
     @Override
@@ -620,7 +620,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.common.notify.Notifier#eAdapters()
      */
     @Override
@@ -630,7 +630,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.common.notify.Notifier#eDeliver()
      */
     @Override
@@ -640,7 +640,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.common.notify.Notifier#eSetDeliver(boolean)
      */
     @Override
@@ -650,7 +650,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.common.notify.Notifier#eNotify(org.eclipse.emf.common.notify.Notification)
      */
     @Override
@@ -660,7 +660,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Class#getIndex()
      */
     @Override
@@ -670,7 +670,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#isIsAbstract()
      */
     @Override
@@ -680,7 +680,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#setIsAbstract(boolean)
      */
     @Override
@@ -690,7 +690,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getFeature()
      */
     @Override
@@ -700,7 +700,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getStructuralFeature()
      */
     @Override
@@ -710,7 +710,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getParameter()
      */
     @Override
@@ -720,7 +720,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getGeneralization()
      */
     @Override
@@ -730,7 +730,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getSpecialization()
      */
     @Override
@@ -740,7 +740,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getInstance()
      */
     @Override
@@ -750,7 +750,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getAlias()
      */
     @Override
@@ -760,7 +760,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getExpressionNode()
      */
     @Override
@@ -770,7 +770,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getMappingFrom()
      */
     @Override
@@ -780,7 +780,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getMappingTo()
      */
     @Override
@@ -790,7 +790,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getClassifierMap()
      */
     @Override
@@ -800,7 +800,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getCfMap()
      */
     @Override
@@ -810,7 +810,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getDomain()
      */
     @Override
@@ -820,7 +820,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Classifier#getSimpleDimension()
      */
     @Override
@@ -830,7 +830,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see orgomg.cwm.objectmodel.core.Namespace#getOwnedElement()
      */
     @Override
@@ -840,7 +840,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#getSourceName()
      */
     @Override
@@ -850,7 +850,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#setSourceName(java.lang.String)
      */
     @Override
@@ -860,7 +860,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#getConnection()
      */
     @Override
@@ -870,7 +870,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#getAdditionalProperties()
      */
     @Override
@@ -880,7 +880,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#getTableType()
      */
     @Override
@@ -890,7 +890,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#setTableType(java.lang.String)
      */
     @Override
@@ -900,7 +900,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#isAttachedCDC()
      */
     @Override
@@ -910,7 +910,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#setAttachedCDC(boolean)
      */
     @Override
@@ -920,7 +920,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#isActivatedCDC()
      */
     @Override
@@ -930,7 +930,7 @@ public class MetadataTableWithFilter extends MetadataTableImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.model.metadata.builder.connection.MetadataTable#setActivatedCDC(boolean)
      */
     @Override

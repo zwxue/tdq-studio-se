@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
  * @author scorreia
- * 
+ *
  * A class to get the correct executor for a given analysis.
  */
 public final class AnalysisExecutorSelector {
@@ -44,7 +44,7 @@ public final class AnalysisExecutorSelector {
 
     /**
      * Method "getAnalysisExecutor".
-     * 
+     *
      * @param analysis the analysis to be run by the executor.
      * @return the appropriate executor of the analysis or null when no appropriate executor has been found.
      */
@@ -98,7 +98,7 @@ public final class AnalysisExecutorSelector {
 
     /**
      * return Column or TdXMLElement analysis executor. ADD xqliu bug 10238 2009-12-24
-     * 
+     *
      * @param analysis
      * @param executionEngine
      * @return
@@ -125,7 +125,7 @@ public final class AnalysisExecutorSelector {
 
     /**
      * DOC zshen Comment method "judgeEditorOpenning".
-     * 
+     *
      * @param analysisItem
      * @return
      */
@@ -136,7 +136,7 @@ public final class AnalysisExecutorSelector {
 
     /**
      * yyi 2011-02-22 17871:delimitefile.
-     * 
+     *
      * @param analysis
      * @param executionEngine
      * @return
@@ -154,7 +154,7 @@ public final class AnalysisExecutorSelector {
 
     /**
      * Method "executeAnalysis".
-     * 
+     *
      * @param analysis an analysis to be run
      * @return a return code with an error message when the analysis failed to run.
      */
@@ -193,9 +193,9 @@ public final class AnalysisExecutorSelector {
     }
 
     /**
-     * 
+     *
      * DOC xqliu Comment method "executeAnalysis".
-     * 
+     *
      * @param analysis
      * @param monitor
      * @return

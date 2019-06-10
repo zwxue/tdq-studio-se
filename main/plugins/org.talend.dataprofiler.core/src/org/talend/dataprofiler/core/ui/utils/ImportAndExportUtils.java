@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,14 +30,14 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by qiongli on Sep 26, 2012. some communal functions for import and export
- * 
+ *
  */
 public class ImportAndExportUtils {
 
     /**
-     * 
+     *
      * when uncheck an item,should uncheck related client depenedences.
-     * 
+     *
      * @param dependencyClients
      */
     public static void iterateUncheckClientDependency(List<ModelElement> dependencyClients, CheckboxTreeViewer repositoryTree) {
@@ -60,9 +60,9 @@ public class ImportAndExportUtils {
     }
 
     /**
-     * 
+     *
      * Find client dependencies by contextId. it might be Connection
-     * 
+     *
      * @param contextId
      * @return
      */

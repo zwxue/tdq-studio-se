@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -52,9 +52,9 @@ import org.talend.repository.RepositoryWorkUnit;
 import org.talend.utils.io.FilesUtils;
 
 /**
- * 
+ *
  * @author zshen
- * 
+ *
  * This class is needed by ProxyRepositoryFactory, so if simple remove it will effect startup for TOP. If you came to
  * ProxyRepositoryFactory class you will find coreService variable and it need a service (which implements ICoreService)
  * to initialize itself. We have a CoreService calss in the org.talend.core plugin but in TOP we can't get it from
@@ -66,7 +66,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#addWorkspaceTaskDone(java.lang.String)
      */
     @Override
@@ -76,7 +76,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#checkJob(java.lang.String)
      */
     @Override
@@ -86,7 +86,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#createStatsLogAndImplicitParamter(org.talend.core.model.general.Project)
      */
     @Override
@@ -96,7 +96,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#deleteAllJobs(boolean)
      */
     @Override
@@ -106,7 +106,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#deleteRoutinefile(org.talend.core.model.repository.IRepositoryViewObject)
      */
     @Override
@@ -116,7 +116,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#filterSpecialChar(java.lang.String)
      */
     @Override
@@ -126,7 +126,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getColumnNameChanged(org.talend.core.model.metadata.IMetadataTable,
      * org.talend.core.model.metadata.IMetadataTable)
      */
@@ -137,7 +137,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getContextFileNameForPerl(java.lang.String, java.lang.String, java.lang.String,
      * java.lang.String)
      */
@@ -148,7 +148,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getContextFlagFromQueryUtils()
      */
     @Override
@@ -158,7 +158,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getImageWithDocExt(java.lang.String)
      */
     @Override
@@ -168,7 +168,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getImageWithSpecial(org.eclipse.swt.graphics.Image)
      */
     @Override
@@ -178,7 +178,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getJavaJobFolderName(java.lang.String, java.lang.String)
      */
     @Override
@@ -188,7 +188,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getJavaProjectFolderName(org.talend.core.model.properties.Item)
      */
     @Override
@@ -198,7 +198,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getLanTypeString()
      */
     @Override
@@ -208,7 +208,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getLastUser()
      */
     @Override
@@ -218,7 +218,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getNewMetadataColumns(org.talend.core.model.metadata.IMetadataTable,
      * org.talend.core.model.metadata.IMetadataTable)
      */
@@ -229,7 +229,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.core.ICoreService#getParameterUNIQUENAME(org.talend.designer.core.model.utils.emf.talendfile.NodeType)
      */
@@ -240,7 +240,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getRemoveMetadataColumns(org.talend.core.model.metadata.IMetadataTable,
      * org.talend.core.model.metadata.IMetadataTable)
      */
@@ -251,7 +251,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getRootProjectNameForPerl(org.talend.core.model.properties.Item)
      */
     @Override
@@ -261,7 +261,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getRoutineAndJars()
      */
     @Override
@@ -271,7 +271,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getSpecificResourceInJavaProject(org.eclipse.core.runtime.IPath)
      */
     @Override
@@ -281,7 +281,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getSpecificResourceInPerlProject(org.eclipse.core.runtime.IPath)
      */
     @Override
@@ -291,7 +291,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#getTemplateString()
      */
     @Override
@@ -301,7 +301,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#initializeForTalendStartupJob()
      */
     @Override
@@ -311,7 +311,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#initializeTemplates()
      */
     @Override
@@ -321,7 +321,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#isAlreadyBuilt(org.talend.core.model.general.Project)
      */
     @Override
@@ -331,7 +331,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#isContainContextParam(java.lang.String)
      */
     @Override
@@ -341,7 +341,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#isKeyword(java.lang.String)
      */
     @Override
@@ -351,7 +351,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#readWorkspaceTasksDone()
      */
     @Override
@@ -361,7 +361,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#removeItemRelations(org.talend.core.model.properties.Item)
      */
     @Override
@@ -371,7 +371,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#removeJobLaunch(org.talend.core.model.repository.IRepositoryViewObject)
      */
     @Override
@@ -381,7 +381,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#setFlagForQueryUtils(boolean)
      */
     @Override
@@ -391,7 +391,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#syncAllRoutines()
      */
     @Override
@@ -401,7 +401,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#syncLibraries(org.eclipse.core.runtime.IProgressMonitor[])
      */
     @Override
@@ -411,7 +411,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#validateValueForDBType(java.lang.String)
      */
     @Override
@@ -421,7 +421,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#synchronizeMapptingXML()
      */
     @Override
@@ -442,7 +442,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#deleteBeanfile(org.talend.core.model.repository.IRepositoryViewObject)
      */
     @Override
@@ -452,7 +452,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#syncAllBeans()
      */
     @Override
@@ -462,7 +462,7 @@ public class TopService implements ICoreService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ICoreService#convert(org.talend.core.model.metadata.builder.connection.MetadataTable)
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ public class SelectedComparisonAction extends Action {
 
     /**
      * DOC mzhao Refrech selected object when selection changed.
-     * 
+     *
      * @param mSelectedObj1
      * @param mSelectedObj2
      */

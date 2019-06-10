@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -43,7 +43,7 @@ public class IndicatorEditor extends CommonFormEditor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.forms.editor.FormEditor#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
      */
     @Override
@@ -64,7 +64,7 @@ public class IndicatorEditor extends CommonFormEditor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.CommonFormEditor#addPages()
      */
     @Override
@@ -92,7 +92,7 @@ public class IndicatorEditor extends CommonFormEditor {
 
     /**
      * Judge if the current indicator definition is a system indicator
-     * 
+     *
      * @return true if it is system indicator false if it is UDI
      */
     private boolean isSystemIndicator() {
@@ -119,7 +119,7 @@ public class IndicatorEditor extends CommonFormEditor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.part.WorkbenchPart#firePropertyChange(int)
      */
     @Override
@@ -131,7 +131,7 @@ public class IndicatorEditor extends CommonFormEditor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.CommonFormEditor#doSave(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
@@ -144,7 +144,7 @@ public class IndicatorEditor extends CommonFormEditor {
 
     /**
      * Sets the indicatorDefinitions.
-     * 
+     *
      * @param indicatorDefinitions the indicatorDefinitions to set
      */
     public void setIndicatorDefinitions(IndicatorsDefinitions indicatorDefinitions) {
@@ -153,7 +153,7 @@ public class IndicatorEditor extends CommonFormEditor {
 
     /**
      * Getter for indicatorDefinitions.
-     * 
+     *
      * @return the indicatorDefinitions
      */
     public IndicatorsDefinitions getIndicatorDefinitions() {
@@ -162,7 +162,7 @@ public class IndicatorEditor extends CommonFormEditor {
 
     /**
      * DOC xqliu 2009-07-02 bug 7687.
-     * 
+     *
      * @param state
      */
     public void setSaveActionButtonState(boolean state) {

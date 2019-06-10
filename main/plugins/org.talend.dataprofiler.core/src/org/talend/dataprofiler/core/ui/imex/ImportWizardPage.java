@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -117,7 +117,7 @@ public class ImportWizardPage extends WizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
@@ -290,7 +290,7 @@ public class ImportWizardPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * Comment method "updateBasePath".
      */
     public void updateBasePath() {
@@ -317,7 +317,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "removeInvalidRecords".
-     * 
+     *
      * @param invalidRecords
      */
     public void removeInvalidRecords(ItemRecord[] invalidRecords) {
@@ -476,7 +476,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "createRepositoryTree".
-     * 
+     *
      * @param top
      */
     private void createRepositoryTree(Composite top) {
@@ -490,7 +490,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "createErrorsList".
-     * 
+     *
      * @param top
      */
     private void createErrorsList(Composite top) {
@@ -528,7 +528,7 @@ public class ImportWizardPage extends WizardPage {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
              */
             @Override
@@ -548,7 +548,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "createOptionComposite".
-     * 
+     *
      * @param top
      */
     private void createOptionComposite(Composite top) {
@@ -559,7 +559,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "setDirState".
-     * 
+     *
      * @param state
      */
     protected void setDirState(boolean state) {
@@ -574,7 +574,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "isDirState".
-     * 
+     *
      * @return
      */
     public boolean isDirState() {
@@ -583,7 +583,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "setArchState".
-     * 
+     *
      * @param state
      */
     protected void setArchState(boolean state) {
@@ -598,7 +598,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "isArchState".
-     * 
+     *
      * @return
      */
     public boolean isArchState() {
@@ -607,7 +607,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "createSelectComposite".
-     * 
+     *
      * @param top
      */
     private void createSelectComposite(Composite top) {
@@ -645,7 +645,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "getElements".
-     * 
+     *
      * @return
      */
     public ItemRecord[] getElements() {
@@ -680,7 +680,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * get the Sum Indicator File according to the Mean Indicator's ModelElement.
-     * 
+     *
      * @param meanIndicator
      * @return
      */
@@ -708,7 +708,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * Getter for writer.
-     * 
+     *
      * @return the writer
      */
     public IImportWriter getWriter() {
@@ -717,7 +717,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * DOC bZhou Comment method "updateErrorList".
-     * 
+     *
      * @param records
      */
     public void updateErrorList(ItemRecord[] records) {
@@ -733,9 +733,9 @@ public class ImportWizardPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * add related subReport jrxml/jasper file to List.
-     * 
+     *
      * @param record
      * @param itemRecords
      */
@@ -785,7 +785,7 @@ public class ImportWizardPage extends WizardPage {
 
     /**
      * Get the status of overwrite
-     * 
+     *
      * @return true if all conflict element should be overwrite else false
      */
     public boolean isOverWrite() {

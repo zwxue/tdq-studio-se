@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFields()
      */
     @Override
@@ -63,7 +63,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFieldsListeners()
      */
     @Override
@@ -72,7 +72,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -86,7 +86,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -99,7 +99,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
      */
     @Override
@@ -130,7 +130,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
      */
     @Override
@@ -139,7 +139,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
      */
     @Override
@@ -148,7 +148,7 @@ public class TextLengthForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#checkFieldsValue()
      */
     @Override

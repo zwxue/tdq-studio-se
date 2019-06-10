@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -58,7 +58,7 @@ public class FirstNameIndexMigrator {
 
     /**
      * Sets the inputPath.
-     * 
+     *
      * @param inputPath the inputPath to set
      */
     public void setInputPath(String inputPath) {
@@ -67,7 +67,7 @@ public class FirstNameIndexMigrator {
 
     /**
      * Sets the outputPath.
-     * 
+     *
      * @param outputPath the outputPath to set
      */
     public void setOutputPath(String outputPath) {
@@ -76,7 +76,7 @@ public class FirstNameIndexMigrator {
 
     /**
      * Deletes all files and sub-directories under a specified directory.
-     * 
+     *
      * @param dir
      * @return true if all deletions were successful
      */
@@ -95,7 +95,7 @@ public class FirstNameIndexMigrator {
 
     /**
      * prepare I/O folders and call regeneration process.
-     * 
+     *
      * @throws java.io.IOException
      */
     public int run() throws IOException {
@@ -127,7 +127,7 @@ public class FirstNameIndexMigrator {
 
     /**
      * regenerate all indexes recursively.
-     * 
+     *
      * @param inputFolder
      * @param outputFolder
      * @throws java.io.IOException
@@ -248,9 +248,9 @@ public class FirstNameIndexMigrator {
 
     /**
      * check if a file is for Lucene index. A complete list of lucene index formats can be found here:
-     * 
+     *
      * http://lucene.apache.org/core/old_versioned_docs/versions/3_0_1/ fileformats.html
-     * 
+     *
      * @param file
      */
     private boolean isLuceneIndexFile(File file) {

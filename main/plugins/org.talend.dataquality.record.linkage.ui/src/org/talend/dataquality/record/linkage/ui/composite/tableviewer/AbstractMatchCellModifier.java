@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.filter.Col
 
 /**
  * created by zshen on Sep 13, 2013 Detailled comment
- * 
+ *
  * Abstract class for cell Modifier in match key and block key table
  */
 public abstract class AbstractMatchCellModifier<T> implements ICellModifier {
@@ -33,7 +33,7 @@ public abstract class AbstractMatchCellModifier<T> implements ICellModifier {
 
     /**
      * Getter for columnList.
-     * 
+     *
      * @return the columnList
      */
     public List<MetadataColumn> getColumnList() {
@@ -42,7 +42,7 @@ public abstract class AbstractMatchCellModifier<T> implements ICellModifier {
 
     /**
      * Sets the columnList.
-     * 
+     *
      * @param columnList the columnList to set
      */
     public void setColumnMap(List<MetadataColumn> columnList) {
@@ -53,7 +53,7 @@ public abstract class AbstractMatchCellModifier<T> implements ICellModifier {
 
     /**
      * Getter for tableViewer.
-     * 
+     *
      * @return the tableViewer
      */
     public AbstractMatchAnalysisTableViewer<T> getTableViewer() {
@@ -62,7 +62,7 @@ public abstract class AbstractMatchCellModifier<T> implements ICellModifier {
 
     /**
      * Sets the tableViewer.
-     * 
+     *
      * @param tableViewer the tableViewer to set
      */
     public void setTableViewer(AbstractMatchAnalysisTableViewer<T> tableViewer) {

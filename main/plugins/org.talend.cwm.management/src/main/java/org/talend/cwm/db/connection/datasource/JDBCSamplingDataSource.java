@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.datascience.SamplingDataSource#setDataSource(java.lang.Object)
      */
     public void setDataSource(ResultSet rs) {
@@ -42,7 +42,7 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.datascience.SamplingDataSource#getDatasize()
      */
     public boolean hasNext() throws DQException {
@@ -58,7 +58,7 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.datascience.SamplingDataSource#getRecord()
      */
     public Object[] getRecord() throws DQException {
@@ -88,7 +88,7 @@ public class JDBCSamplingDataSource extends AbstractSamplingDataSource<ResultSet
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.sampling.SamplingDataSource#finalizeDataSampling()
      */
     public boolean finalizeDataSampling() throws DQException {

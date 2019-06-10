@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -97,7 +97,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
 
     /**
      * DOC zqin ColumnAnalysisResultPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -172,7 +172,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
 
     protected Section createGraphicsSectionPart(Composite parentComp) {
         Section section = createSection(form, parentComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ 
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -370,7 +370,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
     /**
      * get the table column names from ColumnSetMultiValueIndicator, all the column with nominal type should be ahead of
      * the column with other types.
-     * 
+     *
      * @param csMultiIndicator
      * @return
      */
@@ -400,9 +400,9 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
     }
 
     /**
-     * 
+     *
      * DOC hcheng Comment method "addColumnSorters".For 8267.
-     * 
+     *
      * @param tableViewer
      * @param tableColumns
      * @param sorters
@@ -416,7 +416,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
     private Color bg = new Color(null, 249, 139, 121);
 
     /**
-     * 
+     *
      * DOC zhaoxinyi ColumnCorrelationNominalIntervalResultPage class global comment. Detailled comment
      */
     class TableSectionViewerProvider implements IStructuredContentProvider, ITableLabelProvider, ITableColorProvider {
@@ -489,7 +489,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
@@ -499,7 +499,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -510,7 +510,7 @@ public class CorrelationAnalysisResultPage extends AbstractAnalysisResultPage im
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
      * .ui.editor.analysis.AbstractAnalysisMetadataPage)

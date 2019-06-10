@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,7 +31,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.service.IMatchRuleUIService#getImageByName(java.lang.String)
      */
     @Override
@@ -41,7 +41,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.service.IMatchRuleUIService#createMatchRuleCTabFolderRenderer()
      */
     @Override
@@ -51,7 +51,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.service.IMatchRuleUIService#getAddImage()
      */
     @Override
@@ -61,7 +61,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.service.IMatchRuleUIService#getMatchRuleTable()
      */
     @Override
@@ -73,7 +73,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.service.IMatchRuleUIService#createMatchRuleDataChart(org.eclipse.swt.widgets.Composite,
      * java.util.List, java.util.List)
      */
@@ -113,7 +113,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.service.IMatchRuleUIService#setNeedDisplayCount(int)
      */
     @Override
@@ -128,7 +128,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.service.IMatchRuleUIService#refreshMatchRuleChart(java.util.List,
      * org.eclipse.swt.widgets.Composite)
      */
@@ -145,7 +145,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.service.IMatchRuleUIService#layoutMatchRuleChart()
      */
     @Override
@@ -158,7 +158,7 @@ public class MatchRuleUIService implements IMatchRuleUIService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.service.IMatchRuleUIService#disposeMatchRuleChart(org.eclipse.swt.widgets.Composite)
      */
     @Override

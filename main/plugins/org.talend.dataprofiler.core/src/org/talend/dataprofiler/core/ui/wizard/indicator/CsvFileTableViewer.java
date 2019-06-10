@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -63,7 +63,7 @@ public class CsvFileTableViewer extends Composite {
 
     /**
      * DOC yyi CsvFileTableViewer class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class ViewContentProvider implements IStructuredContentProvider {
@@ -121,7 +121,7 @@ public class CsvFileTableViewer extends Composite {
 
         /**
          * DOC talend Comment method "checkEmptyError".
-         * 
+         *
          * @param obj
          * @param index
          */
@@ -168,7 +168,7 @@ public class CsvFileTableViewer extends Composite {
 
         /**
          * judge the method whether is empty
-         * 
+         *
          * @param input
          * @return true when input is null or length is 0 after remove quote
          */
@@ -179,7 +179,7 @@ public class CsvFileTableViewer extends Composite {
 
         /**
          * DOC talend Comment method "isLastOne".
-         * 
+         *
          * @return
          */
         private boolean isLastOne(int index, int length) {
@@ -263,7 +263,7 @@ public class CsvFileTableViewer extends Composite {
 
     /**
      * the column which index is "index" is a register expression
-     * 
+     *
      * @param index
      * @return
      */
@@ -342,7 +342,7 @@ public class CsvFileTableViewer extends Composite {
 
     /**
      * set a csv file.
-     * 
+     *
      * @param csvFile
      * @return whether the file be loaded.
      */
@@ -370,7 +370,7 @@ public class CsvFileTableViewer extends Composite {
 
     /**
      * Returns <code>true</code> if the file contains a patterns header.
-     * 
+     *
      * @return whether the file contains a patterns header.
      */
     public boolean isHeadersInvalid() {
@@ -379,7 +379,7 @@ public class CsvFileTableViewer extends Composite {
 
     /**
      * Returns <code>true</code> if Use Text Qualifier.
-     * 
+     *
      * @return whether Use Text Qualifier
      */
     public boolean isUseTextQualifier() {
@@ -388,7 +388,7 @@ public class CsvFileTableViewer extends Composite {
 
     /**
      * Sets the csv reader use text qualifier if the argument is <code>true</code>.
-     * 
+     *
      * @param useTextQualifier
      */
     public void setUseTextQualifier(boolean useTextQualifier) {
@@ -397,7 +397,7 @@ public class CsvFileTableViewer extends Composite {
 
     /**
      * Returns <code>true</code> if the file contains quotes error value.
-     * 
+     *
      * @return
      */
     public boolean isQuotesError() {

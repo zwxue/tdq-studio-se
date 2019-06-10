@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -106,7 +106,7 @@ public class PartListener implements IPartListener {
 
     /**
      * MOD yyi 2010-11-29 15686: lock editor.
-     * 
+     *
      * @param editor
      */
     public void lockCommonFormEditor(IWorkbenchPart editor) {
@@ -117,7 +117,7 @@ public class PartListener implements IPartListener {
 
     /**
      * MOD yyi 2010-11-29 15686: unload editor.
-     * 
+     *
      * @param editor
      */
     public void unLockCommonFormEditor(IWorkbenchPart editor) {

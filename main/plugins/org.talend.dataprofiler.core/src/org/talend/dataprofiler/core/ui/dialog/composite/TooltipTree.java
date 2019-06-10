@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,7 +35,7 @@ public class TooltipTree extends Tree {
 
     /**
      * DOC zqin TooltipTree constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -47,7 +47,7 @@ public class TooltipTree extends Tree {
 
     /*
      * Disable the judge of subclass.
-     * 
+     *
      * @see org.eclipse.swt.widgets.TreeItem#checkSubclass()
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
@@ -42,7 +42,7 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "runAnalysisLow".
-     * 
+     *
      * @param analysis
      * @param sqlStatement
      * @param eval
@@ -68,7 +68,7 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getTablePattern".
-     * 
+     *
      * @param parameters
      * @return
      */

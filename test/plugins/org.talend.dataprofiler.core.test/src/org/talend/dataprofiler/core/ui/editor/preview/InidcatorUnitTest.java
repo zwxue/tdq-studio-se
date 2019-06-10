@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,13 +35,13 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * created by zshen on Feb 7, 2014 Detailled comment
- * 
+ *
  */
 public class InidcatorUnitTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getIndicatorName()}.
-     * 
+     *
      * test case 1: Get Indicator Name from ColumnSetIndicatorUnit
      */
     @Test
@@ -68,7 +68,7 @@ public class InidcatorUnitTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getIndicatorName()}.
-     * 
+     *
      * test case 2: Get Indicator Name from ColumnIndicatorUnit
      */
     @Test
@@ -95,7 +95,7 @@ public class InidcatorUnitTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getIndicatorName()}.
-     * 
+     *
      * test case 3: Get Indicator Name from TableIndicatorUnit
      */
     @Test
@@ -122,7 +122,7 @@ public class InidcatorUnitTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getForms()}.
-     * 
+     *
      * test case 1: Get Forms from ColumnSetIndicatorUnit
      */
     @Test
@@ -153,7 +153,7 @@ public class InidcatorUnitTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getForms()}.
-     * 
+     *
      * test case 2: Get Forms from TableIndicatorUnit
      */
     @Test
@@ -184,7 +184,7 @@ public class InidcatorUnitTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getForms()}.
-     * 
+     *
      * test case 3: Get Forms from ColumnIndicatorUnit
      */
     @Test
@@ -215,7 +215,7 @@ public class InidcatorUnitTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#isExsitingForm()}.
-     * 
+     *
      * test case 1:ColumnIndicatorUnit
      */
     @Test

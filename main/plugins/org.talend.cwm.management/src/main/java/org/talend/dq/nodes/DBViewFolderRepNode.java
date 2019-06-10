@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -63,7 +63,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     /**
      * DBViewFolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -81,7 +81,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     /**
      * create the node of parent.
-     * 
+     *
      * @return
      */
     private RepositoryNode createParentNode() {
@@ -117,7 +117,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     /**
      * Create ViewFolderNodeRepositoryNode.
-     * 
+     *
      * @param metadataObject parent CatalogViewObject or SchemaViewObject
      */
     private void createRepositoryNodeViewFolderNode(IRepositoryViewObject metadataObject) {
@@ -194,7 +194,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     /**
      * DOC klliu Comment method "createTableRepositoryNode".
-     * 
+     *
      * @param tables
      */
     private void createViewRepositoryNode(List<TdView> views, List<IRepositoryNode> node) {
@@ -218,7 +218,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getLabel()
      */
     @Override
@@ -231,7 +231,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     /*
      * ADD gdbu 2011-7-25 bug : 23220
-     * 
+     *
      * children count : only read from the file
      */
     private int getChildrenCount() {
@@ -249,7 +249,7 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     /**
      * return the Catalog or Schema, or null.
-     * 
+     *
      * @return
      */
     public Package getPackage() {

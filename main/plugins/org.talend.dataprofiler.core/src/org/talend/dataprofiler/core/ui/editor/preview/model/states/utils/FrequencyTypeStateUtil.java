@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by yyin on 2014-12-2 Detailled comment
- * 
+ *
  */
 public class FrequencyTypeStateUtil {
 
@@ -41,9 +41,9 @@ public class FrequencyTypeStateUtil {
 
     /**
      * DOC bZhou Comment method "isWithRowCountIndicator".
-     * 
+     *
      * If have RowCountIndicator in the indicator list, return true, otherwise, return false.
-     * 
+     *
      * @return
      */
     public static boolean isWithRowCountIndicator(List<IndicatorUnit> units) {
@@ -102,7 +102,7 @@ public class FrequencyTypeStateUtil {
 
     /**
      * DOC yyin Comment method "getKeyLabel".
-     * 
+     *
      * @param freqExt
      * @param maxKeyLength the max length for keyLable,in general,30 for Tableviewer,200 for chart.
      * @return
@@ -138,7 +138,7 @@ public class FrequencyTypeStateUtil {
 
     /**
      * DOC yyin Comment method "getNumberOfShown".
-     * 
+     *
      * @param unit
      * @param frequencyExt
      * @return

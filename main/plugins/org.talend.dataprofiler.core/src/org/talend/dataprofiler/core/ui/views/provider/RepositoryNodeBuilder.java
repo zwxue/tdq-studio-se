@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -74,7 +74,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * DOC klliu Comment method "retrieveRepObjectType".
-     * 
+     *
      * @param path
      * @return
      */
@@ -84,7 +84,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * get parent path
-     * 
+     *
      * @param path relative path to current project
      * @return if path is empty will return {@link Path#EMPTY}
      */
@@ -98,7 +98,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * DOC klliu Comment method "createSystemFolder".
-     * 
+     *
      * @param node
      * @param resConstant
      * @return
@@ -121,7 +121,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * create repository node for sub system folder
-     * 
+     *
      * @param node create repository node
      * @param resConstant sub folder type
      * @return sub node
@@ -136,7 +136,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * create repository node for sub system folder
-     * 
+     *
      * @param node create repository node
      * @param resConstant sub folder type
      * @return sub node
@@ -247,7 +247,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * DOC klliu Comment method "createRepositoryNodeSystemFolders".
-     * 
+     *
      * @param node
      * @param resConstants
      * @return
@@ -266,7 +266,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * create repository node for a system folder
-     * 
+     *
      * @param node
      * @param resConstants
      * @return sub node list
@@ -283,7 +283,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * create repository node for a system folder
-     * 
+     *
      * @param node
      * @param resConstants
      * @return sub node list
@@ -300,7 +300,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * DOC klliu Comment method "getIndicatorsChildren".
-     * 
+     *
      * @param conList
      * @return
      */
@@ -315,11 +315,11 @@ public final class RepositoryNodeBuilder {
     }
 
     /**
-     * 
+     *
      * create a Local folder Helper
-     * 
+     *
      * @return Local Folder helper
-     * 
+     *
      * @deprecated use {@link AbstractEMFRepositoryFactory#getFolderHelper()} instead.
      */
     @Deprecated
@@ -339,7 +339,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * DOC xqliu Comment method "getIndicatorsChildren".
-     * 
+     *
      * @param category
      * @return
      */
@@ -353,7 +353,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * DOC xqliu Comment method "getIndicatorChildren".
-     * 
+     *
      * @return
      */
     public Object[] getIndicatorsChildren(IFolder folder) {
@@ -370,7 +370,7 @@ public final class RepositoryNodeBuilder {
 
     /**
      * DOC klliu Comment method "getInstance".
-     * 
+     *
      * @return
      */
     public static RepositoryNodeBuilder getInstance() {

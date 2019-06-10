@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,7 +20,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 
 /**
- * 
+ *
  * DOC mzhao TdEditorToolBar class global comment. Detailled comment
  */
 public class TdEditorBarWrapper {
@@ -39,7 +39,7 @@ public class TdEditorBarWrapper {
 
     /**
      * DOC bZhou Comment method "addExpandableComposite".
-     * 
+     *
      * @param composite
      */
     public void addExpandableComposite(ExpandableComposite composite) {
@@ -50,7 +50,7 @@ public class TdEditorBarWrapper {
 
     /**
      * DOC bZhou Comment method "setExpandableComposites".
-     * 
+     *
      * @param composites
      */
     public void setExpandableComposites(ExpandableComposite[] composites) {
@@ -61,7 +61,7 @@ public class TdEditorBarWrapper {
 
     /**
      * DOC bZhou Comment method "setExpandableComposites".
-     * 
+     *
      * @param composites
      */
     public void setExpandableComposites(List<ExpandableComposite> composites) {
@@ -72,7 +72,7 @@ public class TdEditorBarWrapper {
 
     /**
      * DOC bZhou Comment method "getExpandableComposites".
-     * 
+     *
      * @return
      */
     public List<ExpandableComposite> getExpandableComposites() {
@@ -88,7 +88,7 @@ public class TdEditorBarWrapper {
 
     /**
      * Getter for editor.
-     * 
+     *
      * @return the editor
      */
     public FormEditor getEditor() {

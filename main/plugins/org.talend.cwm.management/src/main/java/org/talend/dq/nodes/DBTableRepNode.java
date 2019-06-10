@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ public class DBTableRepNode extends ColumnSetRepNode {
 
     /**
      * DOC klliu DBTableRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -68,7 +68,7 @@ public class DBTableRepNode extends ColumnSetRepNode {
 
     /**
      * create the node of parent.
-     * 
+     *
      * @param object
      * @return
      */
@@ -81,7 +81,7 @@ public class DBTableRepNode extends ColumnSetRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.DQRepositoryNode#getParentViewObject()
      */
     @Override
@@ -100,7 +100,7 @@ public class DBTableRepNode extends ColumnSetRepNode {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
@@ -120,7 +120,7 @@ public class DBTableRepNode extends ColumnSetRepNode {
 
     /**
      * get the parent package node of this table.
-     * 
+     *
      * @param node
      * @return
      */

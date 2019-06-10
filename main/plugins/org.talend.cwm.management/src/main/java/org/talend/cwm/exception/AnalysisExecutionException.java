@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ public class AnalysisExecutionException extends TalendException {
 
     /**
      * DOC scorreia AnalysisExecutionException constructor comment.
-     * 
+     *
      * @param message
      * @param cause
      */
@@ -38,7 +38,7 @@ public class AnalysisExecutionException extends TalendException {
 
     /**
      * DOC scorreia AnalysisExecutionException constructor comment.
-     * 
+     *
      * @param message
      */
     public AnalysisExecutionException(String message) {
@@ -47,7 +47,7 @@ public class AnalysisExecutionException extends TalendException {
 
     /**
      * DOC scorreia AnalysisExecutionException constructor comment.
-     * 
+     *
      * @param cause
      */
     public AnalysisExecutionException(Throwable cause) {

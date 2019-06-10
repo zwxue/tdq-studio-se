@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,13 +23,13 @@ import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 
 /**
  * created by yyin on 2014-12-3 Detailled comment
- * 
+ *
  */
 public class PatternStatisticeStateUtil {
 
     /**
      * DOC yyin Comment method "createDataEntity".
-     * 
+     *
      * @param unit
      * @param label
      * @param notMathCount
@@ -47,7 +47,7 @@ public class PatternStatisticeStateUtil {
 
     /**
      * DOC yyin Comment method "getMatchCount".
-     * 
+     *
      * @param patternExt
      * @return
      */
@@ -57,7 +57,7 @@ public class PatternStatisticeStateUtil {
 
     /**
      * DOC yyin Comment method "getNotMatchCount".
-     * 
+     *
      * @param patternExt
      * @return
      */
@@ -70,9 +70,9 @@ public class PatternStatisticeStateUtil {
     }
 
     /**
-     * 
+     *
      * Convert unitValue when indicator is not computed
-     * 
+     *
      * @param indicator
      * @param unitValue
      * @return Instance of PatternMatchingExt which contain the result of currnt matching indicator

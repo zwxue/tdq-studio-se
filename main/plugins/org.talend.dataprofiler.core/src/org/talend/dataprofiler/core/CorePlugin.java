@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -119,7 +119,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Getter for context.
-     * 
+     *
      * @return the context
      */
     public BundleContext getBundleContext() {
@@ -128,7 +128,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Getter for repositoryInitialized.
-     * 
+     *
      * @return the repositoryInitialized
      */
     public boolean isRepositoryInitialized() {
@@ -143,7 +143,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
      */
     @SuppressWarnings("restriction")
@@ -167,7 +167,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
      */
     @Override
@@ -178,7 +178,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Returns the shared instance.
-     * 
+     *
      * @return the shared instance
      */
     public static CorePlugin getDefault() {
@@ -187,7 +187,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Returns an image descriptor for the image file at the given plug-in relative path.
-     * 
+     *
      * @param path the path
      * @return the image descriptor
      */
@@ -197,7 +197,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC Zqin Comment method "getCurrentActiveEditor".
-     * 
+     *
      * @return the current active editor;
      */
     public IEditorPart getCurrentActiveEditor() {
@@ -206,7 +206,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC msjian Comment method "getAllDataProviders".
-     * 
+     *
      * @return
      */
     public Collection<Connection> getAllDataProviders() {
@@ -224,7 +224,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bZhou Comment method "openEditor".
-     * 
+     *
      * @param file
      * @param editorId
      * @return
@@ -244,7 +244,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC mzhao open editor with editor input.
-     * 
+     *
      * @param editorInput
      * @param editorId
      * @return
@@ -260,7 +260,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * get DQ repository view if the view is opening else return null
-     * 
+     *
      * @return
      */
     public DQRespositoryView getRepositoryView() {
@@ -270,7 +270,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * get DQ repository view without bring it to top.
-     * 
+     *
      * @return
      */
     public DQRespositoryView getRepositoryViewWithoutBringToTop() {
@@ -280,7 +280,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * get DQ repository view if the view is opening else will open it firstly
-     * 
+     *
      * @return
      */
     public DQRespositoryView findAndOpenRepositoryView() {
@@ -290,7 +290,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bzhou Comment method "getPatternTestView".
-     * 
+     *
      * @return
      */
     public PatternTestView getPatternTestView() {
@@ -322,7 +322,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * get Current the first selected node from DQRespositoryView.
-     * 
+     *
      * @return
      */
     public IRepositoryNode getCurrentSelectionNode() {
@@ -342,7 +342,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * get Current all selected nodes from DQRespositoryView.
-     * 
+     *
      * @return
      */
     public IRepositoryNode[] getCurrentSelectionNodes() {
@@ -366,7 +366,7 @@ public class CorePlugin extends AbstractUIPlugin {
     /**
      * refresh the object's status in the DQReposirotyView(if this object is null, then refresh all the
      * DQReposirotyView).
-     * 
+     *
      * @param object
      */
     public void refreshDQView(Object object) {
@@ -405,7 +405,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bzhou Comment method "getProductVersion".
-     * 
+     *
      * @return
      * @deprecated use MigrationPlugin.getDefault().getProductVersion()
      */
@@ -416,7 +416,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC qiongli close editor by file.
-     * 
+     *
      * @param fileRes
      */
     public void closeEditorIfOpened(Item item) {
@@ -425,7 +425,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * check the item's editor is opening or not.
-     * 
+     *
      * @param item
      * @return
      */
@@ -435,7 +435,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * check the item's editor is opening or not.
-     * 
+     *
      * @param item
      * @param closeEditor close the editor if it is opening
      * @return
@@ -482,9 +482,9 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * 
+     *
      * refresh the related connection which is opened in DQ side.
-     * 
+     *
      * @param item
      */
     public void refreshOpenedEditor(Item item) {
@@ -665,7 +665,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * copy the method from ProxyRepositoryFactory to avoid tos migeration.
-     * 
+     *
      * @param fileName
      * @param pattern
      */

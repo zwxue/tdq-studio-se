@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 21, 2013 Detailled comment
- * 
+ *
  */
 public class MatchKeyDefinitionSection extends MatchingKeySection {
 
@@ -43,7 +43,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /**
      * DOC zshen MatchKeyDefinitionSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -57,7 +57,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getSectionName()
      */
     @Override
@@ -67,7 +67,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getMatchRuleDefinition()
      */
     @Override
@@ -77,7 +77,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#createSubChart(org.eclipse.swt.widgets.Composite
      * )
@@ -89,7 +89,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#createMatchKeyFromCurrentMatchRule(java.lang
      * .String)
@@ -102,7 +102,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /**
      * Sets the matchRuleDef.
-     * 
+     *
      * @param matchRuleDef the matchRuleDef to set
      */
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
@@ -111,7 +111,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#removeMatchKeyFromCurrentMatchRule(java.lang
      * .String)
@@ -124,7 +124,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /**
      * Getter for matchRules.
-     * 
+     *
      * @return the matchRules
      */
     public List<MatchRule> getMatchRules() {
@@ -139,7 +139,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#createTableComposite(org.eclipse.swt.widgets
      * .Composite, org.talend.dataquality.rules.MatchRule)
@@ -151,7 +151,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#checkColumnNameIsEmpty(org.talend.dataquality
      * .rules.MatchKeyDefinition)

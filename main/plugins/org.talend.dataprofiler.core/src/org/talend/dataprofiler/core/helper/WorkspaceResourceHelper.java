@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -71,9 +71,9 @@ public final class WorkspaceResourceHelper {
     }
 
     /**
-     * 
+     *
      * DOC Administrator Comment method "getModelElementPath".
-     * 
+     *
      * @param me
      * @return
      */
@@ -83,7 +83,7 @@ public final class WorkspaceResourceHelper {
 
     /**
      * DOC bZhou Comment method "getInstallPath".
-     * 
+     *
      * @return the install path for the current release.
      */
     public static String getInstallPath() {
@@ -92,7 +92,7 @@ public final class WorkspaceResourceHelper {
 
     /**
      * DOC bZhou Comment method "getLocationPath".
-     * 
+     *
      * @return
      */
     public static String getLocationPath() {
@@ -101,7 +101,7 @@ public final class WorkspaceResourceHelper {
 
     /**
      * DOC bZhou Comment method "computeFileFromPlugin".
-     * 
+     *
      * @param plugin
      * @param srcPath
      * @param recurse
@@ -171,7 +171,7 @@ public final class WorkspaceResourceHelper {
 
     /**
      * if the source file has been opened then return true.
-     * 
+     *
      * @param sourceNode the source file node
      * @return
      */
@@ -216,7 +216,7 @@ public final class WorkspaceResourceHelper {
 
     /**
      * DOC xqliu Comment method "checkSourceFileNodeOpening".
-     * 
+     *
      * @param node
      * @return
      */
@@ -232,7 +232,7 @@ public final class WorkspaceResourceHelper {
 
     /**
      * DOC xqliu Comment method "checkSourceFileSubFolderNodeOpening".
-     * 
+     *
      * @param node
      * @return
      */
@@ -260,7 +260,7 @@ public final class WorkspaceResourceHelper {
 
     /**
      * DOC xqliu Comment method "showSourceFilesOpeningWarnMessages".
-     * 
+     *
      * @param openSourceFileNames
      */
     public static void showSourceFilesOpeningWarnMessages(String openSourceFileNames) {
@@ -280,7 +280,7 @@ public final class WorkspaceResourceHelper {
 
     /**
      * Refresh the related Repository node of the item in the view
-     * 
+     *
      * @param item
      */
     public static void refreshItem(Item item) {
@@ -293,9 +293,9 @@ public final class WorkspaceResourceHelper {
     }
 
     /**
-     * 
+     *
      * create a IFile from File inputStream.
-     * 
+     *
      * @param sourceFile
      * @param targetIFile
      * @param message

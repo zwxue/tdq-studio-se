@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.talend.resource.ResourceManager;
 
 /**
  * @author scorreia
- * 
+ *
  * This class helps to update the .Talend.definition file.
  */
 public class TalendDefinitionFileUpdate {
@@ -48,7 +48,7 @@ public class TalendDefinitionFileUpdate {
 
     /**
      * Method "replace".
-     * 
+     *
      * @return true if ok
      */
     public boolean replace(String migrationTaskName) {
@@ -79,7 +79,7 @@ public class TalendDefinitionFileUpdate {
 
     /**
      * Method "indexOf".
-     * 
+     *
      * @return the index of the first occurrence of the character in the character sequence represented by this object,
      * or <code>-1</code> if the character does not occur.
      */

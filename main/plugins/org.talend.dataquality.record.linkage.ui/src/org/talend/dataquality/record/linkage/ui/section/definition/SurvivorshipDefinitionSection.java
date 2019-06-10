@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSection {
 
@@ -47,7 +47,7 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
 
     /**
      * DOC HHB SurvivorshipDefinitionTableSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -141,7 +141,7 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
 
     /**
      * Getter for survivorshipKeys.
-     * 
+     *
      * @return the survivorshipKeys
      */
     public List<SurvivorshipKeyDefinition> getSurvivorshipKeys() {
@@ -150,7 +150,7 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -175,7 +175,7 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -202,7 +202,7 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#checkResultStatus()
      */
     @Override

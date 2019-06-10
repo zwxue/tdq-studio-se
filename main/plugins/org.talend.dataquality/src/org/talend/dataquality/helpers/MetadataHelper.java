@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,16 +38,16 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * @author scorreia
- * 
+ *
  * This class is a helper for handling data quality metadata.
  */
 public final class MetadataHelper {
 
     // MOD klliu 2010-10-09 feature 15821
     /**
-     * 
+     *
      * DOC klliu Comment method "getOtherParameter".
-     * 
+     *
      * @return
      */
     public static String getOtherParameter(ModelElement element) {
@@ -59,9 +59,9 @@ public final class MetadataHelper {
     }
 
     /**
-     * 
+     *
      * DOC klliu Comment method "setOtherParameter".
-     * 
+     *
      * @param otherParameter
      */
     public static void setOtherParameter(String otherParameter, ModelElement element) {
@@ -73,7 +73,7 @@ public final class MetadataHelper {
 
     /**
      * Method "setDataminingType" sets the type of the content of a column.
-     * 
+     *
      * @param type
      * @param column
      */
@@ -83,7 +83,7 @@ public final class MetadataHelper {
 
     /**
      * DOC xqliu Comment method "setDataminingType".
-     * 
+     *
      * @param type
      * @param modelElement
      */
@@ -93,7 +93,7 @@ public final class MetadataHelper {
 
     /**
      * Set the DataminingType according to the Column Type.
-     * 
+     *
      * @param modelElement
      */
     public static void setDefaultDataminingType(ModelElement modelElement) {
@@ -109,7 +109,7 @@ public final class MetadataHelper {
 
     /**
      * Method "getDataminingType" gets the type of the content of a column.
-     * 
+     *
      * @param column
      * @return the DataminingType or null if none has been set.
      */
@@ -132,7 +132,7 @@ public final class MetadataHelper {
 
     /**
      * method "getDefaultDataminingType" gets the default type of the content of a column.
-     * 
+     *
      * @param javaSqlType
      * @return the datamining type (never null)
      */
@@ -159,7 +159,7 @@ public final class MetadataHelper {
 
     /**
      * DOC bZhou Comment method "setAuthor".
-     * 
+     *
      * @param element
      * @param author
      * @return
@@ -170,7 +170,7 @@ public final class MetadataHelper {
 
     /**
      * DOC bZhou Comment method "getAuthor".
-     * 
+     *
      * @param element
      * @return
      */
@@ -184,7 +184,7 @@ public final class MetadataHelper {
 
     /**
      * DOC bZhou Comment method "getDescription".
-     * 
+     *
      * @param element
      * @return
      */
@@ -198,7 +198,7 @@ public final class MetadataHelper {
 
     /**
      * DOC bZhou Comment method "setDescription".
-     * 
+     *
      * @param description
      * @param element
      * @return
@@ -209,7 +209,7 @@ public final class MetadataHelper {
 
     /**
      * Method "setDevStatus" sets the development status of the given element.
-     * 
+     *
      * @param element
      * @param status the state to set.
      * @return
@@ -224,7 +224,7 @@ public final class MetadataHelper {
 
     /**
      * Method "getDevStatus". MOD mzhao feature 7479
-     * 
+     *
      * @param element such as Analysis, DataProvider...
      * @return the development status of the element
      */
@@ -244,7 +244,7 @@ public final class MetadataHelper {
 
     /**
      * Method "setPurpose".
-     * 
+     *
      * @param purpose the purpose to set or create
      * @param element a CWM element
      */
@@ -254,7 +254,7 @@ public final class MetadataHelper {
 
     /**
      * Method "getPurpose".
-     * 
+     *
      * @param element a CWM element
      * @return the purpose or null
      */
@@ -268,7 +268,7 @@ public final class MetadataHelper {
 
     /**
      * Method "setVersion" sets the version of the given element.
-     * 
+     *
      * @param version the version to set
      * @param element the element
      * @return true if the value was not set before.
@@ -280,7 +280,7 @@ public final class MetadataHelper {
 
     /**
      * Method "getVersion".
-     * 
+     *
      * @param element
      * @return the version of the element
      */
@@ -294,7 +294,7 @@ public final class MetadataHelper {
 
     /**
      * DOC bZhou Comment method "getPropertyPath".
-     * 
+     *
      * @param element
      * @return
      */
@@ -305,7 +305,7 @@ public final class MetadataHelper {
 
     /**
      * DOC bZhou Comment method "setPropertyPath".
-     * 
+     *
      * @param path
      * @param element
      */
@@ -344,7 +344,7 @@ public final class MetadataHelper {
 
     /**
      * DOC xqliu Comment method "getDataminingType".
-     * 
+     *
      * @param modelElement
      * @return
      */
@@ -369,7 +369,7 @@ public final class MetadataHelper {
 
     /**
      * DOC xqliu Comment method "setRetrieveAllMetadata".
-     * 
+     *
      * @param retrieveAllMetadata
      * @param element
      * @return
@@ -380,7 +380,7 @@ public final class MetadataHelper {
 
     /**
      * DOC xqliu Comment method "getRetrieveAllMetadata".
-     * 
+     *
      * @param element
      * @return
      */
@@ -394,7 +394,7 @@ public final class MetadataHelper {
 
     /**
      * DOC klliu Comment method "getAnType".
-     * 
+     *
      * @param analysis
      * @return
      */

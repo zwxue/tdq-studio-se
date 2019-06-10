@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -150,7 +150,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createShowSatelliteCheck".
-     * 
+     *
      * @param dialog
      * @return
      */
@@ -169,7 +169,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createToolControllers".
-     * 
+     *
      * @param vv
      * @return
      */
@@ -217,7 +217,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createRestoreBTN".
-     * 
+     *
      * @param vv
      * @param pl
      * @param fileName
@@ -241,7 +241,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createPersistBTN".
-     * 
+     *
      * @param pl
      * @param fileName
      * @return
@@ -272,7 +272,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createModeSwitcher".
-     * 
+     *
      * @param graphMouse
      * @return
      */
@@ -282,7 +282,7 @@ public class JungGraphGenerator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
              */
             public void actionPerformed(ActionEvent e) {
@@ -299,7 +299,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createResetBTN".
-     * 
+     *
      * @param vv
      * @return
      */
@@ -318,7 +318,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createMinusScaler".
-     * 
+     *
      * @param vv
      * @param scaler
      * @return
@@ -336,7 +336,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createPlusScaler".
-     * 
+     *
      * @param vv
      * @param scaler
      * @return
@@ -354,7 +354,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createInverseCheck".
-     * 
+     *
      * @param vv
      * @return
      */
@@ -364,7 +364,7 @@ public class JungGraphGenerator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
              */
             public void actionPerformed(ActionEvent e) {
@@ -378,7 +378,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createSlider".
-     * 
+     *
      * @return
      */
     private JPanel createSlider() {
@@ -396,7 +396,7 @@ public class JungGraphGenerator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see javax.swing.event.ChangeListener#stateChanged(javax.swing.event.ChangeEvent)
              */
             public void stateChanged(ChangeEvent e) {
@@ -413,7 +413,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "configureVViewer".
-     * 
+     *
      * @param vv
      */
     private void configureVViewer(final VisualizationViewer vv) {
@@ -469,7 +469,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createSatelliteView".
-     * 
+     *
      * @param vv
      * @param sv
      * @return
@@ -500,7 +500,7 @@ public class JungGraphGenerator {
 
     /**
      * DOC bZhou Comment method "createHelpBTN".
-     * 
+     *
      * @return
      */
     private JButton createHelpBTN() {
@@ -537,7 +537,7 @@ public class JungGraphGenerator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent)
              */
             @Override

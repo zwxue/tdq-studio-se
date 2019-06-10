@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,36 +23,36 @@ public interface ICWMResouceAdapter {
 
     /**
      * DOC bzhou Comment method "checkMetadata".
-     * 
+     *
      * check the metadata user defined is valid or not. <br>
-     * 
+     *
      * @return
      */
     public ReturnCode checkMetadata();
 
     /**
      * DOC bzhou Comment method "initCWMResourceBuilder".
-     * 
+     *
      * initialized instance of CWM resource object. <br>
-     * 
+     *
      * @return
      */
     public ModelElement initCWMResourceBuilder();
 
     /**
      * DOC bzhou Comment method "fillMetadataToCWMResource".
-     * 
+     *
      * add metadata information to CWM resource object. <br>
-     * 
+     *
      * @param repositoryObject
      */
     public void fillMetadataToCWMResource(ModelElement repositoryObject);
 
     /**
      * DOC bzhou Comment method "createCWMResourceFile".
-     * 
+     *
      * create file resource and store the CWM object. <br>
-     * 
+     *
      * @return
      */
     public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement repositoryObject);

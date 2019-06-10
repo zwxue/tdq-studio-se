@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,7 +21,7 @@ public final class AnalysisThreadMemoryChangeNotifier extends AbstractMemoryChan
 
     /**
      * Method "getInstance".
-     * 
+     *
      * @return the singleton instance.
      */
     public static synchronized AnalysisThreadMemoryChangeNotifier getInstance() {
@@ -42,7 +42,7 @@ public final class AnalysisThreadMemoryChangeNotifier extends AbstractMemoryChan
 
     /**
      * Method "convertToMB" convert bytes to MB.
-     * 
+     *
      * @param numByte the number of bytes.
      * @return the number of MB.
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
- * 
+ *
  * Abstract class to be used by data explorer subclasses.
  */
 public abstract class DataExplorer implements IDataExplorer {
@@ -110,7 +110,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * get the comment of analysis, if analysis is null, return "".
-     * 
+     *
      * @param showing
      * @return
      */
@@ -160,7 +160,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * Method "getRowsStatement".
-     * 
+     *
      * @param whereClause the WHERE clause of the statement
      * @return the full SELECT statement with the WHERE clause
      */
@@ -179,7 +179,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * Method "getRowsStatement".
-     * 
+     *
      * @param whereClause the WHERE clause of the statement
      * @param colName the name of select column
      * @return the SELECT statement(only select column) with the WHERE clause
@@ -211,7 +211,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * DOC zqin Comment method "getFromClause".
-     * 
+     *
      * @return
      */
     protected String getFromClause() {
@@ -226,7 +226,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * DOC msjian Comment method "getIndicatorExpressionSQL".
-     * 
+     *
      * @return
      */
     protected String getIndicatorExpressionSQL() {
@@ -243,7 +243,7 @@ public abstract class DataExplorer implements IDataExplorer {
         }
         DataManager dataManager = context.getConnection();
         if (dataManager == null) {
-            log.error(Messages.getString("DataExplorer.NOCONNFOUND") + analysis.getName());//$NON-NLS-1$ 
+            log.error(Messages.getString("DataExplorer.NOCONNFOUND") + analysis.getName());//$NON-NLS-1$
             return false;
         }
         this.dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dataManager);
@@ -258,9 +258,9 @@ public abstract class DataExplorer implements IDataExplorer {
     }
 
     /**
-     * 
+     *
      * Add qiongli handle ColumnSetMultiValueIndicator.
-     * 
+     *
      * @return
      */
     protected String getAnalyzedElementName(Indicator ind) {
@@ -278,10 +278,10 @@ public abstract class DataExplorer implements IDataExplorer {
         }
         if (eLs != null && !eLs.isEmpty()) {
             for (ModelElement mColumn : eLs) {
-                name.append(dbmsLanguage.quote(mColumn.getName())).append(",");//$NON-NLS-1$ 
+                name.append(dbmsLanguage.quote(mColumn.getName())).append(",");//$NON-NLS-1$
             }
             if (eLs.size() > 0) {
-                return org.apache.commons.lang.StringUtils.removeEnd(name.toString(), ",");//$NON-NLS-1$ 
+                return org.apache.commons.lang.StringUtils.removeEnd(name.toString(), ",");//$NON-NLS-1$
             }
         }
 
@@ -290,7 +290,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * DOC bZhou Comment method "getFullyQualifiedTableName".
-     * 
+     *
      * @param column
      * @return
      */
@@ -301,7 +301,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * DOC bZhou Comment method "getFullyQualifiedTableName".
-     * 
+     *
      * @param set
      * @return
      */
@@ -319,7 +319,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * DOC scorreia Comment method "getRowsStatementWithSubQuery".
-     * 
+     *
      * @return
      */
     protected String getRowsStatementWithSubQuery() {
@@ -347,7 +347,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * Method "getDataFilterClause".
-     * 
+     *
      * @return the data filter string which represents a where clause (without the where keyword)
      */
     protected String getDataFilterClause() {
@@ -357,7 +357,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * Method "andDataFilterClause".
-     * 
+     *
      * @return the data filter string to add to a where clause. The returned string starts with AND if a clause exists.
      * Otherwise it is empty.
      */
@@ -371,7 +371,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * Method "inBrackets".
-     * 
+     *
      * @param clause
      * @return the given clause surrounded by parenthesis.
      */
@@ -381,7 +381,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
      */
     public Map<String, String> getQueryMap() {
@@ -394,7 +394,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * when return ture, will not show the drill down menus.
-     * 
+     *
      * @return
      */
     protected boolean NotShowMenu() {
@@ -403,7 +403,7 @@ public abstract class DataExplorer implements IDataExplorer {
 
     /**
      * DOC msjian Comment method "getSubClassQueryMap".
-     * 
+     *
      * @return
      */
     public abstract Map<String, String> getSubClassQueryMap();

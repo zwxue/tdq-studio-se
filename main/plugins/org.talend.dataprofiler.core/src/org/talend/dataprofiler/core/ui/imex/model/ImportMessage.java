@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ public class ImportMessage {
 
     /**
      * Getter for message.
-     * 
+     *
      * @return the message
      */
     public String getMessage() {
@@ -34,7 +34,7 @@ public class ImportMessage {
 
     /**
      * Sets the message.
-     * 
+     *
      * @param message the message to set
      */
     public void setMessage(String message) {
@@ -43,7 +43,7 @@ public class ImportMessage {
 
     /**
      * Getter for type.
-     * 
+     *
      * @return the type
      */
     public EMessageType getType() {
@@ -52,7 +52,7 @@ public class ImportMessage {
 
     /**
      * Sets the type.
-     * 
+     *
      * @param type the type to set
      */
     public void setType(EMessageType type) {

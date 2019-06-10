@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,7 +34,7 @@ public class PatternEditor extends CommonFormEditor {
 
     @Override
     protected void addPages() {
-        masterPage = new PatternMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ 
+        masterPage = new PatternMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$
         // MOD qiongli 2011-3-21,bug 19472.set method 'setPartName(...)' behind method 'addPage(...)'
         try {
             addPage(masterPage);
@@ -79,7 +79,7 @@ public class PatternEditor extends CommonFormEditor {
 
     /**
      * DOC xqliu 2009-07-02 bug 7687.
-     * 
+     *
      * @param state
      */
     public void setSaveActionButtonState(boolean state) {

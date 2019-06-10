@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,7 +18,7 @@ import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 
 /**
- * 
+ *
  * The sorter extends ViewerSorter for column sorting.
  */
 public class SchemaTableSorter extends ViewerSorter {

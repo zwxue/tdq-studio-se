@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -82,7 +82,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     /**
      * DOC xqliu Comment method "getCustomerDatasetRownCount".
-     * 
+     *
      * @return
      */
     public ICustomerDataset getCustomerDatasetRownCount() {
@@ -137,7 +137,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     /**
      * DOC xqliu Comment method "getOptimizeShowDataset". ADD xqliu 2010-03-10 feature 10834
-     * 
+     *
      * @return
      */
     private List<Object> getOptimizeShowDataset() {
@@ -176,7 +176,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     /**
      * DOC yyin Comment method "getSizeOfDQRule".
-     * 
+     *
      * @return
      */
     public static int getSizeOfDQRulePerChart() {
@@ -201,7 +201,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     /**
      * DOC xqliu Comment method "removeRowCountUnit".
-     * 
+     *
      * @param units1
      * @return
      */
@@ -211,7 +211,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     /**
      * DOC xqliu Comment method "getRownCountUnit".
-     * 
+     *
      * @param units1
      * @return
      */
@@ -221,7 +221,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     /**
      * DOC xqliu Comment method "addDataEntity2CustomerDataset". ADD xqliu 2010-03-10 feature 10834
-     * 
+     *
      * @param customerDataset
      * @param unit
      */
@@ -242,7 +242,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     /**
      * DOC xqliu Comment method "addRownCountDataEntity2CustomerDataset".
-     * 
+     *
      * @param customerDataset
      * @param unit
      */
@@ -258,7 +258,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChart(org.jfree.data.category
      * .CategoryDataset)
@@ -269,7 +269,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChartList(java.util.List)
      */
     public List<Object> getChartList(List<Object> datasets) {

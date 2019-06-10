@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -49,7 +49,7 @@ public class RowMatchExplorer extends DataExplorer {
 
     /**
      * get Rows for NotMatched Statement.
-     * 
+     *
      * @return
      */
     public String getRowsNotMatchStatement() {
@@ -104,7 +104,7 @@ public class RowMatchExplorer extends DataExplorer {
 
     /**
      * get Rows for Matched Statement.
-     * 
+     *
      * @return
      */
     public String getRowsMatchStatement() {
@@ -186,7 +186,7 @@ public class RowMatchExplorer extends DataExplorer {
 
     /**
      * get All Rows Statement.
-     * 
+     *
      * @return
      */
     public String getAllRowsStatement() {
@@ -199,9 +199,9 @@ public class RowMatchExplorer extends DataExplorer {
     }
 
     /**
-     * 
+     *
      * DOC zshen 2010-01-15 Comment method "getdataFilterIndex".
-     * 
+     *
      * @param tableOrViewName the name of table or view.if null get index of current indicator in analysis
      * @return the index for datafilter. return -1 when can't find
      */
@@ -230,9 +230,9 @@ public class RowMatchExplorer extends DataExplorer {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "andDataFilter".
-     * 
+     *
      * @param tableOrViewName the name of table or view
      * @return DataFilter clause
      */
@@ -254,9 +254,9 @@ public class RowMatchExplorer extends DataExplorer {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "andDataFilter".
-     * 
+     *
      * @param tableOrViewName the name of table or view.
      * @param index have known index.
      * @return DataFilter clause

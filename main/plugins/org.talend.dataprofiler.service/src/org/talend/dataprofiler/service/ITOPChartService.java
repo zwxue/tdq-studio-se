@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,7 +21,7 @@ import org.talend.dataprofiler.service.utils.ValueAggregator;
 
 /**
  * created by yyin on 2014-11-28 Detailled comment
- * 
+ *
  */
 public interface ITOPChartService {
 
@@ -29,15 +29,15 @@ public interface ITOPChartService {
 
     static final String PLUGIN_VERSION = VersionUtils.getTalendVersion();
 
-    static final String VERSION_IN_FILENAME = "-" + PLUGIN_VERSION; //$NON-NLS-1$ 
+    static final String VERSION_IN_FILENAME = "-" + PLUGIN_VERSION; //$NON-NLS-1$
 
-    public static final String JAR_FILE_NAME = PLUGIN_NAME + ".jar"; //$NON-NLS-1$ 
+    public static final String JAR_FILE_NAME = PLUGIN_NAME + ".jar"; //$NON-NLS-1$
 
-    public static final String JAR_FILE_NAME_WITH_VERSION = PLUGIN_NAME + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ 
+    public static final String JAR_FILE_NAME_WITH_VERSION = PLUGIN_NAME + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$
 
-    public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+    public static final String JAR_NL_FILE_NAME = PLUGIN_NAME + ".nl" + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    public static final String JAR_NL_FILE_NAME_WITH_VERSION = PLUGIN_NAME + ".nl" + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$ 
+    public static final String JAR_NL_FILE_NAME_WITH_VERSION = PLUGIN_NAME + ".nl" + VERSION_IN_FILENAME + ".jar"; //$NON-NLS-1$ //$NON-NLS-2$
 
     Object getDatasetFromChart(Object chart, int datasetIndex);
 
@@ -58,9 +58,9 @@ public interface ITOPChartService {
     Object createBarChart(Object dataset);
 
     /**
-     * 
+     *
      * The parameter dataset must be CategoryDataset
-     * 
+     *
      * @param dataset
      * @return It should be JFreeChart
      */

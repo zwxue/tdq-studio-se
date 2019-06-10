@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,9 +22,9 @@ public abstract class AbstractSamplingDataSource<DataSource> implements Sampling
     protected int columnSize = 0;
 
     /**
-     * 
+     *
      * DOC zhao Set column size .
-     * 
+     *
      * @param columnSize the size of the columns in a record.
      */
     public void setColumnSize(int columnSize) {

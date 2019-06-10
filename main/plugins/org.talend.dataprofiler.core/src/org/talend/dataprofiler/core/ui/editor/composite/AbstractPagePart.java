@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -116,7 +116,7 @@ public abstract class AbstractPagePart {
     }
 
     /**
-     * 
+     *
      * ADD mzhao 2009-05-05 bug:6587.
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, TableIndicator[] indicators, Tree tree) {
@@ -128,7 +128,7 @@ public abstract class AbstractPagePart {
     }
 
     /**
-     * 
+     *
      * ADD mzhao 2009-05-05 bug:6587.
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, Tree tree) {
@@ -303,7 +303,7 @@ public abstract class AbstractPagePart {
                     /**
                      * check the connection is available or not(the connection is exist and not proxy, don't check the
                      * connection).
-                     * 
+                     *
                      * @return a ReturnCode, the message is the connection label
                      */
                     private ReturnCode selectedObjectAvailable() {
@@ -319,7 +319,7 @@ public abstract class AbstractPagePart {
 
                     /**
                      * DOC xqliu Comment method "getConnectionFromRepositoryNode".
-                     * 
+                     *
                      * @param repoNode
                      * @return
                      */
@@ -402,7 +402,7 @@ public abstract class AbstractPagePart {
     public abstract void updateModelViewer();
 
     /**
-     * 
+     *
      * ADD mzhao 2009-05-05 bug:6587.
      */
     private boolean isAnalyzedColumnsEmpty(Tree tree) {
@@ -415,7 +415,7 @@ public abstract class AbstractPagePart {
 
     /**
      * create the similar label for tree item
-     * 
+     *
      * @param parent
      * @param imageName
      * @param tooltipTextName

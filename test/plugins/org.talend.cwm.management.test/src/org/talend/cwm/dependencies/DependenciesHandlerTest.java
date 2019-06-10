@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -70,7 +70,7 @@ public class DependenciesHandlerTest {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see junit.framework.TestCase#tearDown()
      */
     @After
@@ -279,7 +279,7 @@ public class DependenciesHandlerTest {
         analysisResult1.getIndicators().add(createUserDefIndicator);
         ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
         if (!createIndicatorDefinition.getSupplierDependency().isEmpty()) {
-            createIndicatorDefinition.getSupplierDependency().get(0).getClient().clear();    
+            createIndicatorDefinition.getSupplierDependency().get(0).getClient().clear();
         }
         Analysis analysisFromFile = AnalysisFactory.eINSTANCE.createAnalysis();
         try {

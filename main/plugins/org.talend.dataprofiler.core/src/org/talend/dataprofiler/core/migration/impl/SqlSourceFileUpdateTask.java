@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,9 +42,9 @@ import org.talend.repository.model.IProxyRepositoryFactory;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z bzhou $
- * 
+ *
  */
 public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
 
@@ -58,7 +58,7 @@ public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -67,7 +67,7 @@ public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -76,7 +76,7 @@ public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -90,7 +90,7 @@ public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
             getAllFilesFromFolder(rawFile, fileList, new FilenameFilter() {
 
                 public boolean accept(File dir, String name) {
-                    if (name.endsWith(SQL_EXT)) { 
+                    if (name.endsWith(SQL_EXT)) {
                         return true;
                     }
                     return false;
@@ -177,7 +177,7 @@ public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#isModelTask()
      */
     @Override

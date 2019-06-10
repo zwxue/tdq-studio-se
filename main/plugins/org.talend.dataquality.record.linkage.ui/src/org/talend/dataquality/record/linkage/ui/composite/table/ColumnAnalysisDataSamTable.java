@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable#createFixedColumns()
      */
     @Override
@@ -43,7 +43,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable#getFixedColumnCount()
      */
     @Override
@@ -53,7 +53,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable#isContainGID(java.util.List)
      */
     @Override
@@ -63,7 +63,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable#initTablePanelLayoutPanel(org.eclipse
      * .ui.forms.widgets.Section, org.eclipse.swt.layout.GridData,
@@ -77,7 +77,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable#getPreviewData()
      */
     @Override
@@ -89,7 +89,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable#handleEmptyRow(orgomg.cwm.objectmodel
      * .core.ModelElement[], java.util.List)
@@ -101,7 +101,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable#handleGID(org.eclipse.swt.widgets.Composite
      * , java.util.List)
@@ -113,7 +113,7 @@ public class ColumnAnalysisDataSamTable extends DataSampleTable {
 
     /**
      * DOC talend Comment method "setDataFilter".
-     * 
+     *
      * @param dataFilterString
      */
     public void setDataFilter(String dataFilterString) {

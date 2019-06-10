@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImp
 
 /**
  * created by zshen on Aug 7, 2013 Detailled comment
- * 
+ *
  */
 public class BlockingKeyDataChart extends Composite {
 
@@ -43,7 +43,7 @@ public class BlockingKeyDataChart extends Composite {
 
     /**
      * DOC zshen BlockingKeyDataChart constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -132,7 +132,7 @@ public class BlockingKeyDataChart extends Composite {
     }
 
     /**
-     * 
+     *
      * create a chart with empty dataset,so as to clear the blocking key chart.
      */
     public void clearChart() {

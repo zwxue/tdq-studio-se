@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -77,7 +77,7 @@ import org.talend.utils.sql.TalendTypeConvert;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * 
+ *
  * @author yyi 2009-12-16
  */
 public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
@@ -119,7 +119,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getMasterPage()
      */
     @Override
@@ -173,9 +173,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "createButtonSection".
-     * 
+     *
      * @param topComp create the button with delButton,moveUpButton,moveDownButton
      */
     private void createButtonSection(Composite topComp) {
@@ -234,11 +234,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "enabledButtons".
-     * 
+     *
      * @param enabled the state of buttons .
-     * 
+     *
      * change the state of buttons.
      */
     public void enabledButtons(boolean enabled) {
@@ -254,12 +254,12 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "moveElement".
-     * 
+     *
      * @param columnsElementViewer
      * @param step
-     * 
+     *
      * move the element of the columnList to up or down.
      */
     private void moveElement(AnalysisColumnSetTreeViewer columnsElementViewer, int step) {
@@ -318,7 +318,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /**
      * DOC bZhou Comment method "addTargetDND".
-     * 
+     *
      * @param newTree
      */
     private void addTargetDND(final Tree newTree) {
@@ -444,7 +444,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             comboEditor.setEditor(combo, treeItem, 1);
 
             TreeEditor addPatternEditor = new TreeEditor(tree);
-            Label addPatternLabl = createTreeItemLabel(tree, ImageLib.ADD_PATTERN, "AnalysisColumnTreeViewer.addPattern"); //$NON-NLS-1$ 
+            Label addPatternLabl = createTreeItemLabel(tree, ImageLib.ADD_PATTERN, "AnalysisColumnTreeViewer.addPattern"); //$NON-NLS-1$
 
             PatternMouseAdapter mouseAdapter = new PatternMouseAdapter(this, masterPage, meIndicator, treeItem);
             mouseAdapter.addFilter(new ViewerFilter() {
@@ -536,7 +536,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xzhao Comment method "deleteTreeElements".
-     * 
+     *
      * @param columnIndicators
      * @param deleteColumnIndiciators
      */
@@ -557,7 +557,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /**
      * Remove the selected elements(eg:TdColumn or Indicator) from tree.
-     * 
+     *
      * @param newTree
      */
     private void removeSelectedElements(final Tree newTree) {
@@ -606,7 +606,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getTheSuitedComposite(org.eclipse.swt
      * .events.SelectionEvent)
@@ -633,7 +633,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /**
      * Getter for analysis.
-     * 
+     *
      * @return the analysis
      */
     public Analysis getAnalysis() {
@@ -642,7 +642,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /**
      * Getter for analysis.
-     * 
+     *
      * @return the analysis
      */
     public IRepositoryNode getAnalysisNode() {
@@ -690,7 +690,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#openIndicatorOptionDialog(org.eclipse
      * .swt.widgets.Shell, org.eclipse.swt.widgets.TreeItem)
@@ -704,9 +704,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "getModelElemetnDisplayName".
-     * 
+     *
      * @param meIndicator
      * @return
      */
@@ -730,7 +730,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#removeItemBranch(org.eclipse.swt.widgets
      * .TreeItem)
@@ -777,7 +777,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
         /**
          * DOC yyi AnalysisColumnSetMenuProvider constructor comment.
-         * 
+         *
          * @param tree
          */
         public AnalysisColumnSetMenuProvider(Tree tree) {
@@ -817,7 +817,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
      */
     @Override

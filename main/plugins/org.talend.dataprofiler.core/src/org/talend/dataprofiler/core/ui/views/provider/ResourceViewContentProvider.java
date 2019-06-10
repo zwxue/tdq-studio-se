@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -160,7 +160,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     /**
      * DOC talend Comment method "getRepositoryNodeChildren".
-     * 
+     *
      * @param element
      * @param instance
      * @return
@@ -281,7 +281,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     /**
      * DOC talend Comment method "getWorkspaceRootChildren".
-     * 
+     *
      * @param element
      * @return
      * @throws CoreException
@@ -395,7 +395,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     /**
      * DOC talend Comment method "findChildren".
-     * 
+     *
      * @param element
      * @return
      */
@@ -440,7 +440,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     /**
      * sort element on the tree.
-     * 
+     *
      * @param array
      * @return
      */
@@ -450,7 +450,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     /**
      * sort element on the tree.
-     * 
+     *
      * @param array
      * @return
      */
@@ -539,7 +539,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getParent(java.lang.Object)
      */
     @Override
@@ -559,7 +559,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.model.WorkbenchContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
      * java.lang.Object, java.lang.Object)
      */
@@ -571,7 +571,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.model.WorkbenchContentProvider#dispose()
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ import routines.system.IPersistableRow;
 
 /**
  * created by zhao on Oct 14, Represent a match row that be able to comparable and being lookup with persistent manager.
- * 
+ *
  */
 @SuppressWarnings("rawtypes")
 public class MatchRow implements IPersistableComparableLookupRow, IPersistableRow {
@@ -53,9 +53,9 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
     private int blockFieldCount = 0;
 
     /**
-     * 
+     *
      * Construct a match row instance with the record feild size and block feild size.
-     * 
+     *
      * @param recordFieldCount
      * @param blockFieldCount
      */
@@ -66,7 +66,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /**
      * Getter for row.
-     * 
+     *
      * @return the row
      */
     public List<String> getRow() {
@@ -74,9 +74,9 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
     }
 
     /**
-     * 
+     *
      * Get row with blocking key.
-     * 
+     *
      * @return
      */
     public List<String> getRowWithBlockKey() {
@@ -93,7 +93,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /**
      * Sets the row.
-     * 
+     *
      * @param row the row to set
      */
     public void setRow(List<String> rowList) {
@@ -102,7 +102,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /**
      * Sets the key.
-     * 
+     *
      * @param key the key to set
      */
     public void setKey(List<String> key) {
@@ -111,7 +111,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /**
      * Getter for key.
-     * 
+     *
      * @return the key
      */
     public List<String> getKey() {
@@ -188,7 +188,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#writeValuesData(java.io.DataOutputStream, java.io.ObjectOutputStream)
      */
     public void writeValuesData(DataOutputStream dataOut, ObjectOutputStream objectOut) {
@@ -203,7 +203,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#readValuesData(java.io.DataInputStream, java.io.ObjectInputStream)
      */
     public void readValuesData(DataInputStream dataIn, ObjectInputStream objectIn) {
@@ -223,7 +223,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#copyKeysDataTo(java.lang.Object)
      */
     public void copyKeysDataTo(Object other) {
@@ -232,7 +232,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     public int compareTo(Object other) {
@@ -252,7 +252,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#copyDataTo(java.lang.Object)
      */
     public void copyDataTo(Object other) {
@@ -261,7 +261,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @SuppressWarnings("nls")
@@ -279,7 +279,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableRow#writeData(java.io.ObjectOutputStream)
      */
     public void writeData(ObjectOutputStream out) {
@@ -289,7 +289,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableRow#readData(java.io.ObjectInputStream)
      */
     public void readData(ObjectInputStream in) {

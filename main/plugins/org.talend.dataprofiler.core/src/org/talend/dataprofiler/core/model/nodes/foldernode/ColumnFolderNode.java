@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author rli
- * 
+ *
  */
 public class ColumnFolderNode extends AbstractDatabaseFolderNode {
 
@@ -55,7 +55,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.model.nodes.AbstractFolderNode#loadChildren()
      */
     @Override
@@ -126,7 +126,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
 
     /**
      * DOC xqliu Comment method "filterColumns". ADD xqliu 2009-05-07 bug 7234
-     * 
+     *
      * @param <T>
      * @param columns
      * @param columnPattern
@@ -142,7 +142,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
 
     /**
      * DOC xqliu Comment method "filterMatchingColumns". ADD xqliu 2009-05-07 bug 7234
-     * 
+     *
      * @param <T>
      * @param columns
      * @param patterns
@@ -170,7 +170,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
 
     /**
      * DOC xqliu Comment method "cleanPatterns". ADD xqliu 2009-05-07 bug 7234
-     * 
+     *
      * @param split
      * @return
      */
@@ -186,7 +186,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
 
     /**
      * DOC xqliu Comment method "needFilter". ADD xqliu 2009-05-07 bug 7234
-     * 
+     *
      * @param columnSetPattern
      * @return
      */

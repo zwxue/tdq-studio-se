@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
 
 /**
  * created by yyin on 2014-12-3 Detailled comment
- * 
+ *
  */
 public class PatternStatisticsTableState extends AbstractTableTypeStates {
 
@@ -59,7 +59,7 @@ public class PatternStatisticsTableState extends AbstractTableTypeStates {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.table.AbstractTableTypeStates#getDataEntity()
      */
     @Override
@@ -80,7 +80,7 @@ public class PatternStatisticsTableState extends AbstractTableTypeStates {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.table.AbstractTableTypeStates#getDataExplorer()
      */
     @Override

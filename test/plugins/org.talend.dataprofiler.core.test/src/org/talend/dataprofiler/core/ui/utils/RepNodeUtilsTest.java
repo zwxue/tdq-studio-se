@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -81,7 +81,7 @@ public class RepNodeUtilsTest {
      * can not use the real project to test, because the method RepositoryNodeHelper.getDataProfilingFolderNode will use
      * the UI view to fetch the node. so , can only mock for this test. The report and its analysismap with jrxml is
      * real created, not mocked object.
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -147,7 +147,7 @@ public class RepNodeUtilsTest {
 
     /**
      * DOC yyin Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After

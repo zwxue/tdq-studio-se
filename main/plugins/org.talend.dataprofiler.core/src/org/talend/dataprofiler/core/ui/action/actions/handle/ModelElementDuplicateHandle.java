@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -61,7 +61,7 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
 
     /**
      * DOC msjian Comment method "extractFolder".
-     * 
+     *
      * @param oldItem
      * @param oldObject
      * @return
@@ -86,7 +86,7 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
 
     /**
      * DOC bZhou Comment method "update".
-     * 
+     *
      * @param oldObject
      * @param newObject
      * @return
@@ -103,7 +103,7 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#isExistedLabel(java.lang.String)
      */
     public boolean isExistedLabel(IFile file, String label) {
@@ -119,7 +119,7 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicateModelElement(orgomg
      * .cwm.objectmodel.core.ModelElement, java.lang.String)
      */
@@ -146,10 +146,10 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
     }
 
     /**
-     * 
+     *
      * when duplicate an analysis,remove the built-in pattern. or else, the reference pattern will be copied as a built-in
      * pattern.
-     * 
+     *
      * @param oldModelElement
      * @return
      */
@@ -200,7 +200,7 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicateItem(org.talend.core.model.properties
      * .Item, java.lang.String)
@@ -235,7 +235,7 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
 
     /**
      * IF the item need to save the related dependency, return true.
-     * 
+     *
      * @return
      */
     protected boolean needSaveDepend() {

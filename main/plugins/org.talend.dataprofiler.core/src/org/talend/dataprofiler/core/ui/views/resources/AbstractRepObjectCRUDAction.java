@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,7 +31,7 @@ public abstract class AbstractRepObjectCRUDAction implements IRepositoryObjectCR
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#validateDrop(org.talend.repository
      * .model.IRepositoryNode)
@@ -42,7 +42,7 @@ public abstract class AbstractRepObjectCRUDAction implements IRepositoryObjectCR
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#handleDrop(org.talend.repository.
      * model.IRepositoryNode)
@@ -53,7 +53,7 @@ public abstract class AbstractRepObjectCRUDAction implements IRepositoryObjectCR
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#handleRenameFolder(org.talend.repository
      * .model.IRepositoryNode)
@@ -64,7 +64,7 @@ public abstract class AbstractRepObjectCRUDAction implements IRepositoryObjectCR
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#getUISelection()
      */
     public ISelection getUISelection() {
@@ -73,7 +73,7 @@ public abstract class AbstractRepObjectCRUDAction implements IRepositoryObjectCR
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#refreshDQViewForRemoteProject()
      */
     public void refreshDQViewForRemoteProject() {

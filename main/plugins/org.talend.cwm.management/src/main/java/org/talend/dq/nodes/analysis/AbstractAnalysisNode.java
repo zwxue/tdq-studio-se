@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,19 +19,19 @@ package org.talend.dq.nodes.analysis;
  *
  */
 public abstract class AbstractAnalysisNode implements IAnalysisTypeNode {
-    
+
     protected String name;
-    
+
     protected String literal;
-    
+
     protected Object[] children;
-    
+
     protected Object parent;
-    
+
     public AbstractAnalysisNode(String name) {
         this.name = name;
     }
-    
+
     public AbstractAnalysisNode(String name, String literal, Object parent) {
         this.name = name;
         this.parent = parent;
@@ -80,7 +80,7 @@ public abstract class AbstractAnalysisNode implements IAnalysisTypeNode {
         this.parent = parent;
     }
 
-    
+
     /**
      * @return the literal
      */
@@ -88,7 +88,7 @@ public abstract class AbstractAnalysisNode implements IAnalysisTypeNode {
         return this.literal;
     }
 
-    
+
     /**
      * @param literal the literal to set
      */

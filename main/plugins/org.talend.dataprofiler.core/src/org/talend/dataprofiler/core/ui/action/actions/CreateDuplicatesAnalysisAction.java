@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -82,7 +82,7 @@ public class CreateDuplicatesAnalysisAction extends Action {
 
     /**
      * DOC xqliu CreateDuplicatesAnalysisAction constructor comment.
-     * 
+     *
      * @param columnsMap
      */
     public CreateDuplicatesAnalysisAction(Map<ColumnSet, List<TdColumn>> columnsMap) {
@@ -176,7 +176,7 @@ public class CreateDuplicatesAnalysisAction extends Action {
 
     /**
      * DOC xqliu Comment method "getAnalysisName".
-     * 
+     *
      * @param columnSet
      * @return
      */
@@ -197,7 +197,7 @@ public class CreateDuplicatesAnalysisAction extends Action {
 
     /**
      * DOC xqliu Comment method "fillMetadataToAnalysis".
-     * 
+     *
      * @param analysis
      * @param anaParam
      */
@@ -211,7 +211,7 @@ public class CreateDuplicatesAnalysisAction extends Action {
 
     /**
      * DOC xqliu Comment method "createDefaultAnalysisParameter".
-     * 
+     *
      * @param columnSet
      * @return
      */

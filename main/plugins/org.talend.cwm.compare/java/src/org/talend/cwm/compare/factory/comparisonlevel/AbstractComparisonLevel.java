@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -208,7 +208,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     /**
      * DOC rli Comment method "createTempConnectionFile".
-     * 
+     *
      * @throws ReloadCompareException
      */
     protected IFile createTempConnectionFile() throws ReloadCompareException {
@@ -257,7 +257,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     /**
      * Method "findDataProvider".
-     * 
+     *
      * @return the data provider of the selected object
      */
     protected abstract Connection findDataProvider();
@@ -269,7 +269,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     /**
      * remove the jrxml from the ResourceSet before doMatch, if the ResourceSet is null, return empty Map. Should call
      * this method only before doMatch.
-     * 
+     *
      * @return
      */
     protected Map<ResourceSet, List<Resource>> removeJrxmlsFromResourceSet() {
@@ -285,7 +285,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     /**
      * add the jrxml into the ResourceSet after doMatch. Should call this method only after doMatch
-     * 
+     *
      * @param rsJrxmlMap
      */
     protected void addJrxmlsIntoResourceSet(Map<ResourceSet, List<Resource>> rsJrxmlMap) {
@@ -301,7 +301,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     /**
      * Compare the old selected object with reload object(rightResource), and updated the content of old selected
      * object.
-     * 
+     *
      * @param rightResource
      * @return
      * @throws ReloadCompareException
@@ -376,9 +376,9 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     }
 
     /**
-     * 
+     *
      * create a EMFCompare with default configuration.
-     * 
+     *
      * @return
      */
     protected EMFCompare createDefaultEMFCompare() {
@@ -400,9 +400,9 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     }
 
     /**
-     * 
+     *
      * ignore the difference of id(not xmi id) Atrribute.
-     * 
+     *
      * @return
      */
     protected IDiffEngine diffEngineWithFilter() {
@@ -432,7 +432,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
     /**
      * DOC qiongli Comment method "copyRightToLeft".
-     * 
+     *
      * @param diff
      */
     protected void copyRightToLeft(Diff diff) {

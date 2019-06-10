@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,7 +39,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC scorreia SybaseASEDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      * @param majorVersion
      * @param minorVersion
@@ -50,7 +50,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#toQualifiedName(java.lang.String, java.lang.String,
      * java.lang.String)
      */
@@ -62,7 +62,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC yyi 2011-08-10 22246:view rows for aveagge length
-     * 
+     *
      * @return average length sql statement
      */
     @Override
@@ -72,7 +72,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#trim(java.lang.String)
      */
     @Override
@@ -82,7 +82,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
      */
     @Override
@@ -93,7 +93,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
      */
     @Override
@@ -103,7 +103,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullRows()
      */
     @Override
@@ -114,20 +114,20 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getTopNQuery(java.lang.String, int)
      */
     @Override
     public String getTopNQuery(String query, int n) {
 
         Matcher m = SELECT_PATTERN.matcher(query);
-        return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+        return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$
 
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
      */
     @Override
@@ -137,7 +137,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getColumnNameInQueryClause(java.lang.String)
      */
     @Override
@@ -147,7 +147,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -161,7 +161,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getQueryColumnSetWithPrefix(orgomg.cwm.resource.relational.ColumnSet)
      */
     @Override

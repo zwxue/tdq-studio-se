@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -84,7 +84,7 @@ public abstract class ModelElementTreeMenuProvider {
 
     /**
      * DOC qzhang Comment method "createTreeMenu". MOD qiongli bug 16252.Add a param of 'isColumnSetMenu'
-     * 
+     *
      * @param newTree
      * @param containEdit
      */
@@ -104,7 +104,7 @@ public abstract class ModelElementTreeMenuProvider {
 
                     /*
                      * (non-Javadoc)
-                     * 
+                     *
                      * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected (org.eclipse
                      * .swt.events.SelectionEvent)
                      */
@@ -136,7 +136,7 @@ public abstract class ModelElementTreeMenuProvider {
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @seeorg.eclipse.swt.events.SelectionAdapter# widgetSelected(org.eclipse .swt.events.SelectionEvent)
                  */
                 @Override
@@ -156,7 +156,7 @@ public abstract class ModelElementTreeMenuProvider {
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected (org.eclipse .swt.events.SelectionEvent)
                  */
                 @Override
@@ -176,7 +176,7 @@ public abstract class ModelElementTreeMenuProvider {
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @seeorg.eclipse.swt.events.SelectionAdapter# widgetSelected(org .eclipse.swt.events.SelectionEvent)
                  */
                 @Override
@@ -221,7 +221,7 @@ public abstract class ModelElementTreeMenuProvider {
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @seeorg.eclipse.swt.events.SelectionAdapter# widgetSelected(org .eclipse.swt.events.SelectionEvent)
                  */
                 @Override
@@ -239,7 +239,7 @@ public abstract class ModelElementTreeMenuProvider {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org .eclipse .swt.events.SelectionEvent)
              */
             @Override
@@ -261,7 +261,7 @@ public abstract class ModelElementTreeMenuProvider {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org .eclipse .swt.events.SelectionEvent)
              */
             @Override
@@ -276,7 +276,7 @@ public abstract class ModelElementTreeMenuProvider {
 
     /**
      * DOC yyi Comment method "removeSelectedElements".
-     * 
+     *
      * @param tree
      */
     protected abstract void removeSelectedElements2(Tree tree);
@@ -298,7 +298,7 @@ public abstract class ModelElementTreeMenuProvider {
 
     /**
      * DOC yyi Comment method "editUDIndicator" 2009-09-04.
-     * 
+     *
      * @param tree
      */
     private void editUDIndicator(Tree tree) {
@@ -320,7 +320,7 @@ public abstract class ModelElementTreeMenuProvider {
 
     /**
      * DOC Zqin Comment method "previewSelectedElements".
-     * 
+     *
      * @param newTree
      */
     private void previewSelectedElements(Tree newTree) {
@@ -339,9 +339,9 @@ public abstract class ModelElementTreeMenuProvider {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "viewQueryForSelectedElement".
-     * 
+     *
      * @param newTree
      */
     private void viewQueryForSelectedElement(Tree newTree) {
@@ -370,7 +370,7 @@ public abstract class ModelElementTreeMenuProvider {
 
     /**
      * DOC Zqin Comment method "showSelectedElements".MOD 2009-01-07 mzhao.
-     * 
+     *
      * @param newTree
      */
     public void showDetailView(Tree newTree) {
@@ -389,7 +389,7 @@ public abstract class ModelElementTreeMenuProvider {
 
     /**
      * DOC Zqin Comment method "showSelectedElements".MOD 2009-01-07 mzhao.
-     * 
+     *
      * @param newTree
      */
     private void showSelectedElements(Tree newTree) {
@@ -407,7 +407,7 @@ public abstract class ModelElementTreeMenuProvider {
 
     /**
      * DOC msjian Comment method "getSelectedNode".
-     * 
+     *
      * @param selection
      * @return
      */
@@ -461,9 +461,9 @@ public abstract class ModelElementTreeMenuProvider {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "isSelectedFrequencyIndicator". judge to indicator whether is frequency
-     * 
+     *
      * @param items
      * @return
      */
@@ -501,9 +501,9 @@ public abstract class ModelElementTreeMenuProvider {
     }
 
     /**
-     * 
+     *
      * DOC qiongli:if the selected item is MetadaColumn.
-     * 
+     *
      * @param items
      * @return
      */
@@ -518,9 +518,9 @@ public abstract class ModelElementTreeMenuProvider {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "isMetadataColumnIndicatorSelected".
-     * 
+     *
      * @param items
      * @return
      */
@@ -538,7 +538,7 @@ public abstract class ModelElementTreeMenuProvider {
 
     /**
      * DOC yyi Comment method "isSelectedUDIndicator" 2009-09-04.
-     * 
+     *
      * @param items
      * @return
      */
@@ -562,9 +562,9 @@ public abstract class ModelElementTreeMenuProvider {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "createColumnAnalysis".bug 16252.
-     * 
+     *
      * @param newTree
      */
     private void createColumnAnalysis(Tree newTree) {

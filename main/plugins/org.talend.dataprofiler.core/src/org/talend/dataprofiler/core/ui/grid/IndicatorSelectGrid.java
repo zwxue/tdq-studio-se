@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /**
      * DOC talend IndicatorSelectGrid constructor comment.
-     * 
+     *
      * @param dialog
      * @param parent
      * @param style
@@ -57,7 +57,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.swt.widgets.Control#redraw()
      */
     @Override
@@ -68,7 +68,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TalendObserver)
@@ -80,7 +80,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TalendObserver)
@@ -94,7 +94,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
      */
     public void clearObserver() {
@@ -106,7 +106,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
      */
     public void notifyObservers() {
@@ -123,7 +123,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#initObserverable()
      */
     public void initObserverable() {
@@ -135,7 +135,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.AbstractIndicatorSelectGrid#getColumnHeaderRenderer()
      */
     @Override
@@ -145,7 +145,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
      */
     public void update(ObserverEvent observerEvent) {
@@ -228,7 +228,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.AbstractIndicatorSelectGrid#notifyHscrollSelectionChange()
      */
     @Override
@@ -245,7 +245,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /**
      * DOC talend Comment method "notifyVerticalBarVisible".
-     * 
+     *
      * @param observer
      */
     @Override
@@ -278,7 +278,7 @@ public class IndicatorSelectGrid extends AbstractIndicatorSelectGrid implements 
 
     /**
      * DOC talend Comment method "hideInvalidItem".
-     * 
+     *
      * @param selection
      */
     public void hideInvalidItem(boolean selection) {

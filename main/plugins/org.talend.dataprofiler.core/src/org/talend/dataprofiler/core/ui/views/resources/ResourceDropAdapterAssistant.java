@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -62,7 +62,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
- * 
+ *
  * @deprecated not used any more
  */
 public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
@@ -73,7 +73,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.navigator.CommonDropAdapterAssistant#handleDrop (org.eclipse.ui.navigator.CommonDropAdapter,
      * org.eclipse.swt.dnd.DropTargetEvent, java.lang.Object)
      */
@@ -180,7 +180,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
     /**
      * DOC bZhou Comment method "closeEditorIfOpened".
-     * 
+     *
      * @param fileRes
      */
     private void closeEditorIfOpened(IFile fileRes) {
@@ -205,7 +205,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
     /**
      * Returns the resource selection from the LocalSelectionTransfer.
-     * 
+     *
      * @return the resource selection from the LocalSelectionTransfer
      */
     private IResource[] getSelectedResources() {
@@ -218,7 +218,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
     /**
      * Returns the resource selection from the LocalSelectionTransfer.
-     * 
+     *
      * @return the resource selection from the LocalSelectionTransfer
      */
     @SuppressWarnings("unchecked")
@@ -242,7 +242,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.navigator.CommonDropAdapterAssistant#validateDrop(java.lang.Object, int,
      * org.eclipse.swt.dnd.TransferData)
      */
@@ -282,7 +282,7 @@ public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
     /**
      * DOC bZhou Comment method "allowDND".
-     * 
+     *
      * @param sourceFile
      * @param targetFolder
      * @return

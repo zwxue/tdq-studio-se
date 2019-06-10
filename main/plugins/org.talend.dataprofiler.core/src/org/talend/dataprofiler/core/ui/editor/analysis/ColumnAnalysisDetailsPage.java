@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -269,7 +269,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#checkSqlEnginIndicatorExist()
      */
     @Override
@@ -286,7 +286,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * DOC zshen Comment method "createPaginationTree".
-     * 
+     *
      * @param topComp1
      */
     private void createPaginationTree(Composite topComp1) {
@@ -381,9 +381,9 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "expandTreeItems".
-     * 
+     *
      * @param items
      * @param expandOrCollapse
      */
@@ -399,7 +399,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#setTreeViewInput(java.lang.Object[])
      */
@@ -415,7 +415,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * Refresh the preview Table
-     * 
+     *
      * @param modelElementIndicator
      */
     public void refreshPreviewTable(ModelElementIndicator[] modelElements, boolean loadData) {
@@ -424,9 +424,9 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
     }
 
     /**
-     * 
+     *
      * Refresh the column tree
-     * 
+     *
      * @param modelElements
      */
     public void refreshTheTree(ModelElementIndicator[] modelElements) {
@@ -474,7 +474,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * ADD xqliu 2009-08-24 bug 8776.
-     * 
+     *
      * @return
      */
     protected boolean includeUDI() {
@@ -519,7 +519,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
         } catch (NumberFormatException nfe) {
             MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField", //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"))); //$NON-NLS-1$ 
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"))); //$NON-NLS-1$
             maxNumText.setText(String.valueOf(analysis.getParameters().getMaxNumberRows()));
         }
         analysis.getParameters().setStoreData(drillDownCheck.getSelection());
@@ -598,7 +598,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * DOC yyi 2011-06-02 16929:expand the selected column in the graphical chart.
-     * 
+     *
      * @param indicator
      */
     protected void expandChart(ModelElementIndicator indicator) {
@@ -669,7 +669,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
      */
     @Override
@@ -731,7 +731,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * check whether JUDI need to update
-     * 
+     *
      * @return
      */
     private boolean checkJUDIUpdate() {
@@ -791,7 +791,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * Judge whether there are java indicator exist.
-     * 
+     *
      * @return whether there are java indicator exist.
      */
     @Override
@@ -808,7 +808,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * Judge whether there are exist invalid udi
-     * 
+     *
      * @param modelElementIndicator
      * @return
      */
@@ -847,7 +847,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * set the Language To TreeViewer.
-     * 
+     *
      * @param executionLanguage
      */
     @Override
@@ -856,9 +856,9 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
     }
 
     /**
-     * 
+     *
      * refresh current Tree Viewer
-     * 
+     *
      * @param result
      */
     public void refreshCurrentTreeViewer(ModelElementIndicator[] result) {
@@ -906,7 +906,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * DOC msjian Comment method "createDrillDownPart".
-     * 
+     *
      * @param anaParameters
      * @param comp2
      * @param executionLanguage
@@ -952,7 +952,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * DOC zshen Comment method "isFileConnection".
-     * 
+     *
      * @return
      */
     private boolean isFileConnection() {
@@ -965,7 +965,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refreshEnginSection()
      */
     @Override
@@ -1045,7 +1045,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -1080,7 +1080,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getNonJavaIndicatorMessage()
      */
     @Override
@@ -1092,7 +1092,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /**
      * DOC zshen Comment method "refreshEnginSection".
-     * 
+     *
      * @param javaEnginSection
      * @param currentLanguage
      */
@@ -1116,7 +1116,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#createIndicatorSelectButton(org.
      * eclipse.swt.widgets.Composite)
@@ -1130,7 +1130,7 @@ public class ColumnAnalysisDetailsPage extends DynamicAnalysisMasterPage {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
              */
             @Override

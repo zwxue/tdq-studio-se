@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -124,7 +124,7 @@ public class AddTextStatistics4SnowflakeTask extends AbstractWorksapceUpdateTask
         addIndicators.put(REGULAR_EXPRESSION_MATCHING_UUID, REGULAR_EXPRESSION_MATCHING_BODY);
 
         definitionHandler = DefinitionHandler.getInstance();
-        
+
         for (String uuid : addIndicators.keySet()) {
             IndicatorDefinition definition = definitionHandler.getDefinitionById(uuid);
             if (definition != null) {

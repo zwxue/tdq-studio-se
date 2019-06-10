@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -44,9 +44,9 @@ import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
- * 
+ *
  * Match survivorship key table section specific to match analysis editor.
- * 
+ *
  */
 public class AnaMatchSurvivorSection extends MatchingKeySection {
 
@@ -56,7 +56,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /**
      * DOC zhao AnaMatchSurvivorSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -69,7 +69,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getSectionName()
      */
     @Override
@@ -79,7 +79,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#createTableComposite(org.eclipse.swt.widgets
      * .Composite, org.talend.dataquality.rules.MatchRule)
@@ -94,7 +94,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#setInput(org.talend.dataquality.rules.MatchRule
      * , org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite)
@@ -195,7 +195,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /**
      * DOC yyin Comment method "findPositionOfCurrentMatchkey".
-     * 
+     *
      * @param matchKey
      * @return
      */
@@ -212,7 +212,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /**
      * DOC yyin Comment method "createMatchAndSurvivorKey".
-     * 
+     *
      * @param matchKey
      * @param isClearSurvivor
      * @param isClearSurvivor
@@ -233,7 +233,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#removeTableItem()
      */
     @Override
@@ -265,7 +265,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#deleteMatchRuleTab(org.eclipse.swt.custom
      * .CTabItem)
@@ -284,7 +284,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#remoteKeyDefinition(java.lang.String,
      * org.eclipse.swt.custom.CTabItem)
      */
@@ -297,7 +297,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#checkAndRemoveEmptyMatchRule(org.eclipse.
      * swt.custom.CTabItem)
@@ -319,7 +319,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getCurrentTabDefinitions()
      */
     @Override
@@ -332,7 +332,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getMatchRule(org.eclipse.swt.custom.CTabItem)
      */
@@ -362,7 +362,7 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getTableViewerSorter(org.talend.dataquality
      * .rules.MatchRule)

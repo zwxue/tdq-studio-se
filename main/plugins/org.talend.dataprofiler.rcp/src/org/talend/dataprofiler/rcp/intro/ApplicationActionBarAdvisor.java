@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -44,7 +44,7 @@ import org.talend.dataprofiler.rcp.intro.linksbar.LinksToolbarItem;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
@@ -188,7 +188,7 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.application.ActionBarAdvisor#fillCoolBar(org.eclipse.jface.action.ICoolBarManager)
      */
     @Override

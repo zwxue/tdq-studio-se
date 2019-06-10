@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ public class TOPImportHandler extends ImportRepTypeHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.repository.items.importexport.handlers.imports.ImportRepTypeHandler#setInitializationData(org.eclipse
      * .core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
@@ -57,7 +57,7 @@ public class TOPImportHandler extends ImportRepTypeHandler {
 
     /*
      * (non-Javadoc) .
-     * 
+     *
      * @see
      * org.talend.repository.items.importexport.handlers.imports.ImportBasicHandler#computeItemRecord(org.talend.repository
      * .items.importexport.manager.ResourcesManager, org.eclipse.core.runtime.IPath)
@@ -88,7 +88,7 @@ public class TOPImportHandler extends ImportRepTypeHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.repository.items.importexport.handlers.imports.ImportBasicHandler#computeProperty(org.talend.repository
      * .items.importexport.manager.ResourcesManager, org.talend.repository.items.importexport.handlers.model.ImportItem)
@@ -100,7 +100,7 @@ public class TOPImportHandler extends ImportRepTypeHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.repository.items.importexport.handlers.imports.ImportBasicHandler#isValidFile(org.eclipse.core.runtime
      * .IPath)
@@ -118,7 +118,7 @@ public class TOPImportHandler extends ImportRepTypeHandler {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.items.importexport.handlers.imports.ImportBasicHandler#getResourceNeededExtensions()
      */
     @Override

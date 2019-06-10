@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -63,7 +63,7 @@ public class ParticularDefaultSurvivorShipCellModifier extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
      */
     @Override
@@ -111,7 +111,7 @@ public class ParticularDefaultSurvivorShipCellModifier extends
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     @Override
@@ -160,7 +160,7 @@ public class ParticularDefaultSurvivorShipCellModifier extends
 
     /**
      * Set function to special one(from SurvivorShipAlgorithmEnum)
-     * 
+     *
      * @param pdskd
      */
     private void setFunction(ParticularDefaultSurvivorshipDefinitions pdskd, SurvivorShipAlgorithmEnum functionEnum) {
@@ -182,7 +182,7 @@ public class ParticularDefaultSurvivorShipCellModifier extends
 
     /**
      * Reset function to default one(SurvivorShipAlgorithmEnum.CONCATENATE)
-     * 
+     *
      * @param pdskd
      */
     private void resetFunction(ParticularDefaultSurvivorshipDefinitions pdskd) {
@@ -192,7 +192,7 @@ public class ParticularDefaultSurvivorShipCellModifier extends
 
     /**
      * Judge whether current function is valid for new data type
-     * 
+     *
      * @param pdskd
      * @param talendType
      * @return

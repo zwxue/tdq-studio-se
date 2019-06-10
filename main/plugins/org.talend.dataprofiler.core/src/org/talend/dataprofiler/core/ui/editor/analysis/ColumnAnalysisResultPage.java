@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -72,7 +72,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     /**
      * DOC zqin ColumnAnalysisResultPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -103,7 +103,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     /**
      * create CollapseAll Link for result section.
-     * 
+     *
      * @param composite
      */
     private void createCollapseAllLink(Composite composite) {
@@ -128,7 +128,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     /**
      * create ExpandAll Link for result section.
-     * 
+     *
      * @param composite
      */
     private void createExpandAllLink(Composite composite) {
@@ -156,7 +156,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     /**
      * DOC msjian Comment method "getExpandableCompositeList".
-     * 
+     *
      * @return
      */
     protected List<ExpandableComposite> getExpandableCompositeList() {
@@ -224,7 +224,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
@@ -234,7 +234,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seejava.beans.PropertyChangeListener#propertyChange(java.beans. PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -245,7 +245,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
      * .ui.editor.analysis.AbstractAnalysisMetadataPage)
@@ -294,7 +294,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                     eReceiver.setChartComposite(chartComposite);
                     eReceiver.refreshChart();
                     eReceiver.setTableViewer(tableViewer);
- 
+
                     // clear data
                     eReceiver.clearValue();
                     registerIndicatorEvent(oneIndicator, eReceiver);
@@ -351,7 +351,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
 
     /**
      * unregister every dynamic events which registered before executing analysis
-     * 
+     *
      * @param eventReceivers
      */
     public void unRegisterDynamicEvent() {

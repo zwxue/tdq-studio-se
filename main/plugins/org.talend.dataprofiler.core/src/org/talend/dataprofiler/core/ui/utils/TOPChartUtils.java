@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -54,7 +54,7 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * created by yyin on 2014-12-8 Detailled comment
- * 
+ *
  */
 public class TOPChartUtils extends AbstractOSGIServiceUtils {
 
@@ -118,9 +118,9 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     }
 
     /**
-     * 
+     *
      * zshen Create bar chart and keep customer dataset
-     * 
+     *
      * @param title
      * @param dataset
      * @return
@@ -143,9 +143,9 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     }
 
     /**
-     * 
+     *
      * zshen Create Benford chart and keep customer dataset
-     * 
+     *
      * @param axisXLabel
      * @param categoryAxisLabel
      * @param dataset
@@ -286,7 +286,7 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
 
     /**
      * create the menu used for the chart in the analysis result page.
-     * 
+     *
      * @param composite NOTE:this parameter must be a composite which can be disposed, because we need its dispose listener to
      * dispose
      * the menu. BUT when the composite's shell is top shell, it is NOT allowed, becasue it will never dispose until close the
@@ -611,9 +611,9 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     }
 
     /**
-     * 
+     *
      * Get CustomerDataset from EncapsulationCumstomerDataset
-     * 
+     *
      * @param dataset
      * @return Get CustomerDataset when dataset is EncapsulationCumstomerDataset else return null
      */

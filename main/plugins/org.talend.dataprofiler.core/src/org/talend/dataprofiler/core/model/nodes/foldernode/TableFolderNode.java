@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,12 +31,12 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author rli
- * 
+ *
  */
 public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
 
     /**
-     * 
+     *
      */
     public TableFolderNode() {
         super(DefaultMessagesImpl.getString("TableFolderNode.tables")); //$NON-NLS-1$
@@ -60,7 +60,7 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.model.nodes.AbstractFolderNode#getColumnSets(org.talend.cwm.relational.TdCatalog,
      * org.talend.cwm.relational.TdSchema)
@@ -78,7 +78,7 @@ public class TableFolderNode extends NamedColumnSetFolderNode<TdTable> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.model.nodes.AbstractFolderNode#loadColumnSets(org.talend.cwm.relational.TdCatalog,
      * org.talend.cwm.relational.TdSchema, org.talend.cwm.softwaredeployment.TdDataProvider, java.util.List)

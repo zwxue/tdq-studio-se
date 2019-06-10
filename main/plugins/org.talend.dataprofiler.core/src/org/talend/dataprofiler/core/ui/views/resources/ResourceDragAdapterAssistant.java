@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.eclipse.ui.part.ResourceTransfer;
 
 /**
  * DOC rli class global comment. Detailled comment
- * 
+ *
  * @deprecated not used any more
  */
 public class ResourceDragAdapterAssistant extends CommonDragAdapterAssistant {
@@ -40,7 +40,7 @@ public class ResourceDragAdapterAssistant extends CommonDragAdapterAssistant {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.navigator.CommonDragAdapterAssistant#getSupportedTransferTypes()
      */
     public Transfer[] getSupportedTransferTypes() {
@@ -49,7 +49,7 @@ public class ResourceDragAdapterAssistant extends CommonDragAdapterAssistant {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.navigator.CommonDragAdapterAssistant#setDragData(org.eclipse.swt.dnd.DragSourceEvent,
      * org.eclipse.jface.viewers.IStructuredSelection)
      */

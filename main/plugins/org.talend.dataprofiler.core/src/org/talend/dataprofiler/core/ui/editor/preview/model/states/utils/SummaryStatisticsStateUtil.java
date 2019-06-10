@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ import org.talend.utils.sql.Java2SqlType;
 
 /**
  * created by yyin on 2014-12-2 Detailled comment
- * 
+ *
  */
 public class SummaryStatisticsStateUtil {
 
@@ -47,7 +47,7 @@ public class SummaryStatisticsStateUtil {
 
     /**
      * DOC bZhou Comment method "check".
-     * 
+     *
      * @param units2
      * @return
      */
@@ -78,7 +78,7 @@ public class SummaryStatisticsStateUtil {
 
     /**
      * DOC yyin Comment method "findSqlType".
-     * 
+     *
      * @param units
      */
     public int findSqlType(List<IndicatorUnit> units) {
@@ -100,7 +100,7 @@ public class SummaryStatisticsStateUtil {
 
     /**
      * DOC yyin Comment method "getUnitValue".
-     * 
+     *
      * @param unit
      * @return
      */
@@ -117,7 +117,7 @@ public class SummaryStatisticsStateUtil {
 
     /**
      * DOC yyin Comment method "createDataEntity".
-     * 
+     *
      * @param unit
      * @param value
      * @return

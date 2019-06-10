@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author scorreia
- * 
+ *
  * Run analysis on columns.
  */
 public class ColumnAnalysisExecutor extends AnalysisExecutor {
@@ -106,7 +106,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * DOC zshen Comment method "CreateIndicatorEvaluator".
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -117,7 +117,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * Method "belongToSameSchemata" fills in the map this{@link #schemata}.
-     * 
+     *
      * @param tdColumn a column
      * @return false when the given column has an owner different from the one registered in the map.
      */
@@ -145,7 +145,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
@@ -258,7 +258,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "checkAnalyzedElements".
-     * 
+     *
      * @param analysis
      * @param context
      */
@@ -288,7 +288,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * Method "getQuotedColumnName".
-     * 
+     *
      * @param column a column
      * @return the quoted column name
      */
@@ -303,7 +303,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * Method "getQuotedTableName".
-     * 
+     *
      * @param column
      * @return the quoted table name
      */

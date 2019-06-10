@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by zshen on Aug 19, 2013 Detailled comment
- * 
+ *
  */
 public class NewMatchRuleWizard extends AbstractWizard {
 
@@ -59,7 +59,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -77,7 +77,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.ICWMResouceAdapter#initCWMResourceBuilder()
      */
     public ModelElement initCWMResourceBuilder() {
@@ -96,7 +96,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.ICWMResouceAdapter#createAndSaveCWMFile(orgomg.cwm.objectmodel.core.
      * ModelElement)
      */
@@ -119,7 +119,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model
      * .IRepositoryNode )
@@ -132,7 +132,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.dataquality.properties.TDQMatchRuleItem
      * )
@@ -145,7 +145,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#getResourceFileMap()
      */
     @Override
@@ -155,7 +155,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#getParameter()
      */
     @Override
@@ -165,7 +165,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#getEditorName()
      */
     @Override

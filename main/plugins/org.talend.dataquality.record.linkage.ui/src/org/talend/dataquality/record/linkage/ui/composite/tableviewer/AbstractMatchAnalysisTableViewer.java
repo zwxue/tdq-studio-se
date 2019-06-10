@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ import org.talend.dataquality.rules.KeyDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ *
  */
 public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
@@ -62,7 +62,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * DOC zshen MatchAnalysisTabveViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -102,9 +102,9 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "initTable".
-     * 
+     *
      * @param headers the name of column
      * @param columnMap all of columns which can be used by current Table
      * @param pixelDataOfHeaders the width of the column
@@ -171,7 +171,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * Add EditingSupport for current column
-     * 
+     *
      * @param tableColumn
      * @param columnTechnologyLabel
      */
@@ -185,7 +185,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     /**
-     * 
+     *
      * @return
      */
     protected int getTableHeightHint() {
@@ -194,7 +194,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * DOC zshen Comment method "selectAllItem".
-     * 
+     *
      * @param bkdList
      */
     public void selectAllItem(List<KeyDefinition> bkdList) {
@@ -203,7 +203,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ColumnViewer#update(java.lang.Object, java.lang.String[])
      */
     @Override
@@ -218,7 +218,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.AbstractTableViewer#remove(java.lang.Object)
      */
     @Override
@@ -234,7 +234,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * Getter for isAddColumn.
-     * 
+     *
      * @return the isAddColumn
      */
     public boolean isAddColumn() {
@@ -251,14 +251,14 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * DOC zshen Comment method "getDisplayWeight".
-     * 
+     *
      * @return
      */
     abstract protected int getHeaderDisplayWeight();
 
     /**
      * get the header display weight according to the index.
-     * 
+     *
      * @param index
      * @return
      */
@@ -268,46 +268,46 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".
-     * 
+     *
      * @return
      */
     abstract protected IBaseLabelProvider getTableLabelProvider();
 
     /**
      * DOC zshen Comment method "getTableContentProvider".
-     * 
+     *
      * @return
      */
     abstract protected IContentProvider getTableContentProvider();
 
     /**
      * DOC zshen Comment method "getTableCellModifier".
-     * 
+     *
      * @return
      */
     abstract protected AbstractMatchCellModifier<T> getTableCellModifier();
 
     /**
      * DOC zshen Comment method "getCellEditor".
-     * 
+     *
      * @param headers
      * @return
      */
     abstract protected CellEditor[] getCellEditor(List<String> headers, List<MetadataColumn> columnMap);
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
     abstract public boolean addElement(String columnName, Analysis analysis);
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
@@ -319,9 +319,9 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
@@ -333,7 +333,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * create a new KeyDefinition
-     * 
+     *
      * @param columnName
      * @return
      */
@@ -341,14 +341,14 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * remove Element
-     * 
+     *
      * @param columnName the name of column
      */
     abstract public void removeElement(String columnName, List<T> keyList);
 
     /**
      * remove Element
-     * 
+     *
      * @param columnName the element of column
      */
     public void removeElement(T keyDef, List<T> keyList) {
@@ -366,9 +366,9 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     /**
-     * 
+     *
      * move up element
-     * 
+     *
      * @param keyDef
      * @param matchRuleDef
      */
@@ -392,7 +392,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * DOC zhao Comment method "moveFromModel".
-     * 
+     *
      * @param keyDef
      * @param keyList
      * @param indexForElement
@@ -403,9 +403,9 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     /**
-     * 
+     *
      * move down element
-     * 
+     *
      * @param keyDef
      * @param matchRuleDef
      */
@@ -428,7 +428,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * DOC zhao Comment method "moveDownFromModel".
-     * 
+     *
      * @param keyDef
      * @param keyList
      * @param indexForElement

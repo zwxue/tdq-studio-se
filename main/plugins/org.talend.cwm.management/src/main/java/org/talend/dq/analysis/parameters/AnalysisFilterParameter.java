@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,9 +16,9 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ *
  */
 public class AnalysisFilterParameter extends AnalysisParameter {
 
@@ -32,7 +32,7 @@ public class AnalysisFilterParameter extends AnalysisParameter {
 
     /**
      * Getter for tableFilter.
-     * 
+     *
      * @return the tableFilter
      */
     public String getTableFilter() {
@@ -41,7 +41,7 @@ public class AnalysisFilterParameter extends AnalysisParameter {
 
     /**
      * Sets the tableFilter.
-     * 
+     *
      * @param tableFilter the tableFilter to set
      */
     public void setTableFilter(String tableFilter) {
@@ -50,7 +50,7 @@ public class AnalysisFilterParameter extends AnalysisParameter {
 
     /**
      * Getter for viewFilter.
-     * 
+     *
      * @return the viewFilter
      */
     public String getViewFilter() {
@@ -59,7 +59,7 @@ public class AnalysisFilterParameter extends AnalysisParameter {
 
     /**
      * Sets the viewFilter.
-     * 
+     *
      * @param viewFilter the viewFilter to set
      */
     public void setViewFilter(String viewFilter) {
@@ -68,7 +68,7 @@ public class AnalysisFilterParameter extends AnalysisParameter {
 
     /**
      * Getter for tdDataProvider.
-     * 
+     *
      * @return the tdDataProvider
      */
     public Connection getTdDataProvider() {
@@ -77,7 +77,7 @@ public class AnalysisFilterParameter extends AnalysisParameter {
 
     /**
      * Sets the tdDataProvider.
-     * 
+     *
      * @param tdDataProvider the tdDataProvider to set
      */
     public void setTdDataProvider(Connection tdDataProvider) {

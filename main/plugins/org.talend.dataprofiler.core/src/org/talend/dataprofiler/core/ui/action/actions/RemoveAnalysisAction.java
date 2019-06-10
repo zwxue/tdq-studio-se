@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -53,7 +53,7 @@ public class RemoveAnalysisAction extends Action {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -89,8 +89,8 @@ public class RemoveAnalysisAction extends Action {
             return;
         }
         String message = paths.length > 1 ? DefaultMessagesImpl.getString(
-                "RemoveAnalysisAction.areYouDeleteElement0", paths.length) //$NON-NLS-1$ 
-                : DefaultMessagesImpl.getString("RemoveAnalysisAction.areYouDeleteElement2", analysisObj.getName()); //$NON-NLS-1$ 
+                "RemoveAnalysisAction.areYouDeleteElement0", paths.length) //$NON-NLS-1$
+                : DefaultMessagesImpl.getString("RemoveAnalysisAction.areYouDeleteElement2", analysisObj.getName()); //$NON-NLS-1$
         boolean openConfirm = MessageDialog.openConfirm(null,
                 DefaultMessagesImpl.getString("RemoveAnalysisAction.confirmResourceDelete"), message); //$NON-NLS-1$
 

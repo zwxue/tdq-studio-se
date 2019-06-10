@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -69,7 +69,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by yyin on 2012-8-8 Detailled comment
- * 
+ *
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ IndicatorResourceFileHelper.class, DefaultMessagesImpl.class, ElementWriterFactory.class,
@@ -80,7 +80,7 @@ public class FileSystemImportWriterTest {
 
     /**
      * DOC yyin Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -90,7 +90,7 @@ public class FileSystemImportWriterTest {
 
     /**
      * DOC yyin Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After
@@ -157,7 +157,7 @@ public class FileSystemImportWriterTest {
      * Test method for
      * {@link org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriter#mergePattern(org.talend.dataprofiler.core.ui.imex.model.ItemRecord, org.talend.dataquality.domain.pattern.Pattern)}
      * .
-     * 
+     *
      * @throws MalformedURLException
      */
     public void testMergePattern() throws MalformedURLException {
@@ -289,7 +289,7 @@ public class FileSystemImportWriterTest {
      * Test method for
      * {@link org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriter#mergeSystemIndicator(org.talend.dataprofiler.core.ui.imex.model.ItemRecord, org.talend.dataquality.indicators.definition.IndicatorDefinition)}
      * . check: if it is a indicator and checkExist=false(overwrite), then this method should return 0 record.
-     * 
+     *
      * @throws Exception
      */
     public void testPopulate_1() throws Exception {

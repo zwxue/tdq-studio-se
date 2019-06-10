@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,9 +16,9 @@ import org.talend.dataquality.analysis.AnalysisType;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ *
  */
 public class AnalysisParameter extends ConnectionParameter {
 
@@ -30,7 +30,7 @@ public class AnalysisParameter extends ConnectionParameter {
 
     /**
      * Getter for analysisTypeName.
-     * 
+     *
      * @return the analysisTypeName
      */
     public String getAnalysisTypeName() {
@@ -39,7 +39,7 @@ public class AnalysisParameter extends ConnectionParameter {
 
     /**
      * Sets the analysisTypeName.
-     * 
+     *
      * @param analysisTypeName the analysisTypeName to set
      */
     public void setAnalysisTypeName(String typeName) {
@@ -48,7 +48,7 @@ public class AnalysisParameter extends ConnectionParameter {
 
     /**
      * DOC bzhou Comment method "getAnalysisType".
-     * 
+     *
      * @return
      */
     public AnalysisType getAnalysisType() {

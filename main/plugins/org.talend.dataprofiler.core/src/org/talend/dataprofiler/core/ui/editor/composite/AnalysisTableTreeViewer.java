@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -129,7 +129,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu AnalysisTableTreeViewer constructor comment.
-     * 
+     *
      * @param parent
      */
     public AnalysisTableTreeViewer(Composite parent) {
@@ -141,7 +141,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getMasterPage()
      */
     @Override
@@ -151,7 +151,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu AnalysisTableTreeViewer constructor comment.
-     * 
+     *
      * @param tree
      * @param tableMasterDetailsPage
      */
@@ -254,7 +254,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getTheSuitedComposite(org.eclipse.swt
      * .events.SelectionEvent)
@@ -358,7 +358,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu Comment method "showAddDQRuleDialog".
-     * 
+     *
      * @param treeItem
      * @param tableIndicator
      */
@@ -419,7 +419,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu Comment method "removeUncheckedWhereRuleIndicator". ADD xqliu 2009-04-30 bug 6808
-     * 
+     *
      * @param ownedWhereRuleNodes
      * @param results
      * @param tableIndicator
@@ -460,7 +460,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu Comment method "clearAddedResult". ADD xqliu 2009-04-30 bug 6808
-     * 
+     *
      * @param addedResults
      * @param result
      * @return
@@ -484,7 +484,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu Comment method "getOwnedWhereRuleFiles". ADD xqliu 2009-04-30 bug 6808
-     * 
+     *
      * @param tableIndicator
      * @param whereRuleFolder
      * @return
@@ -599,7 +599,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#openIndicatorOptionDialog(org.eclipse
      * .swt.widgets.Shell, org.eclipse.swt.widgets.TreeItem)
@@ -628,7 +628,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC msjian Comment method "hasIndicatorParameters".
-     * 
+     *
      * @param indicatorUnit
      * @return
      */
@@ -693,7 +693,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu Comment method "removeTreeItem". ADD xqliu 2009-04-30 bug 6808
-     * 
+     *
      * @param treeItem
      */
     private void removeTreeItem(TreeItem treeItem) {
@@ -730,7 +730,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu Comment method "setInput".
-     * 
+     *
      * @param objs
      */
     @Override
@@ -813,7 +813,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu Comment method "getTree".
-     * 
+     *
      * @return
      */
     public Tree getTree() {
@@ -836,9 +836,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     /**
-     * 
+     *
      * DOC xqliu Comment method "addElements".
-     * 
+     *
      * @param elements
      */
     public void addElements(final TableIndicator[] elements) {
@@ -855,7 +855,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu Comment method "getAnalysis".
-     * 
+     *
      * @return
      */
     public Analysis getAnalysis() {
@@ -1192,7 +1192,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
         /**
          * DOC msjian Comment method "getSelectedNode".
-         * 
+         *
          * @param selection
          * @return
          */
@@ -1248,7 +1248,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     /**
      * DOC xqliu Comment method "isRowCountIndicator".
-     * 
+     *
      * @param selection
      * @return
      */

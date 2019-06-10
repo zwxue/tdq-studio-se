@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ import orgomg.cwm.resource.relational.Schema;
 public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /**
-     * 
+     *
      */
     private static final String MYSQL_IDENTIFIER_QUOTE = "`"; //$NON-NLS-1$
 
@@ -40,7 +40,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC klliu NetezzaDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      * @param dbVersion
      */
@@ -50,7 +50,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getPatternFinderDefaultFunction(java.lang.String)
      */
     @Override
@@ -74,7 +74,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#replaceNullsWithString(java.lang.String, java.lang.String)
      */
     @Override
@@ -84,7 +84,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#extract(org.talend.dataquality.indicators.DateGrain,
      * java.lang.String)
      */
@@ -95,7 +95,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getSelectRegexp(java.lang.String)
      */
     @Override
@@ -105,7 +105,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override
@@ -115,7 +115,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#supportAliasesInGroupBy()
      */
     @Override
@@ -125,7 +125,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getSelectRemarkOnTable(java.lang.String)
      */
     @Override
@@ -135,7 +135,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getBackSlashForRegex()
      */
     @Override
@@ -157,7 +157,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -171,7 +171,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getSoundexPrefix()
      */
     @Override
@@ -180,9 +180,9 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Get invalid clause for Benford indicator.
-     * 
+     *
      * @param columnName
      * @return
      */
@@ -193,7 +193,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#toQualifiedName(java.lang.String, java.lang.String, java.lang.String)
      */
     @Override
@@ -215,7 +215,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
      */
     @Override

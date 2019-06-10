@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -65,7 +65,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * @author mzhao<br>
  * Select the special columns from this dialog.
- * 
+ *
  */
 public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
@@ -92,7 +92,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * init this Dialog.
-     * 
+     *
      * @param title
      * @param checkedRepoNodes
      */
@@ -153,7 +153,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#restoreCheckStatus()
      */
     @Override
@@ -176,7 +176,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * DOC mzhao Initiate the checked list in column selection dialog.
-     * 
+     *
      * @param reposNodeLs
      */
     private void initCheckedElements(List<? extends IRepositoryNode> reposNodeLs) {
@@ -198,7 +198,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * DOC xqliu Comment method "getParentNode".
-     * 
+     *
      * @param repNode
      * @return
      */
@@ -220,7 +220,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog# addCheckedListener()
      */
     @Override
@@ -301,7 +301,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             Item item = connNode == null ? null : connNode.getObject().getProperty().getItem();
             if (item != null && DqRepositoryViewService.isComeFromRefrenceProject(((ConnectionItem) item).getConnection())) {
                 fCurrStatus = new Status(IStatus.WARNING, PlatformUI.PLUGIN_ID, IStatus.WARNING, DefaultMessagesImpl.getString(
-                        "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
+                        "ColumnMasterDetailsPage.noColumnFoundWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$
             }
         }
 
@@ -309,9 +309,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     /**
-     * 
+     *
      * Compute the checked Table Nodes.
-     * 
+     *
      * @param repNodeArray
      * @return
      */
@@ -337,9 +337,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     /**
-     * 
+     *
      * when the table count >1, means there are more than one table's column selected. then make the ok status disable
-     * 
+     *
      * @param repNodes
      * @param tableCount
      * @return
@@ -358,15 +358,15 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     //
     // if (tableCount > 1) {
     // fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.ERROR, DefaultMessagesImpl.getString(
-    //                    "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$ 
+    //                    "ColumnMasterDetailsPage.noSameTableWarning", PluginConstant.SPACE_STRING), null); //$NON-NLS-1$
     // }
     // return fCurrStatus;
     // }
 
     /**
-     * 
+     *
      * DOC mzhao Handle check state of table view elements. propagate to tree viewer and multi map.
-     * 
+     *
      * @param reposNode
      * @param checkedFlag
      */
@@ -392,9 +392,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Handle check events. propagate the state to the table viewer and update the multi map.
-     * 
+     *
      * @param repNode
      * @param checkedFlag
      */
@@ -446,7 +446,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#
      * addSelectionButtonListener(org.eclipse.swt .widgets.Button, org.eclipse.swt.widgets.Button)
      */
@@ -579,7 +579,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         getAllCheckElements();
         // Added TDQ-8718 20140505 yyin: if no columns checked, warn the user
         if (allCheckedElements.size() == 0) {
-            MessageDialogWithToggle.openWarning(this.getShell(), DefaultMessagesImpl.getString("ColumnSelectionDialog.warning"),//$NON-NLS-1$ 
+            MessageDialogWithToggle.openWarning(this.getShell(), DefaultMessagesImpl.getString("ColumnSelectionDialog.warning"),//$NON-NLS-1$
                     DefaultMessagesImpl.getString("ColumnSelectionDialog.NoColumnSelected"));//$NON-NLS-1$
             return;
         }// ~
@@ -594,7 +594,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * @author rli
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class ModelElementContentProvider extends ResourceViewContentProvider {
@@ -640,7 +640,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * DOC zqin ColumnsSelectionDialog class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class DBTreeViewContentProvider extends ResourceViewContentProvider {

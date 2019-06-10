@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,7 +39,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- * 
+ *
  */
 public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionComposite implements ITableEditOperation {
 
@@ -107,7 +107,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * DOC zshen Comment method "getTableDefaultHeight".
-     * 
+     *
      * @return
      */
     protected int getTableDefaultHeight() {
@@ -134,7 +134,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * Getter for isNeedSubChart.
-     * 
+     *
      * @return the isNeedSubChart
      */
     public Boolean isNeedSubChart() {
@@ -143,7 +143,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * Sets the isNeedSubChart.
-     * 
+     *
      * @param isNeedSubChart the isNeedSubChart to set
      */
     public void setIsNeedSubChart(Boolean isNeedASubChart) {
@@ -152,7 +152,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * DOC zshen Comment method "getColumnNum".
-     * 
+     *
      * @return
      */
     private int getGridColumnNum() {
@@ -201,7 +201,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * DOC zshen Comment method "createEditOperationButtons".
-     * 
+     *
      * @param sectionClient
      */
     private void createEditOperationButtons(Composite parent) {
@@ -221,7 +221,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * DOC zshen Comment method "createAddAndRemoveButton".
-     * 
+     *
      * @param buttonsComposite
      * @param labelGd
      */
@@ -294,7 +294,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * need clear the old data every time
-     * 
+     *
      */
     public void setDataInput(List<Object[]> allData) {
         matchRows.clear();
@@ -312,7 +312,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * Getter for isAddColumn.
-     * 
+     *
      * @return the isAddColumn
      */
     public boolean isAddColumn() {
@@ -321,7 +321,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * Sets the isAddColumn.
-     * 
+     *
      * @param isAddColumn the isAddColumn to set
      */
     public void setAddColumn(boolean isNeedAddColumn) {
@@ -330,7 +330,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * DOC zshen Comment method "shouldMoveUp".
-     * 
+     *
      * @param blockKeyDefinition
      * @param blockKeyDefinition2
      * @return
@@ -344,7 +344,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#pasteTableItem()
      */
     @Override
@@ -355,7 +355,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#copyTableItem()
      */
     @Override
@@ -366,7 +366,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -377,7 +377,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -388,7 +388,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#removeTableItem()
      */
     @Override
@@ -398,7 +398,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
      */
     @Override
@@ -409,21 +409,21 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
     /**
      * DOC zshen Comment method "createSubChart". TODO re-order the protected and abstract key word. let "protected"
      * first.
-     * 
+     *
      * @param sectionClient
      */
     abstract protected void createSubChart(Composite parent);
 
     /**
      * DOC zshen Comment method "createSubContent".
-     * 
+     *
      * @param sectionClient
      */
     abstract protected Composite createSubContent(Composite parent);
 
     /**
      * DOC zshen Comment method "getSectionName".
-     * 
+     *
      * @return
      */
     abstract protected String getSectionName();
@@ -434,7 +434,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * check if the key's name is same with some columns name
-     * 
+     *
      * @param keyName
      * @return
      */
@@ -460,7 +460,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
     /**
      * When import:1) use key's name & key's column to compare, 2) set it empty when no match. If the key's column =
      * some column name, keep it; when key's name and key's column both no match, set it empty
-     * 
+     *
      * @param keyDefinition
      */
     protected void setColumnValueIfMatch(KeyDefinition keyDefinition) {
@@ -478,7 +478,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * Get the name which mapping to real column name
-     * 
+     *
      * @param keyDefinition
      * @return
      */
@@ -496,9 +496,9 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
     }
 
     /**
-     * 
+     *
      * check dirty status of current Section
-     * 
+     *
      * @return
      */
     public ReturnCode checkResultStatus() {
@@ -509,7 +509,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * check whether column name is Null or empty
-     * 
+     *
      * @param bdk
      */
     protected boolean checkColumnNameIsEmpty(KeyDefinition kd) {

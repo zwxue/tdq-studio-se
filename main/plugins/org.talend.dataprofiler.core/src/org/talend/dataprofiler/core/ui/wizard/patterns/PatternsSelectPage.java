@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -63,7 +63,7 @@ public class PatternsSelectPage extends WizardPage {
 
     /**
      * DOC zshen PatternsSelectPage constructor comment.
-     * 
+     *
      * @param pageName
      */
     protected PatternsSelectPage(SelectPatternsWizard selectPatternsWizard) {
@@ -76,7 +76,7 @@ public class PatternsSelectPage extends WizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
@@ -158,7 +158,7 @@ public class PatternsSelectPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * zshen Comment method "inItitemCheck". initialization the table to decide which pattern has been selected.
      */
     private void inItitemCheck() {
@@ -180,7 +180,7 @@ public class PatternsSelectPage extends WizardPage {
 
     /**
      * zshen.
-     * 
+     *
      * @return the input of table.
      */
     private List<Map<Integer, RegexpMatchingIndicator>> organizeTableInput() {
@@ -207,9 +207,9 @@ public class PatternsSelectPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "getMapLocation".
-     * 
+     *
      * @return
      */
     private Map<Integer, RegexpMatchingIndicator> getMapLocation(List<Map<Integer, RegexpMatchingIndicator>> theList, int index) {
@@ -224,16 +224,16 @@ public class PatternsSelectPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * DOC zshen PatternsSelectPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class PatternSelectContentProvider implements IStructuredContentProvider {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
         public Object[] getElements(Object inputElement) {
@@ -246,7 +246,7 @@ public class PatternsSelectPage extends WizardPage {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
         public void dispose() {
@@ -256,7 +256,7 @@ public class PatternsSelectPage extends WizardPage {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
          * java.lang.Object, java.lang.Object)
          */
@@ -268,16 +268,16 @@ public class PatternsSelectPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * DOC zshen PatternsSelectPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class PatternSelectLabelProvider implements ITableLabelProvider {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          */
         public Image getColumnImage(Object element, int columnIndex) {
@@ -290,7 +290,7 @@ public class PatternsSelectPage extends WizardPage {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
         public String getColumnText(Object element, int columnIndex) {
@@ -311,7 +311,7 @@ public class PatternsSelectPage extends WizardPage {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
          */
@@ -322,7 +322,7 @@ public class PatternsSelectPage extends WizardPage {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
          */
         public void dispose() {
@@ -332,7 +332,7 @@ public class PatternsSelectPage extends WizardPage {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
          */
         public boolean isLabelProperty(Object element, String property) {
@@ -342,7 +342,7 @@ public class PatternsSelectPage extends WizardPage {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
          */
@@ -378,14 +378,14 @@ public class PatternsSelectPage extends WizardPage {
     }
 
     /**
-     * 
+     *
      * zshen PatternsSelectPage class global comment. Detailled comment
      */
     private class DataFilterListener implements SelectionListener {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.swt.events.SelectionListener#widgetSelected(org.eclipse.swt.events.SelectionEvent)
          */
         public void widgetSelected(SelectionEvent e) {
@@ -403,7 +403,7 @@ public class PatternsSelectPage extends WizardPage {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.swt.events.SelectionListener#widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent)
          */
         public void widgetDefaultSelected(SelectionEvent e) {

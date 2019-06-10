@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -51,9 +51,9 @@ public final class FolderNodeHelper {
     }
 
     /**
-     * 
+     *
      * MOD mzhao bug 8567, 2010-03-29 Alter the first parameter type from EObject to Package.
-     * 
+     *
      * @param eObject
      * @param columnSet
      * @return
@@ -72,9 +72,9 @@ public final class FolderNodeHelper {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "getFolderNode".
-     * 
+     *
      * @param eObject
      * @return
      */

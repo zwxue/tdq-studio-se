@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -98,7 +98,7 @@ public final class DQStructureComparer {
 
     /**
      * Method "getCopyedFile" copies the source file into the destination file .
-     * 
+     *
      * @param sourceFile
      * @param destinationFile
      * @return
@@ -128,7 +128,7 @@ public final class DQStructureComparer {
     private static IFile iterateGetNotExistFile(String fileName) {
         IFile file = getFile(fileName);
         if (file.exists()) {
-            return iterateGetNotExistFile(fileName.substring(0, fileName.lastIndexOf(".")) + EcoreUtil.generateUUID() //$NON-NLS-1$ 
+            return iterateGetNotExistFile(fileName.substring(0, fileName.lastIndexOf(".")) + EcoreUtil.generateUUID() //$NON-NLS-1$
                     + fileName.substring(fileName.lastIndexOf("."))); //$NON-NLS-1$
         } else {
             return file;
@@ -141,9 +141,9 @@ public final class DQStructureComparer {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "getFirstComparisonLocalFile".
-     * 
+     *
      * @return First comparison file.
      */
     public static IFile getFirstComparisonLocalFile() {
@@ -152,9 +152,9 @@ public final class DQStructureComparer {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "getSecondComparisonLocalFile".
-     * 
+     *
      * @return Second comparison file.
      */
     public static IFile getSecondComparisonLocalFile() {
@@ -164,7 +164,7 @@ public final class DQStructureComparer {
 
     /**
      * Method "deleteCopiedResourceFile".
-     * 
+     *
      * @return true if temporary file ".refresh.prv" has been deleted (or did not exist)
      */
     // public static boolean deleteCopiedResourceFile() {
@@ -176,9 +176,9 @@ public final class DQStructureComparer {
     // }
 
     /**
-     * 
+     *
      * DOC mzhao Delete first selected resource tmp file.
-     * 
+     *
      * @return
      */
     public static boolean deleteFirstResourceFile() {
@@ -186,9 +186,9 @@ public final class DQStructureComparer {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Delete second selected resource tmp file.
-     * 
+     *
      * @return
      */
     public static boolean deleteSecondResourceFile() {
@@ -210,9 +210,9 @@ public final class DQStructureComparer {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Get compared emf diff result file.
-     * 
+     *
      * @return
      */
     public static IFile getLocalDiffResourceFile() {
@@ -222,7 +222,7 @@ public final class DQStructureComparer {
 
     /**
      * To delete the file of "DB Connections" folder by the specific fileName.
-     * 
+     *
      * @return
      */
     public static boolean deleteFile(IFile file) {
@@ -245,9 +245,9 @@ public final class DQStructureComparer {
     }
 
     /**
-     * 
+     *
      * remove one Resource from workspace contains unload,remove from resourceSet and delete file
-     * 
+     *
      * @param currResource
      * @return
      */
@@ -272,9 +272,9 @@ public final class DQStructureComparer {
     }
 
     /**
-     * 
+     *
      * DOC mzhao get file by name at the same location.
-     * 
+     *
      * @param fileName
      * @return IFile
      */
@@ -334,7 +334,7 @@ public final class DQStructureComparer {
 
     /**
      * Find the matched package of matchDataProvider.
-     * 
+     *
      * @param selectedPackage
      * @param matchDataProvider
      * @return
@@ -367,7 +367,7 @@ public final class DQStructureComparer {
 
     /**
      * Find the matched columnSet of matchDataProvider.
-     * 
+     *
      * @param selectedColumnSet
      * @return
      * @throws ReloadCompareException
@@ -412,9 +412,9 @@ public final class DQStructureComparer {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Find the matched column of toMatchDataProvider.
-     * 
+     *
      * @param column
      * @param toMatchDataProvider
      * @return
@@ -446,7 +446,7 @@ public final class DQStructureComparer {
 
     /**
      * DOC rli Comment method "findMatchSchema".
-     * 
+     *
      * @param schemaCase
      * @param schemas
      * @throws ReloadCompareException
@@ -463,7 +463,7 @@ public final class DQStructureComparer {
 
     /**
      * DOC rli Comment method "findMatchCatalogObj".
-     * 
+     *
      * @param catalog
      * @throws ReloadCompareException
      */
@@ -537,7 +537,7 @@ public final class DQStructureComparer {
      * Open a compare editor UI, will clear the information which hasn't relationship with current selected level
      * first(For example: if we compare the catalog level, will clear it's table(view) from every catalog), then will
      * compare current level object.
-     * 
+     *
      * @param rightResource
      * @param oldDataProviderFile
      * @return

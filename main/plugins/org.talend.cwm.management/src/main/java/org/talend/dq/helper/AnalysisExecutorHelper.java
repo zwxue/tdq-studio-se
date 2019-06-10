@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -86,7 +86,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * get full name as: db.catalog.table, if has catalog/schema
-     * 
+     *
      * @param analyzedElement only for TdColumn and ColumnSet.
      * @param dbmsLanguage
      * @return
@@ -108,9 +108,9 @@ public final class AnalysisExecutorHelper {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "findColumnSetOwner".
-     * 
+     *
      * @param column
      * @return
      * @deprecated instead of it by {@link ColumnHelper#getColumnOwnerAsColumnSet(ModelElement)}
@@ -170,7 +170,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * Method "check" checks that the analysis can be run.
-     * 
+     *
      * @param analysis the analysis to prepare
      * @return true if ok.
      */
@@ -218,13 +218,13 @@ public final class AnalysisExecutorHelper {
     }
 
     /**
-     * 
+     *
      * Check the dependent file's existance. <br>
      * 1. If exist, do "hot" content copy from dependent file to built-in. <br>
      * 2. If not exist 1) built-in content is not empty, do nothing, 2) built-in content is empty, ReturnCode = false
      * and return. <br>
      * 3. Load indicator from built-in content.
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -254,7 +254,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * DOC zhao Comment method "checkUserDefineIndicator".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -281,7 +281,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * DOC zhao Comment method "checkIndicatorWithChild".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -326,7 +326,7 @@ public final class AnalysisExecutorHelper {
      * When deep copy, if the where rule contains some joins, it will copy all related tables(extended in related db),
      * but this is not what we want, so we use a temp list to store the joins, and then clear the joins before deep copy
      * to avoid copy many useless things, and restore the joins after deep copy.
-     * 
+     *
      * @param dependentDefinition
      */
     private static IndicatorDefinition copyWhereRule(WhereRule dependentDefinition) {
@@ -352,7 +352,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * Check pattern matching indicator
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -379,7 +379,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * DOC zhao Comment method "checkMatchingIndicator".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -411,7 +411,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * See if the dependent file existed or not.
-     * 
+     *
      * @param modelElements
      * @return
      */
@@ -426,7 +426,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * DOC zhao Comment method "hotCopyPatterns".
-     * 
+     *
      * @param indicator
      * @param patterns
      */
@@ -451,7 +451,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * set the execution info of analysis.
-     * 
+     *
      * @param analysis - which need to update the execution number
      * @param isRunAnaResultok - the running result of the analysis is ok or not
      * @param errorMessage - the error message
@@ -469,7 +469,7 @@ public final class AnalysisExecutorHelper {
 
     /**
      * get the correct indicator name.
-     * 
+     *
      * @param indicator
      * @return
      */

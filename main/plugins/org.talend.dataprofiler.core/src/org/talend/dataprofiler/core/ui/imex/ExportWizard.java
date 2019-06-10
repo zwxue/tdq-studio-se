@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -43,18 +43,18 @@ public class ExportWizard extends Wizard {
      * DOC bZhou ExportWizard constructor comment.
      */
     public ExportWizard(String specifiedPath) {
-        setWindowTitle(DefaultMessagesImpl.getString("ExportWizard.Title"));//$NON-NLS-1$ 
+        setWindowTitle(DefaultMessagesImpl.getString("ExportWizard.Title"));//$NON-NLS-1$
         this.exportPage = new ExportWizardPage(specifiedPath);
     }
 
     public ExportWizard(String specifiedPath, Object[] selectedObj) {
-        setWindowTitle(DefaultMessagesImpl.getString("ExportWizard.Title"));//$NON-NLS-1$ 
+        setWindowTitle(DefaultMessagesImpl.getString("ExportWizard.Title"));//$NON-NLS-1$
         this.exportPage = new ExportWizardPage(null, selectedObj);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -64,7 +64,7 @@ public class ExportWizard extends Wizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
@@ -78,7 +78,7 @@ public class ExportWizard extends Wizard {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask(DefaultMessagesImpl.getString("ExportWizard.Export"), records.length);//$NON-NLS-1$ 
+                monitor.beginTask(DefaultMessagesImpl.getString("ExportWizard.Export"), records.length);//$NON-NLS-1$
 
                 writer.write(records, monitor);
 

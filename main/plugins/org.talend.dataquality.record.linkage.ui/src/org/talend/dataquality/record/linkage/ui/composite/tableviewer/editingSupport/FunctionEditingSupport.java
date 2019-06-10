@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,7 +34,7 @@ public class FunctionEditingSupport extends EditingSupport {
 
     /**
      * constructor of FunctionEditingSupport class.
-     * 
+     *
      * @param viewer
      */
     public FunctionEditingSupport(ColumnViewer viewer) {
@@ -43,7 +43,7 @@ public class FunctionEditingSupport extends EditingSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.EditingSupport#getCellEditor(java.lang.Object)
      */
     @Override
@@ -57,7 +57,7 @@ public class FunctionEditingSupport extends EditingSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.EditingSupport#canEdit(java.lang.Object)
      */
     @Override
@@ -74,7 +74,7 @@ public class FunctionEditingSupport extends EditingSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.EditingSupport#getValue(java.lang.Object)
      */
     @Override
@@ -95,7 +95,7 @@ public class FunctionEditingSupport extends EditingSupport {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.EditingSupport#setValue(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -126,10 +126,10 @@ public class FunctionEditingSupport extends EditingSupport {
 
     /**
      * Find enum value by data type of talend and index of function
-     * 
+     *
      * @param talendDataType like id_String or id_Boolean
      * @param functionTypeIndex the index of function which want to choose -1 mean that no funncion be choosed
-     * 
+     *
      * @return value of SurvivorShipAlgorithmEnum which choose else return default one(MostCommon)
      */
     private SurvivorShipAlgorithmEnum findEnumValue(String talendDataType, int functionTypeIndex) {

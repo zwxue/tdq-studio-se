@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -44,7 +44,7 @@ public class ComponentSearcher {
 
     /**
      * get Available Category.
-     * 
+     *
      * @param version
      * @return empty list if no any category.
      * @throws Exception
@@ -59,7 +59,7 @@ public class ComponentSearcher {
 
     /**
      * get Available Category depend on isOnFilter.
-     * 
+     *
      * @param version
      * @return empty list if no any category.
      * @throws Exception
@@ -74,7 +74,7 @@ public class ComponentSearcher {
 
     /**
      * Find available components.
-     * 
+     *
      * @param version The tos version.
      * @param language The project language.
      * @return
@@ -85,7 +85,7 @@ public class ComponentSearcher {
 
     /**
      * get Available Component Extensions depend on isOnFilter.
-     * 
+     *
      * @param version
      * @param categry
      * @param isOnFilter
@@ -135,7 +135,7 @@ public class ComponentSearcher {
 
     /**
      * Convert the web service returned value to our model object.
-     * 
+     *
      * @param revision The message returned from web service method call.
      * @return
      * @throws ParseException
@@ -153,7 +153,7 @@ public class ComponentSearcher {
 
     /**
      * Find the components that have been installed.
-     * 
+     *
      * @param components
      * @return
      */

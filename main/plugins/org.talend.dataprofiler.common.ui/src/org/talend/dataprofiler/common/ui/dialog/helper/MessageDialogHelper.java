@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,9 +27,9 @@ import org.talend.dataquality.analysis.AnalysisType;
 public class MessageDialogHelper {
 
     /**
-     * 
+     *
      * open one warrning dialog to told user which analysis can not be used in the report
-     * 
+     *
      * @param parent
      * @param uncompatibleAnaLs
      */

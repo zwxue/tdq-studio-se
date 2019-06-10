@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -52,9 +52,9 @@ public class DrillDownUtils {
 
     /**
      * Get MapDB which store the drill down data for current indicator
-     * 
+     *
      * @param analysis
-     * 
+     *
      * @return
      */
     public static AbstractDB<Object> getMapDB(final ChartDataEntity dataEntity, Analysis analysis, MenuItemEntity itemEntitie) {
@@ -82,7 +82,7 @@ public class DrillDownUtils {
 
     /**
      * Get the name of MapDB
-     * 
+     *
      * @return
      */
     public static String getDBMapName(AnalysisType analysisType, Indicator indicator, String selectValue,
@@ -112,7 +112,7 @@ public class DrillDownUtils {
 
     /**
      * DOC talend Comment method "getDefaultMapName".
-     * 
+     *
      * @return
      */
     private static String getDefaultMapName(AnalysisType analysisType, MenuItemEntity itemEntitie) {
@@ -138,9 +138,9 @@ public class DrillDownUtils {
     }
 
     /**
-     * 
+     *
      * Judge current name of menu whether is same to menuType
-     * 
+     *
      * @param menuStr is the name of the menu
      * @param menuType is the type which we think it should be
      * @return return true if menuStr is adapt to menuType, else return false
@@ -163,7 +163,7 @@ public class DrillDownUtils {
 
     /**
      * Get MapDB which store the drill down data for columnSet analysis
-     * 
+     *
      * @param analysisType
      * @param analysis
      */
@@ -183,7 +183,7 @@ public class DrillDownUtils {
 
     /**
      * DOC talend Comment method "createDrillDownMenu".
-     * 
+     *
      * @param analysis
      * @param dataEntity
      * @param menu
@@ -216,7 +216,7 @@ public class DrillDownUtils {
 
     /**
      * get whether the MenuItem is Enable.
-     * 
+     *
      * @param dataEntity
      * @param itemEntity
      * @param analysis
@@ -238,7 +238,7 @@ public class DrillDownUtils {
 
     /**
      * DOC msjian Comment method "createDrillDownMenu".
-     * 
+     *
      * @param dataEntity
      * @param menu
      * @param itemEntities

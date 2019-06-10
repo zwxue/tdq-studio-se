@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -70,7 +70,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /**
      * DOC klliu JavaUDIParametersForm constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param parameters
@@ -82,7 +82,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm#getFormEnum()
      */
     @Override
@@ -92,7 +92,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractIndicatorForm#performFinish()
      */
     @Override
@@ -112,7 +112,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm#adaptFormToReadOnly()
      */
     @Override
@@ -121,7 +121,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm#addFields()
      */
     @Override
@@ -136,7 +136,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /**
      * DOC klliu Comment method "buildControls".
-     * 
+     *
      * @param group
      */
     private void buildControls(Group group) {
@@ -213,7 +213,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm#addFieldsListeners()
      */
     @Override
@@ -222,7 +222,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm#addUtilsButtonListeners()
      */
     @Override
@@ -231,7 +231,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm#checkFieldsValue()
      */
 
@@ -248,7 +248,7 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.indicator.forms.AbstractForm#initialize()
      */
     @Override
@@ -299,9 +299,9 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     }
 
     /**
-     * 
+     *
      * DOC klliu Comment method "attachLabelProvider". figure 13429 2010-08-03
-     * 
+     *
      * @param viewer
      */
     private void attachLabelProvider(TableViewer viewer) {
@@ -338,9 +338,9 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     }
 
     /**
-     * 
+     *
      * DOC klliu Comment method "attachContentProvider".figure 13429 2010-08-03.
-     * 
+     *
      * @param viewer
      */
     private void attachContentProvider(TableViewer viewer) {
@@ -359,9 +359,9 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     }
 
     /**
-     * 
+     *
      * DOC klliu Comment method "buildAndLayoutTable".figure 13429 2010-08-03.
-     * 
+     *
      * @param table
      * @return
      */
@@ -382,9 +382,9 @@ public class JavaUDIParametersForm extends AbstractIndicatorForm {
     }
 
     /**
-     * 
+     *
      * DOC klliu Comment method "attachCellEditors".figure 13429 2010-08-03.
-     * 
+     *
      * @param viewer
      * @param parent
      */

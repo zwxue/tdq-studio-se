@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -142,7 +142,7 @@ public class ItemRecord {
 
     /**
      * the resourceSet attribute is static so that notice call {@link #clear()} method when next time
-     * 
+     *
      * @param file the file which we want to import or export
      * @param rootFolder the location which file is come from
      */
@@ -206,7 +206,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "getElement".
-     * 
+     *
      * @return
      */
     public ModelElement getElement() {
@@ -215,7 +215,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "getFilePath".
-     * 
+     *
      * @return
      */
     public IPath getFilePath() {
@@ -223,10 +223,10 @@ public class ItemRecord {
     }
 
     /**
-     * 
+     *
      * when we do import action this folder is the Path of temp folder. when we do export action this folder is Empty so
      * we get rootFolder of current project
-     * 
+     *
      * @return
      */
     public IPath getRootFolderPath() {
@@ -235,7 +235,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "getPropertyPath".
-     * 
+     *
      * @return
      */
     public IPath getPropertyPath() {
@@ -248,7 +248,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "getFullPath".
-     * 
+     *
      * @return
      */
     public IPath getFullPath() {
@@ -345,7 +345,7 @@ public class ItemRecord {
 
     /**
      * include dependency context for Connection
-     * 
+     *
      * @param connection
      */
     private void includeContextDependency(Connection connection) {
@@ -400,7 +400,7 @@ public class ItemRecord {
     /**
      * @param mElement
      * @return SupplierDependency
-     * 
+     *
      * getClintDependency here will contain system indicators so only will be used by export case
      */
     public List<File> getClintDependencyForExport(ModelElement mElement) {
@@ -428,9 +428,9 @@ public class ItemRecord {
 
     /**
      * get Analysis Dependency (for indicator only).
-     * 
+     *
      * @return get the list of indicator which in use by the analysis
-     * 
+     *
      */
     private List<File> getSystemIndicaotrOfAnalysis(ModelElement mElement) {
         List<File> listFile = new ArrayList<File>();
@@ -506,7 +506,7 @@ public class ItemRecord {
 
     /**
      * DOC zshen Comment method "includeCustomMatcherJarDependencies".
-     * 
+     *
      * @param matchRuleDef
      */
     private void includeCustomMatcherJarDependencies(MatchRuleDefinition matchRuleDef) {
@@ -536,7 +536,7 @@ public class ItemRecord {
     /**
      * Both export and import use this method to find used jar file in UDI's lib, so the lib folder path is different
      * between export and import, should based on: getRootFolderPath(), and then appent the lib path directly.
-     * 
+     *
      * @return the file of the UDI lib folder
      */
     private File getUDILibFolderFile() {
@@ -547,7 +547,7 @@ public class ItemRecord {
 
     /**
      * DOC zshen Comment method "includeCustomMatcherJarDependencies".
-     * 
+     *
      * @param matchAnalysis
      */
     private void includeCustomMatcherJarDependencies(Analysis matchAnalysis) {
@@ -560,7 +560,7 @@ public class ItemRecord {
     /**
      * get the jrxml folder according to the Report file(if the Report file is out of current workspace, the Jrxml
      * Folder should also out of it).
-     * 
+     *
      * @param rep the Report file
      * @param folder the Jrxml Folder in the current project
      * @return
@@ -658,7 +658,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "addError".
-     * 
+     *
      * @param error
      */
     public void addError(String error) {
@@ -668,7 +668,7 @@ public class ItemRecord {
 
     /**
      * Add dependency error
-     * 
+     *
      * @param error the content of dependency error message
      */
     public void addDependencyError(String error) {
@@ -678,7 +678,7 @@ public class ItemRecord {
 
     /**
      * zshen Comment method "addWarn".
-     * 
+     *
      * @param warn
      */
     public void addWarn(String warnItem) {
@@ -688,7 +688,7 @@ public class ItemRecord {
 
     /**
      * Getter for file.
-     * 
+     *
      * @return the file
      */
     public File getFile() {
@@ -697,7 +697,7 @@ public class ItemRecord {
 
     /**
      * Getter for errors.
-     * 
+     *
      * @return the errors
      */
     public List<ImportMessage> getErrors() {
@@ -705,7 +705,7 @@ public class ItemRecord {
     }
 
     /**
-     * 
+     *
      */
     public List<String> getErrorMessage() {
         List<String> errorMessage = new ArrayList<String>();
@@ -718,7 +718,7 @@ public class ItemRecord {
     }
 
     /**
-     * 
+     *
      */
     public List<String> getErrorMessage(boolean isOrverWrite) {
         List<String> errorMessage = new ArrayList<String>();
@@ -734,7 +734,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "isValid".
-     * 
+     *
      * @return
      */
     public boolean isValid() {
@@ -750,7 +750,7 @@ public class ItemRecord {
 
     /**
      * Judge whether there are some errors or warns need to show
-     * 
+     *
      * @return
      */
     public boolean existMessageToShow() {
@@ -766,7 +766,7 @@ public class ItemRecord {
 
     /**
      * Getter for property.
-     * 
+     *
      * @return the property
      */
     public Property getProperty() {
@@ -775,7 +775,7 @@ public class ItemRecord {
 
     /**
      * Getter for parent.
-     * 
+     *
      * @return the parent
      */
     public ItemRecord getParent() {
@@ -788,7 +788,7 @@ public class ItemRecord {
 
     /**
      * Getter for childern.
-     * 
+     *
      * @return the childern
      */
     public ItemRecord[] getChildern() {
@@ -814,7 +814,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "getName".
-     * 
+     *
      * @return
      */
     public String getName() {
@@ -872,7 +872,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "isValid".
-     * 
+     *
      * @param f
      * @return
      */
@@ -886,7 +886,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "isValidFile".
-     * 
+     *
      * @param f
      * @return
      */
@@ -911,7 +911,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "isTOPFile".
-     * 
+     *
      * @param f
      * @return
      */
@@ -943,7 +943,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "isJRXml".
-     * 
+     *
      * @return
      */
     private boolean isJRXml() {
@@ -956,7 +956,7 @@ public class ItemRecord {
 
     /**
      * DOC bZhou Comment method "findRecord".
-     * 
+     *
      * @param file
      * @return
      */
@@ -972,7 +972,7 @@ public class ItemRecord {
 
     /**
      * Find checked record
-     * 
+     *
      * @param filereturn
      */
     public static ItemRecord findCheckedRecord(ItemRecord[] checkedRecords, File findFile) {
@@ -990,7 +990,7 @@ public class ItemRecord {
 
     /**
      * Getter for allItemRecords.
-     * 
+     *
      * @return the allItemRecords
      */
     public static List<ItemRecord> getAllItemRecords() {
@@ -999,7 +999,7 @@ public class ItemRecord {
 
     /**
      * Getter for conflictObject.
-     * 
+     *
      * @return the conflictObject
      */
     public IRepositoryViewObject getConflictObject() {
@@ -1008,7 +1008,7 @@ public class ItemRecord {
 
     /**
      * Sets the conflictObject.
-     * 
+     *
      * @param conflictObject the conflictObject to set
      */
     public void setConflictObject(IRepositoryViewObject conflictObject) {
@@ -1017,7 +1017,7 @@ public class ItemRecord {
 
     /**
      * Getter for eConflictType.
-     * 
+     *
      * @return the eConflictType
      */
     protected EConflictType geteConflictType() {
@@ -1026,7 +1026,7 @@ public class ItemRecord {
 
     /**
      * Sets the eConflictType.
-     * 
+     *
      * @param eConflictType the eConflictType to set
      */
     protected void seteConflictType(EConflictType eConflictType) {
@@ -1035,7 +1035,7 @@ public class ItemRecord {
 
     /**
      * Getter for clientDepenList.
-     * 
+     *
      * @return the clientDepenList
      */
     protected List<Dependency> getClientDepenList() {
@@ -1047,7 +1047,7 @@ public class ItemRecord {
 
     /**
      * Getter for supplierDepenList.
-     * 
+     *
      * @return the supplierDepenList
      */
     protected List<Dependency> getSupplierDepenList() {
@@ -1059,7 +1059,7 @@ public class ItemRecord {
 
     /**
      * Getter for clientDepenFileList.
-     * 
+     *
      * @return the clientDepenFileList
      */
     protected List<IFile> getClientDepenFileList() {
@@ -1071,7 +1071,7 @@ public class ItemRecord {
 
     /**
      * Getter for supplierDepenFileList.
-     * 
+     *
      * @return the supplierDepenFileList
      */
     protected List<IFile> getSupplierDepenFileList() {

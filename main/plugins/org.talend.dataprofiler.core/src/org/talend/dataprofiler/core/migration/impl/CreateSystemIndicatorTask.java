@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -67,21 +67,21 @@ public abstract class CreateSystemIndicatorTask extends AbstractWorksapceUpdateT
 
     /**
      * DOC yyin Comment method "getFoldername".
-     * 
+     *
      * @return
      */
     abstract protected String getFoldername();
 
     /**
      * DOC yyin Comment method "getCategoryString".
-     * 
+     *
      * @return
      */
     abstract protected String getCategoryString();
 
     /**
      * create the related folder with the path.
-     * 
+     *
      * @param folder
      */
     private void copyToFolder(IFolder folder) {

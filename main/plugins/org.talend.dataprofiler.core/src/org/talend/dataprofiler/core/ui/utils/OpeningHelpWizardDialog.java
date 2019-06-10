@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ public class OpeningHelpWizardDialog extends WizardDialog {
 
     /**
      * DOC bZhou OpeningHelpWizardDialog constructor comment.
-     * 
+     *
      * @param parentShell
      * @param newWizard
      * @param href
@@ -43,7 +43,7 @@ public class OpeningHelpWizardDialog extends WizardDialog {
 
     /**
      * DOC bZhou OpeningHelpWizardDialog constructor comment.
-     * 
+     *
      * @param parentShell
      * @param newWizard
      * @param href
@@ -57,7 +57,7 @@ public class OpeningHelpWizardDialog extends WizardDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#create()
      */
     @Override
@@ -94,7 +94,7 @@ public class OpeningHelpWizardDialog extends WizardDialog {
 
     /**
      * DOC bZhou Comment method "isValidHref".
-     * 
+     *
      * @param href
      * @return
      */
@@ -104,7 +104,7 @@ public class OpeningHelpWizardDialog extends WizardDialog {
 
     /**
      * Sets the href.
-     * 
+     *
      * @param href the href to set
      */
     public void setHref(String href) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class BenfordLawFrequencyIndicatorImplTest {
 
     /**
      * DOC yyin Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -61,7 +61,7 @@ public class BenfordLawFrequencyIndicatorImplTest {
 
     /**
      * DOC yyin Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After
@@ -81,7 +81,7 @@ public class BenfordLawFrequencyIndicatorImplTest {
     /**
      * Test method for {@link org.talend.dataquality.indicators.impl.BenfordLawFrequencyIndicatorImpl#checkValues()}.
      * test normal data
-     * 
+     *
      * @throws Exception
      */
     @Test
@@ -219,7 +219,7 @@ public class BenfordLawFrequencyIndicatorImplTest {
     /**
      * unit test for TDQ-6480: Benford Law Frequency indicator chart doesn't show the column which data is zero in
      * generated report file
-     * 
+     *
      * @throws Exception
      */
     @Test

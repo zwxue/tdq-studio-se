@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ import org.talend.resource.ResourceManager;
 
 /**
  * created by talend on Aug 19, 2014 Detailled comment
- * 
+ *
  */
 public class MapDBManager {
 
@@ -61,10 +61,10 @@ public class MapDBManager {
     }
 
     /**
-     * 
+     *
      * If MapDB file is not exist or has been closed then this method will not do anything else will create new task to
      * close it.
-     * 
+     *
      * @param analysis
      */
     public void closeDB(File filePath) {
@@ -73,10 +73,10 @@ public class MapDBManager {
     }
 
     /**
-     * 
+     *
      * If MapDB file is not exist or has been closed then this method will not do anything else will create new task to
      * close it.
-     * 
+     *
      * @param analysis
      */
     public void closeDB(Analysis analysis) {
@@ -85,9 +85,9 @@ public class MapDBManager {
     }
 
     /**
-     * 
+     *
      * Delete mapDB file
-     * 
+     *
      * @param analysis
      */
     public void deleteDB(Analysis analysis) {
@@ -114,7 +114,7 @@ public class MapDBManager {
 
     /**
      * Get MapDB file by analysis
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -130,10 +130,10 @@ public class MapDBManager {
     }
 
     /**
-     * 
+     *
      * If MapDB file is not exist or has been closed then this method will not do anything else will create new task to
      * close it.
-     * 
+     *
      * @param analysis
      */
     public void closeDB(String parentPathStr, String fileName) {
@@ -151,7 +151,7 @@ public class MapDBManager {
     /**
      * Create a new close db task and schedule it. If same task has been schedule or the db is used by other drill down
      * editor then will do nothing
-     * 
+     *
      * @param db
      */
     protected void scheduleCloseTask(DB db, File filePath) {
@@ -170,7 +170,7 @@ public class MapDBManager {
 
     /**
      * Whether the db has been contain by schduel
-     * 
+     *
      * @param db
      * @return
      */
@@ -180,7 +180,7 @@ public class MapDBManager {
 
     /**
      * Whether the db is used by other drill down editor
-     * 
+     *
      * @return
      */
     private boolean isUsedByDrillDown(DB db) {
@@ -188,9 +188,9 @@ public class MapDBManager {
     }
 
     /**
-     * 
+     *
      * Record one db have been used how many times
-     * 
+     *
      * @param filePath
      */
     public void addDBRef(File filePath) {
@@ -210,7 +210,7 @@ public class MapDBManager {
 
     /**
      * Cancel the close db task if special db has a task exist
-     * 
+     *
      * @param db
      */
     protected void cancelCloseTask(DB db) {
@@ -223,9 +223,9 @@ public class MapDBManager {
     }
 
     /**
-     * 
+     *
      * Reduce the times which one db be used. When the count of times is 0 we will close this db.
-     * 
+     *
      * @param filePath
      */
     public void removeDBRef(File filePath) {

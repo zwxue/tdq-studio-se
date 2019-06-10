@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,7 +40,7 @@ public class ExportItemAction extends AContextualAction implements IWorkbenchWin
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
      */
     public void dispose() {
@@ -50,7 +50,7 @@ public class ExportItemAction extends AContextualAction implements IWorkbenchWin
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
      */
     public void init(IWorkbenchWindow window) {
@@ -60,7 +60,7 @@ public class ExportItemAction extends AContextualAction implements IWorkbenchWin
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
      */
     public void run(IAction action) {
@@ -85,7 +85,7 @@ public class ExportItemAction extends AContextualAction implements IWorkbenchWin
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
      * org.eclipse.jface.viewers.ISelection)
      */
@@ -95,7 +95,7 @@ public class ExportItemAction extends AContextualAction implements IWorkbenchWin
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.commons.ui.swt.actions.ITreeContextualAction#init(org.eclipse.jface.viewers.TreeViewer,
      * org.eclipse.jface.viewers.IStructuredSelection)
      */
@@ -105,7 +105,7 @@ public class ExportItemAction extends AContextualAction implements IWorkbenchWin
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.ui.actions.AContextualAction#doRun()
      */
     @Override

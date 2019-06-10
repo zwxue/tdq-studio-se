@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -134,7 +134,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#isConnectionSupport(org.talend.
      * repository.model.IRepositoryNode)
      */
@@ -199,7 +199,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     /**
      * DOC xqliu Comment method "fillSimpleIndicators". ADD xqliu 2010-04-06 bug 12161
-     * 
+     *
      * @param countAvgNullIndicator
      */
     private void fillSimpleIndicators(ColumnSetMultiValueIndicator countAvgNullIndicator) {
@@ -284,7 +284,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
                  */
                 @Override
@@ -546,7 +546,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     /**
      * DOC yyi Comment method "createIndicatorsSection".
-     * 
+     *
      * @param topComp
      * @param form
      */
@@ -674,7 +674,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     /**
      * Getter for treeViewer.
-     * 
+     *
      * @return the treeViewer
      */
     @Override
@@ -747,9 +747,9 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
     }
 
     /**
-     * 
+     *
      * DOC hcheng Comment method "verifyColumn". For 7513,Condition striction when save the correlation analysis.
-     * 
+     *
      * @param columns
      * @param className
      * @return
@@ -809,7 +809,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getConnectionsWithoutDeleted()
      */
     @Override
@@ -819,7 +819,7 @@ public class CorrelationAnalysisDetailsPage extends AbstractAnalysisMetadataPage
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getAnalysisHandler()
      */
     @Override

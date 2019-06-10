@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -78,7 +78,7 @@ public class PatternExplorerRealTest {
 
     /**
      * DOC zshen Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -448,7 +448,7 @@ public class PatternExplorerRealTest {
     }
 
     /**
-     * 
+     *
      * Test method for {@link org.talend.dq.analysis.explore.PatternExplorer#isImplementRegexFunction()}.test return
      * true;
      */
@@ -468,7 +468,7 @@ public class PatternExplorerRealTest {
     }
 
     /**
-     * 
+     *
      * Mock Test method for {@link org.talend.dq.analysis.explore.PatternExplorer#isImplementRegexFunction()}.test
      * return false;
      */

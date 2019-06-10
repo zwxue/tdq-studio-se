@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,7 +35,7 @@ public class EventManager {
 
     /**
      * Getter for instance.
-     * 
+     *
      * @return the instance
      */
     public static synchronized EventManager getInstance() {
@@ -48,7 +48,7 @@ public class EventManager {
     /**
      * register repository node's event receiver with its event type. e.g. when opening a editor, need to call register
      * to remember its receiver with some widgets.
-     * 
+     *
      * @param context: the host of the event receiver
      * @param event: pointed event
      * @param receiver: event handler
@@ -67,7 +67,7 @@ public class EventManager {
 
     /**
      * remove the registered receivers & event of some repository node when unnecessory. e.g. when closing some editor.
-     * 
+     *
      * @param context: the host of the event receiver
      * @param event: pointed event
      * @param toBeUnRegistered: event handler
@@ -87,7 +87,7 @@ public class EventManager {
 
     /**
      * clear all eventReceivers for the current event, for the current context
-     * 
+     *
      * @param context
      * @param event
      * @return
@@ -103,7 +103,7 @@ public class EventManager {
 
     /**
      * call the registered event's related receiver to handle
-     * 
+     *
      * @param context
      * @param event
      * @param data
@@ -130,7 +130,7 @@ public class EventManager {
 
     /**
      * find if there are some registered event for the context, if existed, return the index position in the event list.
-     * 
+     *
      * @param context
      * @param event
      * @return

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.FileSystemExportWriter#setBasePath(org.eclipse.core.runtime.IPath)
      */
@@ -58,7 +58,7 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.FileSystemExportWriter#write(org.eclipse.core.runtime.IPath,
      * org.eclipse.core.runtime.IPath)
      */
@@ -105,7 +105,7 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.FileSystemExportWriter#finish(org.talend.dataprofiler.core.ui.imex
      * .model.ItemRecord[])
@@ -123,7 +123,7 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.FileSystemExportWriter#check()
      */
     @Override
@@ -151,7 +151,7 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
 
     /**
      * DOC bZhou Comment method "addFilesToExistingZip".
-     * 
+     *
      * @param zipFile
      * @param files
      * @throws IOException

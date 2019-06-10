@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,7 +35,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * Getter for context.
-     * 
+     *
      * @return the context
      */
     public BundleContext getBundleContext() {
@@ -60,7 +60,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC bZhou Comment method "getDefault".
-     * 
+     *
      * @return
      */
     public static CWMPlugin getDefault() {
@@ -69,7 +69,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC bZhou Comment method "addConnetionAliasToSQLPlugin".
-     * 
+     *
      * @param dataproviders
      */
     public void addConnetionAliasToSQLPlugin(ModelElement... dataproviders) {
@@ -77,9 +77,9 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "updateConnetionAliasByName".
-     * 
+     *
      * @param connection
      * @param aliasName
      */
@@ -88,9 +88,9 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     * 
+     *
      * update ManagedDriver driver jars.
-     * 
+     *
      * @param connection
      */
     public void loadDriverByLibManageSystem(DatabaseConnection connection) {
@@ -99,7 +99,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC bZhou Comment method "removeAliasInSQLExplorer".
-     * 
+     *
      * @param dataproviders
      */
     public void removeAliasInSQLExplorer(DataProvider... dataproviders) {
@@ -107,7 +107,7 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     * 
+     *
      * when you start TOP ,the 'lib/java' dosen't exist,should create it.
      */
     public void createLibFolderIfNotExist() {

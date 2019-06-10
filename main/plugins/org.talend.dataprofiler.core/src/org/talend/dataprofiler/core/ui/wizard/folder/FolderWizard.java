@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * This class is a wizard to create a folder on workspace.
- * 
+ *
  * @deprecated use org.talend.repository.ui.wizards.folder.FolderWizard instead.
  */
 @Deprecated
@@ -53,7 +53,7 @@ public class FolderWizard extends Wizard {
 
     /**
      * Constructs a new NewProjectWizard.
-     * 
+     *
      * @param author Project author.
      * @param server
      * @param password

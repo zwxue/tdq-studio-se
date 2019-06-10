@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -49,7 +49,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * created by zshen on Apr 23, 2013 Detailled comment
- * 
+ *
  */
 public class ExportConnectionToTOSActionRealTest {
 
@@ -120,7 +120,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "initPackageList".
-     * 
+     *
      * @param packageList
      * @throws PersistenceException
      */
@@ -136,7 +136,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "initPackageList".
-     * 
+     *
      * @param packageList
      * @throws PersistenceException
      */
@@ -148,7 +148,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "initPackageList".
-     * 
+     *
      * @param packageList
      * @throws PersistenceException
      */
@@ -160,7 +160,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "addSchePackage".
-     * 
+     *
      * @param string
      * @param catalog1
      * @return
@@ -173,7 +173,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "addSchePackage".
-     * 
+     *
      * @param string
      * @param catalog1
      * @return
@@ -186,9 +186,9 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case1: create new connection from catalog case
      */
     @Test
@@ -227,7 +227,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "getNewCreatedConnectionByName".
-     * 
+     *
      * @param string
      * @throws PersistenceException
      */
@@ -245,9 +245,9 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case2: create new connection from schema below catalog case
      */
     @Test
@@ -284,9 +284,9 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case3: create new connection from only schema case
      */
     @Test
@@ -335,7 +335,7 @@ public class ExportConnectionToTOSActionRealTest {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.hamcrest.Matcher#matches(java.lang.Object)
          */
         @Override
@@ -374,7 +374,7 @@ public class ExportConnectionToTOSActionRealTest {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.hamcrest.SelfDescribing#describeTo(org.hamcrest.Description)
          */
         @Override

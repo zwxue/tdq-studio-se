@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -226,7 +226,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
 
     /**
      * is there are any join confition
-     * 
+     *
      * @param indicator
      * @return false: when no join conditions set
      */
@@ -262,7 +262,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
 
     /**
      * add the where clause to the sql statement.
-     * 
+     *
      * @param whereExpressionsAnalysis the list of Analysis's where expressions to concatenate (must not be null)
      * @param whereExpressionsDQRule the list of DQRule's where expressions to concatenate (must not be null)
      * @param completedSqlString a generic SQL expression in which the where clause variable will be replaced.
@@ -364,7 +364,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
 
     /**
      * DOC yyin Comment method "executeRule".
-     * 
+     *
      * @param rule
      * @param connection
      * @return
@@ -414,7 +414,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
     /**
      * Added TDQ-8787 publish the related event when one indicator is finished: to refresh the chart with new result of
      * the current indicator
-     * 
+     *
      * @param rule
      */
     private void publishDynamicEvent(final Indicator rule) {
@@ -520,7 +520,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
 
     /**
      * DOC xqliu Comment method "getValidStatement". 2009-10-29 bug 9702
-     * 
+     *
      * @param dataFilterAsString
      * @param indicator
      * @param valid
@@ -599,7 +599,7 @@ public class TableAnalysisSqlExecutor extends AnalysisExecutor {
 
     /**
      * DOC xqliu Comment method "setCachedAnalysis". 2009-10-29 bug 9702
-     * 
+     *
      * @param analysis
      */
     public void setCachedAnalysis(Analysis analysis) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -43,7 +43,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * @author scorreia
- * 
+ *
  * Helper class.
  */
 public final class AnalysisHelper {
@@ -59,7 +59,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "createAnalysis".
-     * 
+     *
      * @param name the name of the analysis
      * @return the new analysis with the given name
      */
@@ -70,9 +70,9 @@ public final class AnalysisHelper {
     }
 
     /**
-     * 
+     *
      * Get Analysis by indicator
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -91,9 +91,9 @@ public final class AnalysisHelper {
     }
 
     /**
-     * 
+     *
      * Get Analysis uuid by indicator
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -108,7 +108,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "getAnalysisType".
-     * 
+     *
      * @param analysis
      * @return the analysis type or null if not set
      */
@@ -123,7 +123,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "getExecutionEngine".
-     * 
+     *
      * @param analysis the analysis
      * @return the execution language (SQL by default)
      */
@@ -138,7 +138,7 @@ public final class AnalysisHelper {
 
     /**
      * Current analysis whether is java engine
-     * 
+     *
      * @param analysis the analysis
      * @return true if is java engin else false
      */
@@ -152,7 +152,7 @@ public final class AnalysisHelper {
 
     /**
      * Current analysis whether is store data
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -166,7 +166,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "setAnalysisType".
-     * 
+     *
      * @param analysis an analysis
      * @param analysisType the type to set to the analysis
      */
@@ -181,7 +181,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "getDataFilter".
-     * 
+     *
      * @param analysis
      * @return the list of domains or null
      */
@@ -195,7 +195,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "getStringDataFilter".
-     * 
+     *
      * @param analysis
      * @return the data filter as a string or null if none.
      */
@@ -205,7 +205,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "getStringDataFilter".
-     * 
+     *
      * @param analysis
      * @param index 0 for DataFilterA, 1 for DataFilterB
      * @return
@@ -282,7 +282,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "setStringDataFilter".
-     * 
+     *
      * @param analysis
      * @param datafilterString
      * @param index 0 for DataFilterA, 1 for DataFilterB
@@ -389,7 +389,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "getReloadDatabases".
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -407,7 +407,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "setReloadDatabases".
-     * 
+     *
      * @param analysis
      * @param reloadDatabases
      * @return
@@ -418,7 +418,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "getPurpose".
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -435,7 +435,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "getDescription".
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -451,9 +451,9 @@ public final class AnalysisHelper {
     }
 
     /**
-     * 
+     *
      * judge the type of analysis whether is Match Rule Analysis
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -462,9 +462,9 @@ public final class AnalysisHelper {
     }
 
     /**
-     * 
+     *
      * judge the type of analysis whether is COLUMN CORRELATION Analysis
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -474,7 +474,7 @@ public final class AnalysisHelper {
 
     /**
      * Get recording matching indicator from analysis
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -490,7 +490,7 @@ public final class AnalysisHelper {
 
     /**
      * get Last Run Context.
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -505,7 +505,7 @@ public final class AnalysisHelper {
 
     /**
      * get the analysis last run context group name, if it is empty, return the default context group name.
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -522,7 +522,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC msjian Comment method "setLastRunContext".
-     * 
+     *
      * @param lastRunContext
      * @param analysis
      * @return

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ import org.talend.dq.nodes.indicator.IIndicatorNode;
 
 /**
  * The indicator select dialog
- * 
+ *
  */
 public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelectDialog {
 
@@ -75,7 +75,7 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
 
     /**
      * IndicatorSelectDialog constructor.
-     * 
+     *
      * @param parentShell
      * @param title
      * @param modelElementIndicators
@@ -132,7 +132,7 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
              */
             @Override
@@ -196,7 +196,7 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
 
     /**
      * DOC talend Comment method "createHideInvalidItemButton".
-     * 
+     *
      * @param buttomComp
      */
     private void createHideInvalidItemButton(Composite buttomComp) {
@@ -207,7 +207,7 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -276,7 +276,7 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
 
     /**
      * select/deselect all enabled indicators when Ctrl+Shift+[A|N] is down.
-     * 
+     *
      * @param selected
      */
     public void selectAllIndicators(boolean selected) {
@@ -285,7 +285,7 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.IIndicatorSelectDialog#getDialogComposite()
      */
     public Control getDialogControl() {
@@ -294,7 +294,7 @@ public class IndicatorSelectDialog extends TrayDialog implements IIndicatorSelec
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.IIndicatorSelectDialog#getDialogComposite()
      */
     public Composite getDialogComposite() {

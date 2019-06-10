@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -17,17 +17,17 @@ import java.util.List;
 
 /**
  * created by talend on Aug 28, 2014 Detailled comment
- * 
+ *
  */
 public interface MapDBDrillDown {
 
     /**
-     * 
+     *
      * Get MapDB by dbName
-     * 
+     *
      * @param dbName The name of DB(note that it is not the name of db file, one db file can contains many dbs and every
      * db have a name)
-     * 
+     *
      * @return null when MapDB can not be used by current indicator
      * @exception when the DB colsed by abnormal way in last exit, then call this method will throws IOError
      */
@@ -36,7 +36,7 @@ public interface MapDBDrillDown {
 
     /**
      * DOC msjian Comment method "handleDrillDownData".
-     * 
+     *
      * @param masterObject
      * @param inputRowList
      */

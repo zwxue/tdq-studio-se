@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -69,9 +69,9 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
- * 
+ *
  * created by zhao on Aug 17, 2013 Detailled comment
- * 
+ *
  */
 public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
@@ -91,7 +91,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zshen MatchingKeySection constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param toolkit
@@ -103,7 +103,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#getSectionName()
      */
     @Override
@@ -113,7 +113,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubContext(org.eclipse.swt.widgets
      * .Composite)
@@ -153,7 +153,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC yyin Comment method "createAddButton".
-     * 
+     *
      * @param com
      */
     protected void createAddButton(Composite com) {
@@ -172,7 +172,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC yyin Comment method "createEditButton".
-     * 
+     *
      * @param com
      */
     protected void createEditButton(Composite com) {
@@ -198,7 +198,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC yyin Comment method "createRuleFolder".
-     * 
+     *
      * @param parent
      */
     protected void createRuleFolder(Composite parent) {
@@ -246,7 +246,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#getTableDefaultHeight()
      */
     @Override
@@ -256,7 +256,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zhao Comment method "createGroupQualityThreshold".
-     * 
+     *
      * @param parent
      */
     protected void createGroupQualityThreshold(Composite parent) {
@@ -296,7 +296,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zhao Comment method "addMatchRuleToModel".
-     * 
+     *
      * @param newMatchRule
      */
     private void addMatchRuleToAnalysis(MatchRule newMatchRule) {
@@ -317,7 +317,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zhao Comment method "getMatchRule".
-     * 
+     *
      * @param tabItem
      * @return
      */
@@ -368,9 +368,9 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     }
 
     /**
-     * 
+     *
      * Add a new key definition on current selected match rule.
-     * 
+     *
      * @param column
      */
     public void createMatchKeyFromCurrentMatchRule(String column) {
@@ -393,7 +393,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zhao Comment method "getMatchRuleComposite".
-     * 
+     *
      * @param currentTabItem
      * @return
      */
@@ -403,9 +403,9 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     }
 
     /**
-     * 
+     *
      * Remove the match key by column name from current selected match rule tab.
-     * 
+     *
      * @param column
      */
     public void removeMatchKeyFromCurrentMatchRule(String column) {
@@ -414,9 +414,9 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     }
 
     /**
-     * 
+     *
      * Remove the match key by column name from current selected match rule tab.
-     * 
+     *
      * @param column
      */
     public void removeMatchKeyFromCurrentMatchRule(MatchKeyDefinition columnkey) {
@@ -426,7 +426,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zshen Comment method "createPropertyTab".
-     * 
+     *
      * @param tabName
      * @param reComputeMatchRule
      */
@@ -466,7 +466,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zhao Comment method "getTableViewerSorter".
-     * 
+     *
      * @param matchRule
      * @return
      */
@@ -476,7 +476,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zhao Comment method "setInput".
-     * 
+     *
      * @param matchRule
      * @param matchRuleComposite
      */
@@ -504,7 +504,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubChart(org.eclipse.swt.widgets
      * .Composite)
@@ -587,7 +587,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * The policy of comparing the key's name is: case INsensitive
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded()
      */
     @Override
@@ -615,7 +615,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * find the current columns which has been selected as match key on the current Tab(Match rule)
-     * 
+     *
      * @return
      */
     public List<String> getCurrentMatchKeyColumn() {
@@ -635,7 +635,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
      */
     @Override
@@ -646,7 +646,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#removeTableItem()
      */
     @Override
@@ -669,7 +669,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -697,7 +697,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -723,7 +723,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zhao Comment method "getCurrentTabDefinitions".
-     * 
+     *
      * @return
      */
     protected List<?> getCurrentTabDefinitions() {
@@ -745,7 +745,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * DOC zhao Comment method "remoteKeyDefinition".
-     * 
+     *
      * @param column
      * @param oneTab
      */
@@ -769,7 +769,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     /**
      * if overwrite: need to delete all current tabs, and create the tab according to the parameter:matchRule else: only
      * add the tab in the parameter matchrule, to the current matchrule.
-     * 
+     *
      * @param matchRuleDefinition
      * @param overwrite
      */
@@ -831,7 +831,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#checkResultStatus()
      */
     @Override
@@ -901,7 +901,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     /**
      * check the survivorship function fit the column or not.
-     * 
+     *
      * @param mkDef
      * @param mrDef
      * @return
@@ -962,7 +962,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     }
 
     /**
-     * 
+     *
      * clear match rule chart.
      */
     @Override

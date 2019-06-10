@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * @author scorreia
- * 
+ *
  * Helper class for Domain object.
  */
 public final class DomainHelper {
@@ -83,7 +83,7 @@ public final class DomainHelper {
 
     /**
      * Method "createDomain" creates a new Domain with the given name.
-     * 
+     *
      * @param name the name of the domain (could be null)
      * @return the new domain.
      */
@@ -95,7 +95,7 @@ public final class DomainHelper {
 
     /**
      * Method "getRegexp".
-     * 
+     *
      * @param pattern a pattern
      * @return the body of the regular expression applicable to this dbms or null
      */
@@ -105,7 +105,7 @@ public final class DomainHelper {
 
     /**
      * DOC yyi Comment method "getJavaRegexp".
-     * 
+     *
      * @param pattern
      * @return
      */
@@ -115,7 +115,7 @@ public final class DomainHelper {
 
     /**
      * DOC bZhou Comment method "getRegexp".
-     * 
+     *
      * @param pattern
      * @param language
      * @return
@@ -135,7 +135,7 @@ public final class DomainHelper {
 
     /**
      * Method "getExpression".
-     * 
+     *
      * @param patternComponent
      * @param language a language (see DbmsLanguage)
      * @return the expression for the given language or null
@@ -154,7 +154,7 @@ public final class DomainHelper {
 
     /**
      * Method "createIndicatorExpectedValueDomain".
-     * 
+     *
      * @return a domain dedicated to storing the expected value. The created domain's name is already set.
      */
     public static Domain createIndicatorExpectedValueDomain() {
@@ -163,7 +163,7 @@ public final class DomainHelper {
 
     /**
      * Method "addRangeRestriction" creates a new range restriction and adds it to the given domain.
-     * 
+     *
      * @param domain the domain to which a new range restriction will be added
      * @return the newly created range restriction
      */
@@ -175,7 +175,7 @@ public final class DomainHelper {
 
     /**
      * Method "createContiguousClosedBinsIntoDomain".
-     * 
+     *
      * @param domainName (can be null)
      * @param nbBins the number of bins to create
      * @param min the minimal value
@@ -189,7 +189,7 @@ public final class DomainHelper {
 
     /**
      * Method "createContiguousClosedBinsIntoDomain".
-     * 
+     *
      * @param domainName the domain name (can be null)
      * @param bins the "closed" bins (the first value of array is the beginning of the bins and the last value of the
      * array is the end of bins)
@@ -208,7 +208,7 @@ public final class DomainHelper {
 
     /**
      * Method "createRangeRestriction".
-     * 
+     *
      * @param min the min value of the range
      * @param max the max value of the range
      * @return the new Range restriction.
@@ -228,9 +228,9 @@ public final class DomainHelper {
     }
 
     /**
-     * 
+     *
      * DOC klliu Comment method "createJavaUDIIndicatorParameter".
-     * 
+     *
      * @param key
      * @param value
      * @return
@@ -251,7 +251,7 @@ public final class DomainHelper {
 
     /**
      * Method "createRealNumberValue".
-     * 
+     *
      * @param meaning the meaning of the value (can be null)
      * @param value the value
      * @return a real number value
@@ -265,7 +265,7 @@ public final class DomainHelper {
 
     /**
      * Method "getNumberOfBins".
-     * 
+     *
      * @param domain the domain containing bins
      * @return the number of bins for this domain
      */
@@ -277,7 +277,7 @@ public final class DomainHelper {
 
     /**
      * Method "getMinBinValue".
-     * 
+     *
      * @param domain
      * @return the lower value of the first bin.
      */
@@ -295,7 +295,7 @@ public final class DomainHelper {
 
     /**
      * Method "getMaxBinValue".
-     * 
+     *
      * @param domain
      * @return the higher value of the last bin.
      * @throws IllegalArgumentException
@@ -335,7 +335,7 @@ public final class DomainHelper {
 
     /**
      * Method "getDomains".
-     * 
+     *
      * @param objects some objects
      * @return only the Domain objects
      */
@@ -352,7 +352,7 @@ public final class DomainHelper {
 
     /**
      * Method "getPatterns".
-     * 
+     *
      * @param objects a list of objects
      * @return the Pattern objects extracted from the given list
      */
@@ -381,7 +381,7 @@ public final class DomainHelper {
 
     /**
      * Method "setDataFilterPattern".
-     * 
+     *
      * @param dataFilters a list of data filters
      * @param type
      * @param domainName
@@ -429,7 +429,7 @@ public final class DomainHelper {
 
     /**
      * Method "getIndicatorExpectedValue".
-     * 
+     *
      * @param dataFilters
      * @return the expected value constraint found in the list of domains.
      */
@@ -439,7 +439,7 @@ public final class DomainHelper {
 
     /**
      * Method "createPattern".
-     * 
+     *
      * @param language
      * @param regexp
      * @return a new pattern from the given regular expression
@@ -481,7 +481,7 @@ public final class DomainHelper {
      * Method "addPatternToDomain" creates a Pattern object with the given expression and stores it in the given domain.
      * Beware that it is also added to the owned elements of the Domain. This means that is contained in the domain and
      * cannot be shared among several domains.
-     * 
+     *
      * @param domain
      * @param tableFilter
      * @param tablePattern
@@ -496,7 +496,7 @@ public final class DomainHelper {
 
     /**
      * Method "getExpressionType".
-     * 
+     *
      * @param pattern
      * @return the expression type of the regular expression contained in the given pattern or null
      */

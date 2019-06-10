@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -117,7 +117,7 @@ public class CompareModelContentMergeViewer {
 
     /**
      * DOC bZhou Comment method "hookToolBar".
-     * 
+     *
      * @param compareEachOther
      */
     public void hookToolBar(boolean compareEachOther) {
@@ -191,7 +191,7 @@ public class CompareModelContentMergeViewer {
     }
 
     /**
-     * 
+     *
      * DOC mzhao CompareModelContentMergeViewer class global comment. Detailled comment
      */
     private class CompareKeyListener implements KeyListener {
@@ -233,7 +233,7 @@ public class CompareModelContentMergeViewer {
     }
 
     /**
-     * 
+     *
      * DOC mzhao CompareModelContentMergeViewer class global comment. Detailled comment
      */
     private class CompareMouseListener implements MouseListener {
@@ -359,7 +359,7 @@ public class CompareModelContentMergeViewer {
     // @Override
     // protected void copy(boolean leftToRight) {
     // // Added yyin 20130131 TDQ-6780, warn the user to check the compare result before copy
-    //        boolean isContinue = MessageUI.openYesNoQuestion(Messages.getString("CompareModelContentMergeViewer.IsContinueCopy"));//$NON-NLS-1$ 
+    //        boolean isContinue = MessageUI.openYesNoQuestion(Messages.getString("CompareModelContentMergeViewer.IsContinueCopy"));//$NON-NLS-1$
     // if (!isContinue) {
     // return;
     // }// ~

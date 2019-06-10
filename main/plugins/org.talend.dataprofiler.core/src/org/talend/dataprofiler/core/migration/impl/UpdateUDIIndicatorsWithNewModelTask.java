@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,9 +35,9 @@ import org.talend.resource.ResourceService;
 
 /**
  * Update UDI Indicators With the New Model from version 5.3.
- * 
+ *
  * @author msjian 2013-2-25 TDQ-6872
- * 
+ *
  */
 public class UpdateUDIIndicatorsWithNewModelTask extends AbstractWorksapceUpdateTask {
 
@@ -96,7 +96,7 @@ public class UpdateUDIIndicatorsWithNewModelTask extends AbstractWorksapceUpdate
 
     /**
      * DOC msjian Comment method "initIndicatorReplaceMap".
-     * 
+     *
      * @return
      */
     public static Map<String, String> initIndicatorReplaceMap() {

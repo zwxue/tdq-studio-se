@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
 /**
- * 
+ *
  * DOC mzhao 2009-03-18 Migration task for merge tdq/top system to tos. All folders existing in tdq/tos before must all
  * be moved to one project, default project name is {@link org.talend.dataquality.PluginConstant#rootProjectName}
  */
@@ -50,7 +50,7 @@ public class TDCPFolderMergeTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -132,7 +132,7 @@ public class TDCPFolderMergeTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataprofiler.core.migration.IWorkspaceMigrationTask# getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {

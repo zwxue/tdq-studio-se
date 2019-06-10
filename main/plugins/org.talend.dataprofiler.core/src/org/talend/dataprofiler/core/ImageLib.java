@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -57,9 +57,9 @@ import org.talend.resource.EResourceConstant;
 
 /**
  * Store and lazy load Imaged. <br/>
- * 
+ *
  * $Id: ImageLib.java,v 1.5 2007/04/05 05:33:07 pub Exp $
- * 
+ *
  */
 public final class ImageLib {
 
@@ -262,9 +262,9 @@ public final class ImageLib {
 
     public static final String RULE_TEST = "test.gif"; //$NON-NLS-1$
 
-    public static final String ICON_LOCK_BYOTHER = "locked_red_overlay.gif"; //$NON-NLS-1$     
+    public static final String ICON_LOCK_BYOTHER = "locked_red_overlay.gif"; //$NON-NLS-1$
 
-    public static final String TICK_IMAGE = "checked.gif"; //$NON-NLS-1$    
+    public static final String TICK_IMAGE = "checked.gif"; //$NON-NLS-1$
 
     public static final String PK_ICON = "primary_key.png"; //$NON-NLS-1$
 
@@ -305,7 +305,7 @@ public final class ImageLib {
 
     /**
      * get <code>ImageDescriptor</code> with special imageName.
-     * 
+     *
      * @param imageName
      * @return
      */
@@ -323,7 +323,7 @@ public final class ImageLib {
 
     /**
      * get <code>Image</code> with special imageName.
-     * 
+     *
      * @param imageName
      * @return
      */
@@ -355,7 +355,7 @@ public final class ImageLib {
 
     /**
      * get current icons URL.
-     * 
+     *
      * @return
      */
     private static URL getIconLocation() {
@@ -370,7 +370,7 @@ public final class ImageLib {
 
     /**
      * store the image with special name(the name with suffix,such as "sample.gif").
-     * 
+     *
      * @param iconName
      */
     public static void addImage(String iconName) {
@@ -384,7 +384,7 @@ public final class ImageLib {
 
     /**
      * DOC bZhou Comment method "createInvalidIcon".
-     * 
+     *
      * @param originalImgName
      * @return
      */
@@ -394,7 +394,7 @@ public final class ImageLib {
 
     /**
      * DOC bZhou Comment method "createInvalidIcon".
-     * 
+     *
      * @param originalImgName
      * @return
      */
@@ -404,7 +404,7 @@ public final class ImageLib {
 
     /**
      * DOC bZhou Comment method "createInvalidIcon".
-     * 
+     *
      * @param originalImg
      * @return
      * @deprecated use createInvalidIcon(String originalImgName) and avoid to create image ervery time.
@@ -417,7 +417,7 @@ public final class ImageLib {
 
     /**
      * DOC bZhou Comment method "createLockedIcon".
-     * 
+     *
      * @param originalImgName
      * @return
      * @deprecated use createLockedByOwnIcon(String originalImgName) and avoid to create image ervery time.
@@ -429,7 +429,7 @@ public final class ImageLib {
 
     /**
      * DOC bZhou Comment method "createLockedIcon".
-     * 
+     *
      * @param originalImg
      * @return
      * @deprecated use createLockedByOwnIcon(String originalImgName) and avoid to create image ervery time.
@@ -443,7 +443,7 @@ public final class ImageLib {
 
     /**
      * DOC bZhou Comment method "createIcon".
-     * 
+     *
      * @param originalImg
      * @param decorateImg
      * @return
@@ -455,14 +455,14 @@ public final class ImageLib {
     }
 
     /**
-     * 
+     *
      * make the original image name and overlay image name as a key, find the image from ImageLib.imageRegistry by this
      * key. if not found,create a new Overlay image and put it's ImageDescriptor into imageRegistry.
-     * 
+     *
      * @param originalName
      * @param overImgName
      * @return the ImageDescriptor
-     * 
+     *
      * @deprecated {@code ImageLib#getOverlayIcon(String, String, int)} instead of it
      */
     @Deprecated
@@ -477,10 +477,10 @@ public final class ImageLib {
     }
 
     /**
-     * 
+     *
      * make the original image name and overlay image name as a key, find the image from ImageLib.imageRegistry by this
      * key. if not found,create a new Overlay image and put it's ImageDescriptor into imageRegistry.
-     * 
+     *
      * @param originalName
      * @param overImgName
      * @param position A value which from IDecoration and point out the position Where is the add icon should be putting
@@ -497,10 +497,10 @@ public final class ImageLib {
     }
 
     /**
-     * 
+     *
      * make the original image name and overlay image name as a key, find the image from ImageLib.imageRegistry by this
      * key. if not found,create a new Overlay image and put it's ImageDescriptor into imageRegistry.
-     * 
+     *
      * @param originalName
      * @param overImgName
      * @return the image
@@ -532,10 +532,10 @@ public final class ImageLib {
     }
 
     /**
-     * 
+     *
      * make the original image name and overlay image name as a key, find the image from ImageLib.imageRegistry by this
      * key. if not found,create a new Overlay image and put it's ImageDescriptor into imageRegistry.
-     * 
+     *
      * @param originalName
      * @param overImgName
      * @param position position A value which from IDecoration and point out the position Where is the add icon should
@@ -568,7 +568,7 @@ public final class ImageLib {
 
     /**
      * DOC xqliu Comment method "createIcon".
-     * 
+     *
      * @param originalImg
      * @param decorateImg
      * @return
@@ -581,7 +581,7 @@ public final class ImageLib {
 
     /**
      * Create a new icon by special name
-     * 
+     *
      * @param originalImg
      * @param decorateImg
      * @param position position A value which from IDecoration and point out the position Where is the add icon should
@@ -633,7 +633,7 @@ public final class ImageLib {
 
     /**
      * DOC qiongli Comment method "createLockedIcon".
-     * 
+     *
      * @param originalImgName
      * @return
      */
@@ -643,7 +643,7 @@ public final class ImageLib {
 
     /**
      * DOC bZhou Comment method "createLockedIcon".
-     * 
+     *
      * @param originalImg
      * @return
      * @deprecated use createErrorIcon(String originalImgName) and avoid to create image ervery time.
@@ -657,10 +657,10 @@ public final class ImageLib {
 
     /**
      * Create a new icon with add icon
-     * 
+     *
      * @param originalImgName
      * @return
-     * 
+     *
      * @deprecated use {@code ImageLib#createAddedIcon(String, int) } instead of it
      */
     @Deprecated
@@ -669,9 +669,9 @@ public final class ImageLib {
     }
 
     /**
-     * 
+     *
      * Create a new icon with add icon
-     * 
+     *
      * @param originalImgName The name of original image
      * @param position A value which from IDecoration and point out the position Where is the add icon should be putting
      * @return a imageDescriptor which take add icon
@@ -682,7 +682,7 @@ public final class ImageLib {
 
     /**
      * DOC qiongli Comment method "createAddedIcon".
-     * 
+     *
      * @param originalImg
      * @return
      * @deprecated use createAddedIcon(String originalImgName) and avoid to create image ervery time.
@@ -699,7 +699,7 @@ public final class ImageLib {
     }
 
     /**
-     * 
+     *
      * @deprecated use createLockedByOtherIcon(String originalImgName) and avoid to create image ervery
      */
     @Deprecated
@@ -709,7 +709,7 @@ public final class ImageLib {
     }
 
     /**
-     * 
+     *
      * @deprecated use createLockedByOtherIcon(String originalImgName) and avoid to create image ervery
      */
     @Deprecated
@@ -723,7 +723,7 @@ public final class ImageLib {
     }
 
     /**
-     * 
+     *
      * @deprecated use createLockedByOwnIcon(String originalImgName) and avoid to create image ervery
      */
     @Deprecated
@@ -733,7 +733,7 @@ public final class ImageLib {
     }
 
     /**
-     * 
+     *
      * @deprecated use createLockedByOwnIcon(String originalImgName) and avoid to create image ervery
      */
     @Deprecated

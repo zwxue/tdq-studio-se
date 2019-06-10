@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -85,7 +85,7 @@ public class ResourceViewLabelProviderTest {
     /**
      * Test method for
      * {@link org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider#getFileCount(org.eclipse.core.resources.IFolder, java.lang.String[])}
-     * 
+     *
      */
     @Test
     public void testGetFileCount() {
@@ -102,9 +102,9 @@ public class ResourceViewLabelProviderTest {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "initFolder". init the folder which contain ana and rep files
-     * 
+     *
      * @param folderName
      * @return
      */
@@ -236,12 +236,12 @@ public class ResourceViewLabelProviderTest {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "checkFileName".
-     * 
+     *
      * @param fileName
      * @param pattern
-     * 
+     *
      * copy the method from ProxyRepositoryFactory to avoid tos migeration.
      */
     private void checkFileName(String fileName, String pattern) {
@@ -297,9 +297,9 @@ public class ResourceViewLabelProviderTest {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "createFolder". create the subfolder under the parentFolder and named for folderName
-     * 
+     *
      * @param parentFolder
      * @param folderName
      * @return
@@ -317,9 +317,9 @@ public class ResourceViewLabelProviderTest {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "createFile". create the file under the parentFolder and named for filName
-     * 
+     *
      * @param parentFolder
      * @param filName
      * @return

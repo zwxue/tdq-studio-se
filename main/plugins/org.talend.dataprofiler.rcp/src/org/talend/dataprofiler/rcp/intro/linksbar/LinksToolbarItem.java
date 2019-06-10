@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,12 +30,12 @@ import org.talend.dataprofiler.rcp.i18n.Messages;
 
 /**
  * DOC xtan class global comment. Detailled comment <br/>
- * 
+ *
  */
 public class LinksToolbarItem extends ContributionItem {
 
     public static final String COOLITEM_LINKS_ID = Activator.PLUGIN_ID + ".CoolItemLinks"; //$NON-NLS-1$
-    
+
     private ToolItem toolitem;
 
     public static final String LEARN_URL = "<a href=\"https://help.talend.com\">Learn</a>"; //$NON-NLS-1$
@@ -138,7 +138,7 @@ public class LinksToolbarItem extends ContributionItem {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.ContributionItem#dispose()
      */
     @Override

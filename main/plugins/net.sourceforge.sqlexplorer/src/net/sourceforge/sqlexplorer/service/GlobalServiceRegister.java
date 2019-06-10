@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ public class GlobalServiceRegister {
 
     /**
      * DOC qiongli Comment method "getService".Gets the specific IService.
-     * 
+     *
      * @param klass the Service type you want to get
      * @return IService IService
      */
@@ -78,7 +78,7 @@ public class GlobalServiceRegister {
 
     /**
      * DOC qiongli Comment method "findService".Finds the specific service from the list.
-     * 
+     *
      * @param klass the interface type want to find.
      * @return IService
      */

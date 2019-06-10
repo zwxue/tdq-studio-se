@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,13 +36,13 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<SurvivorshipKeyDefinition> {
 
     /**
      * DOC HHB SurvivorShipTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param isAddColumn
@@ -64,7 +64,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableLabelProvider
      * ()
@@ -76,7 +76,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getTableContentProvider()
      */
@@ -87,7 +87,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableCellModifier
      * ()
@@ -99,7 +99,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
      * (java.util.List)
@@ -138,7 +138,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
 
     /*
      * (non-Javadoc) columnList.toArray(new String[0])
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * createNewKeyDefinition(java.lang.String)
      */
@@ -156,7 +156,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (java.lang.String, java.util.List)

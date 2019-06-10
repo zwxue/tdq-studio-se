@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -100,9 +100,9 @@ public final class WorkspaceUtils {
     }
 
     /**
-     * 
+     *
      * Comment method "toFile".
-     * 
+     *
      * @param object
      * @return turn URI to File
      */
@@ -119,9 +119,9 @@ public final class WorkspaceUtils {
     }
 
     /**
-     * 
+     *
      * DOC mzhao convert emf resource to workspace resource.
-     * 
+     *
      * @param me ,modelElement of EObject
      * @return File this element links.
      */
@@ -132,9 +132,9 @@ public final class WorkspaceUtils {
     }
 
     /**
-     * 
+     *
      * convert emf resource to workspace resource.
-     * 
+     *
      * @param uri ,URI of EObject
      * @return File this element links.
      */
@@ -172,7 +172,7 @@ public final class WorkspaceUtils {
 
     /**
      * make the pathName to normal(replace the special forbidden chars to "_").
-     * 
+     *
      * @param pathName
      * @return
      */

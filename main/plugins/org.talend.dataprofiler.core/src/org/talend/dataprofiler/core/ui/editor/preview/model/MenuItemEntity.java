@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -60,9 +60,9 @@ public class MenuItemEntity {
     }
 
     /**
-     * 
+     *
      * it is only used to display on UI(like as drill down menu).
-     * 
+     *
      * @return
      */
     public String geti18nLabel() {

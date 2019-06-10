@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,7 +24,7 @@ import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * @author scorreia
- * 
+ *
  * Helper class for handling BooleanExpressionNode.
  */
 public final class BooleanExpressionHelper {
@@ -39,7 +39,7 @@ public final class BooleanExpressionHelper {
 
     /**
      * Method "createBooleanExpressionNode".
-     * 
+     *
      * @param body the body of the Expression
      * @return a BooleanExpressionNode with the given Expression.
      */
@@ -73,7 +73,7 @@ public final class BooleanExpressionHelper {
 
     /**
      * Method "getBody".
-     * 
+     *
      * @param node (must not be null)
      * @return the body string of the expression contained in the given node
      */
@@ -84,7 +84,7 @@ public final class BooleanExpressionHelper {
 
     /**
      * Method "createRegularExpression".
-     * 
+     *
      * @param language
      * @param expression
      * @return a regular expression (no type is set. The caller should set the correct type)
@@ -97,7 +97,7 @@ public final class BooleanExpressionHelper {
 
     /**
      * Method "createRegularExpression".
-     * 
+     *
      * @param language
      * @param expression
      * @param exprType

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class ModelElementMatchEngine extends DefaultMatchEngine {
 
     /**
      * DOC qiongli ModelElementMatchEngine constructor comment.
-     * 
+     *
      * @param matcher
      * @param comparisonFactory
      */
@@ -52,7 +52,7 @@ public class ModelElementMatchEngine extends DefaultMatchEngine {
     /**
      * Creates and configures an {@link IEObjectMatcher} with the strategy given by {@code useIDs}. The {@code cache}
      * will be used to cache some expensive computation (should better a LoadingCache).
-     * 
+     *
      * @param useIDs which strategy the return IEObjectMatcher must follow.
      * @return a new IEObjectMatcher.
      */
@@ -63,7 +63,7 @@ public class ModelElementMatchEngine extends DefaultMatchEngine {
     /**
      * Creates and configures an {@link IEObjectMatcher} with the strategy given by {@code useIDs}. The {@code cache}
      * will be used to cache some expensive computation (should better a LoadingCache).
-     * 
+     *
      * @param useIDs which strategy the return IEObjectMatcher must follow.
      * @param weightProviderRegistry the match engine needs a WeightProvider in case of this match engine do not use
      * identifiers.
@@ -96,7 +96,7 @@ public class ModelElementMatchEngine extends DefaultMatchEngine {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.compare.match.DefaultMatchEngine#match(org.eclipse.emf.compare.Comparison,
      * org.eclipse.emf.compare.scope.IComparisonScope, org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject,
      * org.eclipse.emf.ecore.EObject, org.eclipse.emf.common.util.Monitor)
@@ -115,10 +115,10 @@ public class ModelElementMatchEngine extends DefaultMatchEngine {
     }
 
     /**
-     * 
+     *
      * if the scope is DBConnection,should use scope.getCoveredEObjects(EResource res),instead of
      * scope.getChildren(EObject left).
-     * 
+     *
      * @param comparison
      * @param scope
      * @param left

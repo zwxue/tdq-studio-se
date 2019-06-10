@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,7 +24,7 @@ public interface IDuplicateHandle {
      * duplicate a TDQ item: For the Analysis, Report, the duplicated item will contains the client dependencies in old
      * one. For other type, like connection, pattern, UDI, the duplicated item will not contains any dependencies in old
      * one.
-     * 
+     *
      * @param oldItem
      * @param newName the new name of the duplicated one
      * @return the duplicated item, name is the newName

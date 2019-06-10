@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import net.sourceforge.sqlexplorer.service.MapDBUtils;
 
 /**
  * created by talend on Aug 29, 2014 Detailled comment
- * 
+ *
  */
 public class MapDBSetDataSet extends MapDBDataSet {
 
@@ -30,7 +30,7 @@ public class MapDBSetDataSet extends MapDBDataSet {
 
     /**
      * DOC talend MapDBSetDataSet constructor comment.
-     * 
+     *
      * @param columnLabels
      * @param data
      */
@@ -46,7 +46,7 @@ public class MapDBSetDataSet extends MapDBDataSet {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.sourceforge.sqlexplorer.dataset.DataSet#getRowCount()
      */
     @Override
@@ -60,7 +60,7 @@ public class MapDBSetDataSet extends MapDBDataSet {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.sourceforge.sqlexplorer.dataset.DataSet#getRow(int)
      */
     @Override
@@ -91,7 +91,7 @@ public class MapDBSetDataSet extends MapDBDataSet {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.sourceforge.sqlexplorer.dataset.mapdb.TalendDataSet#getCurrentPageDataSet()
      */
     @Override

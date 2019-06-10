@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -49,7 +49,7 @@ public class TDQJrxmlItemImplTest {
 
     /**
      * DOC yyin Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -99,7 +99,7 @@ public class TDQJrxmlItemImplTest {
 
     /**
      * DOC yyin Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After
@@ -108,12 +108,12 @@ public class TDQJrxmlItemImplTest {
 
     /**
      * TDQ-7259
-     * 
+     *
      * 1) Create a actual JRXML resource via EMF. 2) Edit the content out of EMF resource. 3) Move the EMF resource to
      * other folders.-- make it unload to become proxy type $) Assert the content of EMF resource is fresh.
-     * 
+     *
      * Test method for {@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getContent()}.
-     * 
+     *
      * @throws CoreException
      * @throws IOException
      */

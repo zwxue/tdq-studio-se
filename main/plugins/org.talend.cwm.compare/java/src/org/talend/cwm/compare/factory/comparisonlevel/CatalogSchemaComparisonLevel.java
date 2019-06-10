@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -84,7 +84,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     /**
      * get the Package from the Object.
-     * 
+     *
      * @param object
      * @return a Package or null
      */
@@ -100,7 +100,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     /**
      * get the Package from the RepositoryNode.
-     * 
+     *
      * @param node
      * @return a Package or null
      */
@@ -287,7 +287,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     /**
      * DOC rli Comment method "reloadElementOfPackage".
-     * 
+     *
      * @param toReloadObj
      * @return
      * @throws ReloadCompareException
@@ -347,7 +347,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     /**
      * DOC bZhou Comment method "isValidViewHandle".
-     * 
+     *
      * @param columnSetSwitch
      * @return
      */
@@ -358,7 +358,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     /**
      * DOC bZhou Comment method "isValidTableHandle".
-     * 
+     *
      * @param columnSetSwitch
      * @return
      */
@@ -369,7 +369,7 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#resetTaggedValues()
      */
     @Override

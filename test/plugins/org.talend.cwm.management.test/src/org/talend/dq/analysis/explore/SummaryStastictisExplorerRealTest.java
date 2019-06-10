@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentFactory;
 
 /**
  * created by xqliu on Jul 16, 2013 Detailled comment
- * 
+ *
  */
 public class SummaryStastictisExplorerRealTest {
 
@@ -110,7 +110,7 @@ public class SummaryStastictisExplorerRealTest {
         IndicatorDefinition  maxValueIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         maxValueIndicatorDef.setName("Maximum");
         maxValueIndicator.setIndicatorDefinition(maxValueIndicatorDef);
-        
+
         MinValueIndicator minValueIndicator = IndicatorsFactory.eINSTANCE.createMinValueIndicator();
         minValueIndicator.setValue("20"); //$NON-NLS-1$
         IndicatorDefinition  minValueIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
@@ -124,7 +124,7 @@ public class SummaryStastictisExplorerRealTest {
         IndicatorDefinition  iqrIndicatorDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         iqrIndicatorDef.setName("Inter Quartile Range");
         iqrIndicator.setIndicatorDefinition(iqrIndicatorDef);
-        
+
 
         entityReal.setIndicator(iqrIndicator);
         summaryExplorerSql.setEnitty(entityReal);

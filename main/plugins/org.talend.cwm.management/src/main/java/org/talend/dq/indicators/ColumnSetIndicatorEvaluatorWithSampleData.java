@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,7 +26,7 @@ public class ColumnSetIndicatorEvaluatorWithSampleData extends ColumnSetIndicato
 
     /**
      * DOC zshen ColumnSetIndicatorEvaluatorWithSampleData constructor comment.
-     * 
+     *
      * @param analysis
      */
     public ColumnSetIndicatorEvaluatorWithSampleData(Analysis analysis) {
@@ -36,7 +36,7 @@ public class ColumnSetIndicatorEvaluatorWithSampleData extends ColumnSetIndicato
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#createStatement()
      */
     @Override
@@ -46,7 +46,7 @@ public class ColumnSetIndicatorEvaluatorWithSampleData extends ColumnSetIndicato
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.ColumnSetIndicatorEvaluator#checkConnection()
      */
     @Override
@@ -56,7 +56,7 @@ public class ColumnSetIndicatorEvaluatorWithSampleData extends ColumnSetIndicato
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.ColumnSetIndicatorEvaluator#closeConnection()
      */
     @Override

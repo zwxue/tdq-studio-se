@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,7 +34,7 @@ import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 
 /**
  * created by xqliu on Jul 24, 2013 Detailled comment
- * 
+ *
  */
 public final class ContextHelper {
 
@@ -46,7 +46,7 @@ public final class ContextHelper {
 
     /**
      * if the str is context variable return true, else return false.
-     * 
+     *
      * @param str
      * @return
      */
@@ -56,7 +56,7 @@ public final class ContextHelper {
 
     /**
      * get the context value if pass a context name, otherwise return the str directly.
-     * 
+     *
      * @param contexts the context list
      * @param contextGroupName the name of the group which be used to get the context value
      * @param contextVarName the context variable's name
@@ -91,7 +91,7 @@ public final class ContextHelper {
 
     /**
      * get the context's value from specified context group of the report.
-     * 
+     *
      * @param tdReport the Report
      * @param contextGroupName the name of the context group which be used to get the context value
      * @param contextVarName the context variable's name
@@ -103,7 +103,7 @@ public final class ContextHelper {
 
     /**
      * get the context's value from the last run context(or default context if last run context is empty) in the report.
-     * 
+     *
      * @param tdReport the Report
      * @param contextVarName the context variable's name
      * @return
@@ -114,7 +114,7 @@ public final class ContextHelper {
 
     /**
      * get the context's value from specified context group of the analysis.
-     * 
+     *
      * @param analysis
      * @param contextGroupName the name of the context group which be used to get the context value
      * @param contextVarName the context variable's name
@@ -127,7 +127,7 @@ public final class ContextHelper {
     /**
      * get the context's value from the last run context(or default context if last run context is empty) in the
      * analysis.
-     * 
+     *
      * @param analysis
      * @param contextVarName the context variable's name
      * @return
@@ -138,7 +138,7 @@ public final class ContextHelper {
 
     /**
      * translate the context variable in the string to the value according to the specific context group name.
-     * 
+     *
      * @param context
      * @param contextGroupName
      * @param contextString the stirng contains context variable, example:
@@ -162,7 +162,7 @@ public final class ContextHelper {
 
     /**
      * translate the context variable in the string to the value according to the specific context group name.
-     * 
+     *
      * @param tdReport
      * @param contextGroupName
      * @param contextualizeUrl the stirng contains context variable, example:
@@ -175,7 +175,7 @@ public final class ContextHelper {
 
     /**
      * translate the context variable in the string to the value according to the default context group name.
-     * 
+     *
      * @param tdReport
      * @param contextString the stirng contains context variable, example:
      * jdbc:mysql://context.TdqContext_Host:context.TdqContext_Port/context.TdqContext_DbName?characterEncoding=UTF8
@@ -187,7 +187,7 @@ public final class ContextHelper {
 
     /**
      * build a Map: the key is the context script code(start with context.), the value is the context value.
-     * 
+     *
      * @param contextType
      * @return
      */
@@ -204,7 +204,7 @@ public final class ContextHelper {
     /**
      * get the context script code according to the context variable name, for an example: the context variable name is
      * "server", then the context script code is "context.server".
-     * 
+     *
      * @param contextVarName
      * @return
      */
@@ -214,7 +214,7 @@ public final class ContextHelper {
 
     /**
      * if all the reports have the same output folder return it, else return null.
-     * 
+     *
      * @param reports
      * @return the context var or real string or null
      */
@@ -262,7 +262,7 @@ public final class ContextHelper {
 
     /**
      * if the report use any context variable return true, else return false.
-     * 
+     *
      * @param tdReport the report using context or not
      * @return
      */
@@ -282,7 +282,7 @@ public final class ContextHelper {
 
     /**
      * in ctxString, replace the context variable name with the value from contextValues .
-     * 
+     *
      * @param contextualizeUrl the string which contain several context variable names
      * @param contextValues the context values map, key=ContextScriptCode, value=ContextValue
      * @return the final string of url which is context mode
@@ -297,7 +297,7 @@ public final class ContextHelper {
 
     /**
      * return default ContextType of the ContextItem, if ContextItem is null return null.
-     * 
+     *
      * @param contextItem
      * @return the default ContextType of the ContextItem
      */
@@ -317,7 +317,7 @@ public final class ContextHelper {
 
     /**
      * get DataFilter Without Context.
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -327,7 +327,7 @@ public final class ContextHelper {
 
     /**
      * get DataFilter Without Context.
-     * 
+     *
      * @param analysis
      * @param index 0 for DataFilterA, 1 for DataFilterB
      * @return
@@ -340,7 +340,7 @@ public final class ContextHelper {
     /**
      * compare the oldvalue with the : deleted/renamed context parameter: - if it is deleted, return the context
      * parameter's value - if it is renamed, return the new name
-     * 
+     *
      * @param eList context list
      * @param contextManager
      * @param old name of the parameter
@@ -382,7 +382,7 @@ public final class ContextHelper {
 
     /**
      * if the string contains the context preffix, remove it and return the parameter name only.
-     * 
+     *
      * @param strWithContext
      * @return
      */

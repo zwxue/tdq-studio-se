@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -157,7 +157,7 @@ public class FileSystemImportWriter implements IImportWriter {
     /*
      * check the dependency and conflict; when the record is a indicator(system or user): if overwrite should not add
      * error in record(only check conflict, but not check dependency)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#populate(org.talend.dataprofiler.core.ui.imex.model.
      * ItemRecord [], boolean)
      */
@@ -247,7 +247,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * judge if the record is a IndicatorDefinition or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -257,7 +257,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * judge if the record is a Connection or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -267,7 +267,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * judge if the record is a Analysis or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -277,7 +277,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * judge if the record is a Analysis or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -287,7 +287,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * judge if the record is a DQRule or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -297,7 +297,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * judge if the record is a ParserRule or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -307,7 +307,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * judge if the record is a WhereRule or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -317,7 +317,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * judge if the record is a MatchRuleDefinition or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -327,7 +327,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * judge if the record is a indicator or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -336,9 +336,9 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     /**
-     * 
+     *
      * judge if the record is a DataBaseConnection or not.
-     * 
+     *
      * @param element
      * @return
      */
@@ -349,7 +349,7 @@ public class FileSystemImportWriter implements IImportWriter {
     /**
      * MOdified 20120810 yyin TDQ-4189 when the record is a system indicator and be used by some analysis, only remember
      * the conflict object to merge, but do not add any errors which will cause it can't be imported
-     * 
+     *
      * @param record
      * @param checkExisted
      */
@@ -513,7 +513,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * DOC bZhou Comment method "checkDependency".
-     * 
+     *
      * @param record
      */
     private void checkDependency(ItemRecord record) {
@@ -546,7 +546,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#mapping(org.talend.dataprofiler.core.ui.imex.model.
      * ItemRecord
@@ -588,7 +588,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.eclipse.core.runtime.IPath,
      * org.eclipse.core.runtime.IPath)
      */
@@ -617,13 +617,13 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * DOC bZhou Comment method "update".
-     * 
+     *
      * @param desFile
      * @param isCovered
-     * 
+     *
      * @throws IOException
      * @throws CoreException
-     * 
+     *
      * @throws Exception
      */
     private void update(File desFile, boolean isCovered) throws IOException, CoreException {
@@ -676,7 +676,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * After check the conflicts of the imported object, calling this method (from ImportWizard) replace the conflicts
      * object in the records if the record is valid; then call the finish to do migrate. OR: merge the conflict system
      * indicators if valid.(overwrite)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.
      * ItemRecord
@@ -691,7 +691,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * After check the conflicts of the imported object, calling this method (from ImportWizard) replace the conflicts
      * object in the records if the record is valid; then call the finish to do migrate. OR: merge the conflict system
      * indicators if valid.(overwrite)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.talend.dataprofiler.core.ui.imex.model.
      * ItemRecord
@@ -1105,7 +1105,7 @@ public class FileSystemImportWriter implements IImportWriter {
     /**
      * for ParserRule: 1) replace the same name old rule with new rule; 2) will keep the old rule if new one don't
      * include the same name rule
-     * 
+     *
      * @param record imported modified parser rule
      * @param parserRuleItem the parser rule in the current studio
      */
@@ -1175,7 +1175,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * blank; 2) will keep old value if new value is blank][for IndicatorDefinitionParameter: 1) will replace the same
      * name old parameter with new parameter; 2) will keep the old parameter if new one don't include the same name
      * parameter ]
-     * 
+     *
      * @param record imported modified system indicator
      * @param siDef the system indicator in the current studio
      */
@@ -1313,7 +1313,7 @@ public class FileSystemImportWriter implements IImportWriter {
      * when imported pattern is from lower version, even if it is modified, the "modify date" is still null, so, even if
      * the modify date is null ,still do the comparation. [for Pattern matadata(Purpose, Description, Author, Status):
      * 1) will replace old value with new value if new value is not blank; 2) will keep old value if new value is blank]
-     * 
+     *
      * @param record
      * @param patternItem
      */
@@ -1380,7 +1380,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * remove the old client dependency add a new one in Anlaysis.
-     * 
+     *
      * @param supplierItem
      * @param modelElement
      * @throws PersistenceException
@@ -1452,7 +1452,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * remove the old client dependency add a new one in Anlaysis.
-     * 
+     *
      * @param supplierItem
      * @param modelElement
      * @throws PersistenceException
@@ -1520,7 +1520,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * if there is a same name pattern in current workspace,update the pattern in imported analysis IndicatorParameters.
-     * 
+     *
      * @param systemSupplyModelElement
      * @param analysis
      */
@@ -1546,10 +1546,10 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     /**
-     * 
+     *
      * remove the old pattern from IndicatorParameters of imported analysis ,then add the current workspace pattern into
      * IndicatorParameters.
-     * 
+     *
      * @param indParameters
      * @param sysPattern
      * @param analysis
@@ -1612,7 +1612,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /*
      * when clicking the finish button on the import wizard, execute this method.
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.imex.model.IImportWriter#finish(org.talend.dataprofiler.core.ui.imex.model.
      * ItemRecord
@@ -1748,7 +1748,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#migration(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
@@ -1786,7 +1786,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#computeInput(org.eclipse.core.runtime.IPath)
      */
     @Override
@@ -1852,7 +1852,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#setBasePath(org.eclipse.core.runtime.IPath)
      */
     @Override
@@ -1862,7 +1862,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#getBasePath()
      */
     @Override
@@ -1872,7 +1872,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#check()
      */
     @Override
@@ -1893,7 +1893,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * DOC bZhou Comment method "checkProject".
-     * 
+     *
      * @return
      */
     private boolean checkProject() {
@@ -1902,7 +1902,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * DOC bZhou Comment method "checkVersion".
-     * 
+     *
      * @return
      */
     private boolean checkVersion() {
@@ -1911,7 +1911,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * DOC bZhou Comment method "checkBasePath".
-     * 
+     *
      * @return
      */
     private boolean checkBasePath() {
@@ -1996,7 +1996,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * when the item's status is locked, change to unlocked.
-     * 
+     *
      * @param property
      */
     private void removeLockStatus(Property property) {
@@ -2018,7 +2018,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * get the uri from property.
-     * 
+     *
      * @param property
      * @return
      */
@@ -2054,7 +2054,7 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.imex.model.IImportWriter#postFinish()
      */
     @Override

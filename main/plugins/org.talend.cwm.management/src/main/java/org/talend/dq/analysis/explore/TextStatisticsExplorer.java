@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -94,7 +94,7 @@ public class TextStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC qiongli 2011-09-8 TDQ-2474:view rows for average length with blank.
-     * 
+     *
      * @return
      */
     private String getAverageLengthWithBlankRowsStatement() {
@@ -105,7 +105,7 @@ public class TextStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC qiongli 2011-07-8 TDQ-2474:view rows for average length with null blank.
-     * 
+     *
      * @return
      */
     private String getAverageLengthWithNullBlankRowsStatement() {
@@ -116,7 +116,7 @@ public class TextStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC qiongli 2011-09-8 TDQ-2474:view rows for average length with null.
-     * 
+     *
      * @return
      */
     private String getAverageLengthWithNullRowsStatement() {

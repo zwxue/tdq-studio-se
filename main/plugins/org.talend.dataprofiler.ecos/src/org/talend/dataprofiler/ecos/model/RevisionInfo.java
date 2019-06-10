@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,7 +31,7 @@ public class RevisionInfo {
 	private java.lang.String extension_description;
 
 	private java.lang.String revision_date;
-	
+
 	private java.lang.String filename;
 
 	private java.lang.String revision_description;
@@ -134,6 +134,6 @@ public class RevisionInfo {
 
 	public void setDownload_url(java.lang.String downloadUrl) {
 		this.download_url = downloadUrl;
-	}  
+	}
 
 }

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -169,7 +169,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.IRuningStatusListener#fireRuningItemChanged(boolean)
      */
     public void fireRuningItemChanged(boolean status) {
@@ -178,7 +178,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.IRuningStatusListener#fireRuningItemChanged(boolean)
      */
     public void fireRuningItemChanged(boolean status, boolean isSupportDynamicChart) {
@@ -197,7 +197,7 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
     /**
      * setup the Grid Layout Data to limit the vertical size of the table according to the numOfRows. if (numOfRows <=
      * 10) then table will be 10 rows height, if (numOfRows > 10) then the table will be 30 rows heigth
-     * 
+     *
      * @param table the table to set the GridData value on
      * @param numOfRows number of rows in the table ADDED sgandon 15/03/2010 bug 11769 : setup the size of the table to
      * avoid crash and add consistency.

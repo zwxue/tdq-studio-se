@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ public final class VersionComparator {
 
     /**
      * DOC bZhou Comment method "isLower".
-     * 
+     *
      * @param v1
      * @param v2
      * @return
@@ -44,7 +44,7 @@ public final class VersionComparator {
 
     /**
      * DOC bZhou Comment method "isHigher".
-     * 
+     *
      * @param v1
      * @param v2
      * @return
@@ -58,7 +58,7 @@ public final class VersionComparator {
 
     /**
      * DOC bZhou Comment method "isEqual".
-     * 
+     *
      * @param v1
      * @param v2
      * @return
@@ -72,7 +72,7 @@ public final class VersionComparator {
 
     /**
      * DOC bZhou Comment method "isLower".
-     * 
+     *
      * @return
      */
     public boolean isLower() {
@@ -81,7 +81,7 @@ public final class VersionComparator {
 
     /**
      * DOC bZhou Comment method "isHigher".
-     * 
+     *
      * @return
      */
     public boolean isHigher() {
@@ -90,7 +90,7 @@ public final class VersionComparator {
 
     /**
      * DOC bZhou Comment method "isEqual".
-     * 
+     *
      * @return
      */
     public boolean isEqual() {
@@ -99,7 +99,7 @@ public final class VersionComparator {
 
     /**
      * Getter for v1.
-     * 
+     *
      * @return the v1
      */
     public ProductVersion getV1() {
@@ -108,7 +108,7 @@ public final class VersionComparator {
 
     /**
      * Getter for v2.
-     * 
+     *
      * @return the v2
      */
     public ProductVersion getV2() {

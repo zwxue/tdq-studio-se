@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,7 +21,7 @@ import java.util.TreeMap;
 
 /**
  * @author scorreia
- * 
+ *
  * Utility class.
  */
 public final class AlgoUtils {
@@ -31,7 +31,7 @@ public final class AlgoUtils {
 
     /**
      * Method "incrementValueCounts". Stores in map the object as key, and counts how many times it appears.
-     * 
+     *
      * @param <T> the type of the key
      * @param value the value to store
      * @param valueToCount the map [object -> number of objects]
@@ -49,7 +49,7 @@ public final class AlgoUtils {
 
     /**
      * DOC scorreia Comment method "getMedian".
-     * 
+     *
      * @param totalCount
      * @param valueToCount
      * @return
@@ -60,7 +60,7 @@ public final class AlgoUtils {
 
     /**
      * Method "getQuantile".
-     * 
+     *
      * @param totalCount the total number of values
      * @param valueToCount the frequency table of each value
      * @param nthQuantile the nth q-quantile (e.g. 3 for the upper quartile)

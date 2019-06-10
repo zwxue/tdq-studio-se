@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,7 +40,7 @@ import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * 
+ *
  * DOC mzhao 2009-07-01 feature 7482.
  */
 public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
@@ -55,7 +55,7 @@ public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -106,7 +106,7 @@ public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC scorreia Comment method "createSubfolder".
-     * 
+     *
      * @param newPatternFolder
      * @return
      * @throws CoreException
@@ -183,7 +183,7 @@ public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC bZhou Comment method "remove".
-     * 
+     *
      * @param file
      */
     private void remove(IFile file) throws CoreException {
@@ -192,7 +192,7 @@ public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC scorreia Comment method "getEMFObject".
-     * 
+     *
      * @param file
      * @param folderProperty
      * @return

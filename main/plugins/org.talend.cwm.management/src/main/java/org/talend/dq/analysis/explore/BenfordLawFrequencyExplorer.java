@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     /**
      * DOC yyin Comment method "isInformix".
-     * 
+     *
      * @return
      */
     private boolean isInformix() {
@@ -58,7 +58,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     /**
      * DOC yyin Comment method "getColumnName".
-     * 
+     *
      * @return
      */
     private String getColumnName() {
@@ -74,7 +74,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.explore.DataExplorer#NotShowMenu()
      */
     @Override

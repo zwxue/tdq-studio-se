@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,7 +26,7 @@ public class ParticularDefaultSurvivorShipDefinitionCellModifier extends Particu
 
     /**
      * The constructor of ParticularDefaultSurvivorShipDefinitionCellModifier class.
-     * 
+     *
      * @param tableViewer
      */
     public ParticularDefaultSurvivorShipDefinitionCellModifier(
@@ -36,7 +36,7 @@ public class ParticularDefaultSurvivorShipDefinitionCellModifier extends Particu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.ParticularDefaultSurvivorShipCellModifier#canModify
      * (java
@@ -52,7 +52,7 @@ public class ParticularDefaultSurvivorShipDefinitionCellModifier extends Particu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.ParticularDefaultSurvivorShipCellModifier#getValue(
      * java.
@@ -69,7 +69,7 @@ public class ParticularDefaultSurvivorShipDefinitionCellModifier extends Particu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.ParticularDefaultSurvivorShipCellModifier#modify(java
      * .lang

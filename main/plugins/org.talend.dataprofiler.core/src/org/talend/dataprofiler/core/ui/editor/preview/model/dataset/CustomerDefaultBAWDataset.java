@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,9 +40,9 @@ public class CustomerDefaultBAWDataset implements ICustomerDataset {
     }
 
     /**
-     * 
+     *
      * DOC zshen CustomerDefaultBAWDataset constructor comment.
-     * 
+     *
      * @param mean
      * @param median
      * @param q1
@@ -82,7 +82,7 @@ public class CustomerDefaultBAWDataset implements ICustomerDataset {
 
     /**
      * Getter for defaultCategoryDataset.
-     * 
+     *
      * @return the defaultCategoryDataset
      */
     public Object getDefaultCategoryDataset() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,7 +24,7 @@ import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class DefaultSurvivorShipCellModifier extends AbstractMatchCellModifier<DefaultSurvivorshipDefinition> {
 
@@ -56,7 +56,7 @@ public class DefaultSurvivorShipCellModifier extends AbstractMatchCellModifier<D
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
      */
     @Override
@@ -96,7 +96,7 @@ public class DefaultSurvivorShipCellModifier extends AbstractMatchCellModifier<D
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     @Override

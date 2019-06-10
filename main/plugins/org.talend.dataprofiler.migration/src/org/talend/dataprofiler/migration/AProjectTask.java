@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ public abstract class AProjectTask extends AMigrationTask implements IProjectMig
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#valid()
      */
     public boolean valid() {
@@ -31,7 +31,7 @@ public abstract class AProjectTask extends AMigrationTask implements IProjectMig
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#persist()
      */
     public boolean persist() throws Exception {
@@ -40,7 +40,7 @@ public abstract class AProjectTask extends AMigrationTask implements IProjectMig
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#clear()
      */
     public boolean clear() {
@@ -49,7 +49,7 @@ public abstract class AProjectTask extends AMigrationTask implements IProjectMig
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getTaskCategory()
      */
     public MigrationTaskCategory getTaskCategory() {
@@ -58,7 +58,7 @@ public abstract class AProjectTask extends AMigrationTask implements IProjectMig
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -97,7 +97,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
- * 
+ *
  */
 public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
@@ -206,7 +206,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * DOC yyi create Up Down and Delete Buttons.
-     * 
+     *
      * @param parent
      */
     private void createUpDownButtons(Composite parent) {
@@ -259,7 +259,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * DOC yyi to set the Up Down and Delete Buttons is visible.
-     * 
+     *
      * @param isShow
      */
     public void setControlButtonsVisible(boolean isShow) {
@@ -268,7 +268,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * DOC yyi 7466 2010-03-22 change the order of appearence of indicators.
-     * 
+     *
      * @param newTree
      * @param step
      */
@@ -339,7 +339,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * DOC yyi select element after moved.
-     * 
+     *
      * @param items
      * @param data
      */
@@ -368,7 +368,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * DOC yyi Sort indicators.
-     * 
+     *
      * @param units
      * @param targetUnit
      * @param step
@@ -527,7 +527,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             comboEditor.setEditor(combo, treeItem, 1);
 
             TreeEditor addPatternEditor = new TreeEditor(tree);
-            Label addPatternLabl = createTreeItemLabel(tree, ImageLib.ADD_PATTERN, "AnalysisColumnTreeViewer.addPattern"); //$NON-NLS-1$ 
+            Label addPatternLabl = createTreeItemLabel(tree, ImageLib.ADD_PATTERN, "AnalysisColumnTreeViewer.addPattern"); //$NON-NLS-1$
 
             // MOD mzhao feature:13040, 2010-05-21
             addPatternLabl.addMouseListener(new PatternMouseAdapter(this, masterPage, meIndicator, treeItem));
@@ -568,7 +568,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "addColumnUdi". ADD xqliu 2010-02-23 feature 11617
-     * 
+     *
      * @param treeItem
      * @param meIndicator
      * @param columnIndex
@@ -653,7 +653,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * Open the dialog for select indicator
-     * 
+     *
      * @param shell
      * @return The array of ModelElementIndicator which selected by user if user click ok button. If cancel button be
      * clicked then the size of return array will be zero. If have a Where Clause is error will return null
@@ -703,7 +703,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * Remove the selected elements(eg:TdColumn or Indicator) from tree.
-     * 
+     *
      * @param newTree
      */
     private void removeSelectedElements(Tree newTree) {
@@ -826,7 +826,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getTheSuitedComposite(org.eclipse.swt
      * .events.SelectionEvent)
@@ -853,7 +853,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * Getter for analysis.
-     * 
+     *
      * @return the analysis
      */
     public Analysis getAnalysis() {
@@ -862,7 +862,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /**
      * Getter for analysis.
-     * 
+     *
      * @return the analysis
      */
     public IRepositoryNode getAnalysisNode() {
@@ -924,7 +924,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getMasterPage()
      */
     @Override
@@ -939,7 +939,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         /**
          * DOC yyi ColumnModelElementTreeMenuProvider constructor comment. true *
-         * 
+         *
          * @param tree
          */
         public AnalysisColumnColumnMenuProvider(Tree tree) {
@@ -948,7 +948,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.talend.dataprofiler.core.ui.editor.composite.ModelElementTreeMenuProvider#getAnalysis2()
          */
         @Override
@@ -958,7 +958,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * org.talend.dataprofiler.core.ui.editor.composite.ModelElementTreeMenuProvider#removeSelectedElements2(org
          * .eclipse.swt.widgets.Tree)
@@ -982,7 +982,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
      */
     @Override

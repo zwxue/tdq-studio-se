@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,13 +40,13 @@ public class ImportWizard extends Wizard {
     protected ImportWizardPage importPage;
 
     public ImportWizard() {
-        setWindowTitle(DefaultMessagesImpl.getString("ImportWizard.Title"));//$NON-NLS-1$ 
+        setWindowTitle(DefaultMessagesImpl.getString("ImportWizard.Title"));//$NON-NLS-1$
         this.importPage = new ImportWizardPage();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -69,7 +69,7 @@ public class ImportWizard extends Wizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
@@ -102,7 +102,7 @@ public class ImportWizard extends Wizard {
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                monitor.beginTask(DefaultMessagesImpl.getString("ImportWizard.ImportItem"), records.length);//$NON-NLS-1$ 
+                monitor.beginTask(DefaultMessagesImpl.getString("ImportWizard.ImportItem"), records.length);//$NON-NLS-1$
 
                 writer.write(records, monitor, overWrite);
 

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ import org.talend.cwm.indicator.DataValidation;
 
 /**
  * created by talend on Aug 4, 2014 Detailled comment
- * 
+ *
  */
 public abstract class AbstractDB<K> {
 
@@ -104,7 +104,7 @@ public abstract class AbstractDB<K> {
     }
 
     /**
-     * 
+     *
      * Close the db after 5 minute
      */
     public void close() {
@@ -113,7 +113,7 @@ public abstract class AbstractDB<K> {
 
     /**
      * Check whether input parameter is null
-     * 
+     *
      * @param parentFullPathStr
      * @param fileName
      */
@@ -126,9 +126,9 @@ public abstract class AbstractDB<K> {
     }
 
     /**
-     * 
+     *
      * Judge whether the db is closed
-     * 
+     *
      * @return
      */
     public boolean isClosed() {
@@ -136,9 +136,9 @@ public abstract class AbstractDB<K> {
     }
 
     /**
-     * 
+     *
      * get subList from fromIndex to toIndex
-     * 
+     *
      * @param fromIndex
      * @param toIndex
      * @param indexMap
@@ -149,9 +149,9 @@ public abstract class AbstractDB<K> {
     }
 
     /**
-     * 
+     *
      * get subList from fromIndex to toIndex
-     * 
+     *
      * @param fromIndex
      * @param toIndex
      * @param indexMap
@@ -211,9 +211,9 @@ public abstract class AbstractDB<K> {
     }
 
     /**
-     * 
+     *
      * Check whether fromIndex is less than toIndex
-     * 
+     *
      * @param fromIndex
      * @param toIndex
      * @return
@@ -227,7 +227,7 @@ public abstract class AbstractDB<K> {
 
     /**
      * Getter for limiteSize.
-     * 
+     *
      * @return the limiteSize
      */
     public Long getLimiteSize() {
@@ -236,7 +236,7 @@ public abstract class AbstractDB<K> {
 
     /**
      * Sets the limiteSize.
-     * 
+     *
      * @param limiteSize the limiteSize to set
      */
     public void setLimiteSize(Long limiteSize) {

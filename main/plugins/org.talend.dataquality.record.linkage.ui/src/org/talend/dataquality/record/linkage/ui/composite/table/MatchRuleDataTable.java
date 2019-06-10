@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -92,7 +92,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Getter for uiService.
-     * 
+     *
      * @return the uiService
      */
     public IMatchRuleUIService getUiService() {
@@ -101,7 +101,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Sets the uiService.
-     * 
+     *
      * @param uiService the uiService to set
      */
     public void setUiService(IMatchRuleUIService uiService) {
@@ -192,7 +192,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Getter for displayViewData.
-     * 
+     *
      * @return the displayViewData
      */
     private List<String[]> getDisplayViewData() {
@@ -229,7 +229,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Getter for disGIDList.
-     * 
+     *
      * @return the disGIDList
      */
     public List<String> getDisGIDList() {
@@ -238,7 +238,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Getter for disGroupSize.
-     * 
+     *
      * @return the disGroupSize
      */
     private int getDisGroupSize() {
@@ -247,7 +247,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Sets the disGroupSize.
-     * 
+     *
      * @param disGroupSize the disGroupSize to set
      */
     public void setDisGroupSize(int disGroupSize) {
@@ -321,7 +321,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * DOC xqliu Comment method "buildGroupSizeArray".
-     * 
+     *
      * @param groupSize2groupFrequency
      * @param minGroupSize
      */
@@ -444,7 +444,7 @@ public class MatchRuleDataTable extends Composite {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
          */
         @Override
@@ -476,7 +476,7 @@ public class MatchRuleDataTable extends Composite {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
          */
         @Override

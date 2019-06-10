@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -49,7 +49,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.AbstractSchemaEvaluator#getDataManager()
      */
     @Override
@@ -64,9 +64,9 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#executeSqlQuery(java.lang.String)
-     * 
+     *
      * Note that the given statement is not used.
      */
     @Override
@@ -160,7 +160,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                         try {
                             connection.setCatalog(catName);
                         } catch (SQLException e) {
-                            log.warn("Exception while executing SQL query " + sqlStatement, e); //$NON-NLS-1$  
+                            log.warn("Exception while executing SQL query " + sqlStatement, e); //$NON-NLS-1$
                         }
                     }
                     CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
@@ -219,7 +219,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
     /**
      * if the Connection don't contain the catalog, remove the catalog from the list.
-     * 
+     *
      * @param catalogs
      */
     private void cleanUpCatalog(List<Catalog> catalogs) {
@@ -237,7 +237,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
     /**
      * call the setCatalog() method to make sure the catalog is ok.
-     * 
+     *
      * @param connection
      * @param name
      * @return
@@ -257,7 +257,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
     /**
      * if the connection is created by TOS(DI) return true, else return false.
-     * 
+     *
      * @param conn
      * @return
      */
@@ -291,7 +291,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see
              * org.talend.dataquality.indicators.schema.util.SchemaSwitch#caseCatalogIndicator(org.talend.dataquality
              * .indicators.schema.CatalogIndicator)
@@ -321,7 +321,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see
              * org.talend.dataquality.indicators.schema.util.SchemaSwitch#caseSchemaIndicator(org.talend.dataquality
              * .indicators.schema.SchemaIndicator)
@@ -342,7 +342,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dq.indicators.AbstractSchemaEvaluator#addToConnectionIndicator(org.talend.dataquality.indicators.schema
      * .CatalogIndicator, org.talend.dataquality.indicators.schema.SchemaIndicator)
@@ -372,7 +372,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
     /**
      * DOC scorreia Comment method "getConnectionIndicator".
-     * 
+     *
      * @param dataProvider
      * @param indics
      * @param ok

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,7 +19,7 @@ import org.mapdb.DB;
 
 /**
  * created by talend on Sep 18, 2014 Detailled comment
- * 
+ *
  */
 public class CloseDBTimeTask extends TimerTask {
 
@@ -34,7 +34,7 @@ public class CloseDBTimeTask extends TimerTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.TimerTask#run()
      */
     @Override

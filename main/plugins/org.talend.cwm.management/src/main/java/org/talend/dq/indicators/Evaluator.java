@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,10 +40,10 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author scorreia
- * 
+ *
  * Abstract class for computing indicators.
  * @param <T> the type of the object identifying the analyzed element (usually a string).
- * 
+ *
  */
 public abstract class Evaluator<T> {
 
@@ -84,7 +84,7 @@ public abstract class Evaluator<T> {
 
     /**
      * Getter for analysis.
-     * 
+     *
      * @return the analysis
      */
     public Analysis getAnalysis() {
@@ -94,7 +94,7 @@ public abstract class Evaluator<T> {
     /**
      * Method "storeIndicator" stores the mapping between the analyzed element name and its indicators. if needed, this
      * method must be called on the Child indicators of the given indicator.
-     * 
+     *
      * @param elementToAnalyze the element to analyze (column, data provider...)
      * @param indicator the indicator for the given element
      * @return true if ok
@@ -106,7 +106,7 @@ public abstract class Evaluator<T> {
 
     /**
      * Method "getIndicators".
-     * 
+     *
      * @param elementName
      * @return the indicator to be computed for the given element
      */
@@ -117,7 +117,7 @@ public abstract class Evaluator<T> {
 
     /**
      * Method "getAnalyzedElements".
-     * 
+     *
      * @return the unmodifiable set of analyzed elements.
      */
     protected Set<T> getAnalyzedElements() {
@@ -127,7 +127,7 @@ public abstract class Evaluator<T> {
     /**
      * Method "evaluateIndicators". A connection must be open. It does not close the connection. It is to the caller
      * responsibility to close the connection.
-     * 
+     *
      * @param sqlStatement
      * @return a return code with an error message if any problem has been encountered.
      */
@@ -190,7 +190,7 @@ public abstract class Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "executeSqlQuery".
-     * 
+     *
      * @param sqlStatement
      * @return
      */
@@ -199,7 +199,7 @@ public abstract class Evaluator<T> {
     /**
      * Method "evaluateIndicators". A connection must be open. This method does not close the connection. It is to the
      * caller responsibility to close the connection.
-     * 
+     *
      * @param sqlStatement
      * @return a return code with an error message if any problem has been encountered.
      */
@@ -252,7 +252,7 @@ public abstract class Evaluator<T> {
                 e.printStackTrace();
             }
         }
-        return new ReturnCode(Messages.getString("Evaluator.closeNullConnection"), false); //$NON-NLS-1$  
+        return new ReturnCode(Messages.getString("Evaluator.closeNullConnection"), false); //$NON-NLS-1$
 
     }
 
@@ -265,7 +265,7 @@ public abstract class Evaluator<T> {
 
     /**
      * Method "selectCatalog" attempts to set the catalog for the current connection.
-     * 
+     *
      * @param catalogName the catalog to select
      * @return true if set, false if problem
      */
@@ -326,7 +326,7 @@ public abstract class Evaluator<T> {
 
     /**
      * create the statement.
-     * 
+     *
      * @return
      * @throws SQLException
      */

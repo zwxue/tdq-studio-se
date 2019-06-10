@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,7 +39,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
     }
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.KeyedValues2D#getRowKey(int)
      */
     @Override
@@ -49,7 +49,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.KeyedValues2D#getRowIndex(java.lang.Comparable)
      */
     @Override
@@ -59,7 +59,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.KeyedValues2D#getRowKeys()
      */
     @Override
@@ -69,7 +69,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.KeyedValues2D#getColumnKey(int)
      */
     @Override
@@ -79,7 +79,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.KeyedValues2D#getColumnIndex(java.lang.Comparable)
      */
     @Override
@@ -89,7 +89,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.KeyedValues2D#getColumnKeys()
      */
     @Override
@@ -99,7 +99,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.KeyedValues2D#getValue(java.lang.Comparable, java.lang.Comparable)
      */
     @Override
@@ -109,7 +109,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.Values2D#getRowCount()
      */
     @Override
@@ -119,7 +119,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.Values2D#getColumnCount()
      */
     @Override
@@ -129,7 +129,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.Values2D#getValue(int, int)
      */
     @Override
@@ -139,7 +139,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.general.Dataset#addChangeListener(org.jfree.data.general.DatasetChangeListener)
      */
     @Override
@@ -149,7 +149,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.general.Dataset#removeChangeListener(org.jfree.data.general.DatasetChangeListener)
      */
     @Override
@@ -159,7 +159,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.general.Dataset#getGroup()
      */
     @Override
@@ -169,7 +169,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.data.general.Dataset#setGroup(org.jfree.data.general.DatasetGroup)
      */
     @Override
@@ -179,7 +179,7 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
 
     /**
      * Getter for cusmomerDataset.
-     * 
+     *
      * @return the cusmomerDataset
      */
     public Object getCusmomerDataset() {

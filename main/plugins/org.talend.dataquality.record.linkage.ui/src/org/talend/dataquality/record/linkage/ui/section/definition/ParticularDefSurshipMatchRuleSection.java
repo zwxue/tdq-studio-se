@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,7 +26,7 @@ public class ParticularDefSurshipMatchRuleSection extends ParticularDefSurshipDe
 
     /**
      * The constructor of ParticularDefSurshipMatchRuleSection.
-     * 
+     *
      * @param form
      * @param parent
      * @param toolkit
@@ -37,7 +37,7 @@ public class ParticularDefSurshipMatchRuleSection extends ParticularDefSurshipDe
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.definition.ParticularDefSurshipDefinitionSection#getTableComposite(org
      * .eclipse.swt.widgets.Composite)

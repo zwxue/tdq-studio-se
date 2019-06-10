@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * created by xqliu on 2014-8-20 Detailled comment
- * 
+ *
  */
 public class TableAnalysisSqlExecutorTest {
 
@@ -54,7 +54,7 @@ public class TableAnalysisSqlExecutorTest {
 
     /**
      * DOC xqliu Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -106,7 +106,7 @@ public class TableAnalysisSqlExecutorTest {
 
     /**
      * DOC xqliu Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After

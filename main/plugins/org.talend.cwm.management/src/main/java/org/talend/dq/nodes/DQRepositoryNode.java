@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -70,7 +70,7 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * Getter for untilSchema.
-     * 
+     *
      * @return the untilSchema
      */
     public static boolean isUntilSchema() {
@@ -79,7 +79,7 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * Sets the untilSchema.
-     * 
+     *
      * @param untilSchema the untilSchema to set
      */
     public static void setUntilSchema(boolean untilSchema) {
@@ -88,7 +88,7 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * Getter for untilTable.
-     * 
+     *
      * @return the untilTable
      */
     public static boolean isUntilTable() {
@@ -97,7 +97,7 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * Sets the untilTable.
-     * 
+     *
      * @param untilTable the untilTable to set
      */
     public static void setUntilTable(boolean untilTable) {
@@ -109,9 +109,9 @@ public class DQRepositoryNode extends RepositoryNode {
     }
 
     /**
-     * 
+     *
      * DOC mzhao if the tree is rendering by filter or not.
-     * 
+     *
      * @return
      */
     public static boolean isOnFilterring() {
@@ -120,7 +120,7 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * DQRepositoryNode constructor.(this is used for all type's node)
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -134,9 +134,9 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * filter method
-     * 
+     *
      * DOC gdbu Comment method "filterResultsIfAny".
-     * 
+     *
      * @param children
      * @return
      */
@@ -236,9 +236,9 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * ADD gdbu 2011-7-26 bug : 23220
-     * 
+     *
      * DOC gdbu Comment method "filterRecycleBin". This method just used to filter Recycle Bin node .
-     * 
+     *
      * @param children
      * @return
      */
@@ -304,7 +304,7 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * DOC gdbu Comment method "setExpandNodeWhenFiltering".
-     * 
+     *
      * @param isExpandNodeWhenFiltering
      */
     public static void setIsReturnAllNodesWhenFiltering(boolean isExpandNodeWhenFiltering) {
@@ -321,7 +321,7 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * get Parent viewObject
-     * 
+     *
      * @return
      */
     protected IRepositoryViewObject getParentViewObject() {
@@ -330,7 +330,7 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getLabel()
      */
     @Override
@@ -344,7 +344,7 @@ public class DQRepositoryNode extends RepositoryNode {
 
     /**
      * Getter for project.
-     * 
+     *
      * @return the project
      */
     public org.talend.core.model.general.Project getProject() {
@@ -362,7 +362,7 @@ public class DQRepositoryNode extends RepositoryNode {
     }
 
     public String getDisplayProjectName() {
-        return "(@" + this.getProject().getLabel() + ")"; //$NON-NLS-1$ //$NON-NLS-2$ 
+        return "(@" + this.getProject().getLabel() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override

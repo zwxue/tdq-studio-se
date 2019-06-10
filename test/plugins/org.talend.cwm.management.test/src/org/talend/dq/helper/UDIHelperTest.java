@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,13 +26,13 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * created by talend on Sep 13, 2012 Detailled comment
- * 
+ *
  */
 public class UDIHelperTest {
 
     /**
      * DOC talend Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before

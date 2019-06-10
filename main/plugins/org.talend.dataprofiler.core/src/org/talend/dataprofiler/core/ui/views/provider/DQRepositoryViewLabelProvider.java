@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -109,7 +109,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             if (node.getLabel().equals(EResourceConstant.EXCHANGE.getName())) {
                 return ImageLib.getImage(ImageLib.EXCHANGE);
             }
-            
+
             if (node.getType().equals(ENodeType.SYSTEM_FOLDER)) {
                 if (EResourceConstant.REFERENCED_PROJECT.getName().equals(node.getProperties(EProperties.LABEL))) {
                     return ImageLib.getImage(ImageLib.REFERENCED_PROJECT);
@@ -189,7 +189,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /**
      * if it is needed,add a over warning icon..eg., it is empty analysis or report; imported a MDM analysis or report.
-     * 
+     *
      * @param image
      * @param node
      * @param originalImageName
@@ -243,9 +243,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "getImageByContentType".
-     * 
+     *
      * @param repositoryNode
      * @return
      */
@@ -326,7 +326,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /**
      * ADD qiongli TDQ-5801 if it is a invalid jdbc connection.
-     * 
+     *
      * @param repNode
      * @return
      */
@@ -350,7 +350,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /*
      * yyi 2011-04-14 20362:connection modified
-     * 
+     *
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
      */
     @Override
@@ -397,7 +397,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getForeground(java.lang.Object)
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -43,7 +43,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by yyin on 2014-12-17 Detailled comment
- * 
+ *
  */
 public class DatasetUtils {
 
@@ -72,7 +72,7 @@ public class DatasetUtils {
 
     /**
      * DOC yyin Comment method "getGanttQueryMap".
-     * 
+     *
      * @param createGannttDatasets
      * @param indicator
      * @param column
@@ -125,7 +125,7 @@ public class DatasetUtils {
 
     /**
      * DOC scorreia Comment method "createXYZDatasets".
-     * 
+     *
      * @param indicator
      * @param numericColumn a numeric column which is in the list of numeric column of the indicator
      * @return a series of datasets for the given numeric column
@@ -171,7 +171,7 @@ public class DatasetUtils {
 
     /**
      * Method "fillDataset" fills in the data sets.
-     * 
+     *
      * @param nominalColumns the nominal columns
      * @param listRows the rows (=result set)
      * @param firstNumericColumnIdx the index of the first numeric column
@@ -214,7 +214,7 @@ public class DatasetUtils {
     }
 
     /**
-     * 
+     *
      */
     private static Map<String, DateValueAggregate> fillGanttDataset(final EList<ModelElement> nominalColumns,
             final List<Object[]> listRows, final int firstDateColumnIdx) {
@@ -247,7 +247,7 @@ public class DatasetUtils {
 
     /**
      * Method "createKey" creates a key with the concatenation of the values of the first n columns of the given list.
-     * 
+     *
      * @param nominalColumns
      * @param n
      * @return a key
@@ -265,7 +265,7 @@ public class DatasetUtils {
      */
 
     /**
-     * 
+     *
      */
     public static class DateValueAggregate extends ValueAggregate<MultipleKey, Date> {
 
@@ -274,7 +274,7 @@ public class DatasetUtils {
         /**
          * Method "getLabels". Must not be called before the {@link #addSeriesToXYZDataset(DefaultXYZDataset, String)}
          * method.
-         * 
+         *
          * @param seriesKey
          * @return the label for each item of the dataset
          */
@@ -320,7 +320,7 @@ public class DatasetUtils {
 
         /**
          * Method "addSeriesToXYZDataset" adds a new series of data to the given dataset.
-         * 
+         *
          * @param dataset a dataset
          * @param keyOfDataset the series key of the data series
          */

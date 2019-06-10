@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -51,7 +51,7 @@ public class ColumnDependencyExplorer extends DataExplorer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.explore.DataExplorer#NotShowMenu()
      */
     @Override
@@ -62,7 +62,7 @@ public class ColumnDependencyExplorer extends DataExplorer {
 
     /**
      * DOC xqliu Comment method "getInvalidRowsStatement".
-     * 
+     *
      * @return
      */
     private String getInvalidRowsStatement() {
@@ -109,7 +109,7 @@ public class ColumnDependencyExplorer extends DataExplorer {
 
     /**
      * DOC xqliu Comment method "getValidRowsStatement".
-     * 
+     *
      * @return
      */
     private String getValidRowsStatement() {
@@ -118,7 +118,7 @@ public class ColumnDependencyExplorer extends DataExplorer {
 
     /**
      * DOC xqliu Comment method "getStatement".
-     * 
+     *
      * @param genericSQL
      * @return
      */
@@ -148,7 +148,7 @@ public class ColumnDependencyExplorer extends DataExplorer {
             ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(columnA);
             instantiatedSQL = instantiatedSQL.replace(fullyQualifiedTableName + ".`", columnSetOwner.getName() + ".`");
         }
-        
+
         return instantiatedSQL;
     }
 

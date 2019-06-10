@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * @author scorreia
- * 
+ *
  * This class is a handler for the categories of analysis. A tree structure of categories is loaded from a configuration
  * file.
  */
@@ -60,7 +60,7 @@ public final class CategoryHandler {
 
     /**
      * DOC bZhou Comment method "loadFromFile".
-     * 
+     *
      * @return
      */
     private static AnalysisCategories loadFromFile() {
@@ -99,7 +99,7 @@ public final class CategoryHandler {
 
     /**
      * Method "getAnalysisCategories".
-     * 
+     *
      * @return the singleton analysis categories (or null if a problem occured)
      */
     public static AnalysisCategories getAnalysisCategories() {
@@ -112,9 +112,9 @@ public final class CategoryHandler {
 
     /**
      * DOC bZhou Comment method "getIndicatorCategory".
-     * 
+     *
      * Get the current category.
-     * 
+     *
      * @return if null, return an empty category.
      */
     private static IndicatorCategory getIndicatorCategory() {
@@ -128,9 +128,9 @@ public final class CategoryHandler {
 
     /**
      * DOC bZhou Comment method "getCategoriesIDMaps".
-     * 
+     *
      * impact definition to category.
-     * 
+     *
      * @return a map in structure.
      */
     public static Map<IndicatorCategory, List<IndicatorDefinition>> getCategoriesIDMaps() {
@@ -142,7 +142,7 @@ public final class CategoryHandler {
 
     /**
      * DOC bZhou Comment method "getIndicatorDefinitionList".
-     * 
+     *
      * @param category
      * @return
      */
@@ -155,11 +155,11 @@ public final class CategoryHandler {
 
     /**
      * DOC bZhou Comment method "getShouldNotIncludeIndicatorDefinitionUuidList".
-     * 
+     *
      * Get no need to display indicator definitions.
-     * 
+     *
      * FIXME lazy initialization of a static field.
-     * 
+     *
      * @return
      */
     public static List<String> getShouldNotIncludeIndicatorDefinitionUuidList() {
@@ -196,7 +196,7 @@ public final class CategoryHandler {
 
     /**
      * DOC bZhou Comment method "getShowIndicatorsDefinitions".
-     * 
+     *
      * @return
      */
     public static List<IndicatorDefinition> getShowIndicatorsDefinitions() {
@@ -218,7 +218,7 @@ public final class CategoryHandler {
 
     /**
      * DOC xqliu Comment method "buildCategories".
-     * 
+     *
      * @return
      */
     private static Map<IndicatorCategory, List<IndicatorDefinition>> buildCategories() {
@@ -246,7 +246,7 @@ public final class CategoryHandler {
 
     /**
      * Get i18n label in resource bundle. 2010-03-16 yyi 11739
-     * 
+     *
      * @param key
      * @return
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ import org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl;
 
 /**
  * created by mzhao on 2012-8-27 JUDI for email validation.
- * 
+ *
  */
 public class EMailValidationIndicator extends UserDefIndicatorImpl {
 
@@ -67,7 +67,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
 
     /**
      * Sets the emailAddress. For test only!
-     * 
+     *
      * @param emailAddress the sender email address to set
      */
     void setEmailAddress(String emailAddress) {
@@ -90,7 +90,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handle(java.lang.Object)
      */
     @Override
@@ -125,7 +125,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#finalizeComputation()
      */
     @Override
@@ -147,7 +147,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#reset()
      */
     @Override
@@ -181,7 +181,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
     /**
      * Check: if the user add the paramter for: java.naming.provider.url if the parameter with this name is added,
      * return its value.
-     * 
+     *
      * @return string: if has the related parameter null: no such parameter
      */
     private String getDNSUrl() {
@@ -253,10 +253,10 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
     }
 
     /**
-     * 
+     *
      * Get response status's code, 250 means OK, queuing for node node started. Requested mail action okay, completed.
      * See more details at http://email.about.com/cs/standards/a/smtp_error_code_2.htm
-     * 
+     *
      * @param in
      * @return
      * @throws IOException
@@ -280,9 +280,9 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
     }
 
     /**
-     * 
+     *
      * Write the text ot buffer.
-     * 
+     *
      * @param wr
      * @param text
      * @throws IOException

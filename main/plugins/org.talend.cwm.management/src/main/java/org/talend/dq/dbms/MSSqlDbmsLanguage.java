@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC scorreia MSSqlDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      * @param majorVersion
      * @param minorVersion
@@ -52,7 +52,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#toQualifiedName(java.lang.String, java.lang.String,
      * java.lang.String)
      */
@@ -67,7 +67,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getPatternFinderDefaultFunction(java.lang.String)
      */
     @Override
@@ -96,7 +96,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#trim(java.lang.String)
      */
     @Override
@@ -106,7 +106,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#extract(org.talend.dataquality.indicators.DateGrain,
      * java.lang.String)
      */
@@ -117,7 +117,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#supportNonIntegerConstantInGroupBy()
      */
     @Override
@@ -127,18 +127,18 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getTopNQuery(java.lang.String, int)
      */
     @Override
     public String getTopNQuery(String query, int n) {
         Matcher m = SELECT_PATTERN.matcher(query);
-        return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+        return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#charLength(java.lang.String)
      */
     @Override
@@ -149,7 +149,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#createGenericSqlWithRegexFunction(java.lang.String)
      */
     @Override
@@ -161,12 +161,12 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC yyi 2011-07-07 22246:view rows for average length for Oracle
-     * 
+     *
      * @return average length sql statement
      */
     @Override
     public String getAverageLengthRows() {
-        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE DATALENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(DATALENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEILING(SUM(DATALENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$ 
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE DATALENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(DATALENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEILING(SUM(DATALENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
     }
 
     @Override
@@ -176,7 +176,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
      */
     @Override
@@ -186,7 +186,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullRows()
      */
     @Override
@@ -197,7 +197,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
      */
     @Override
@@ -207,7 +207,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
      */
     @Override
@@ -217,7 +217,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -230,11 +230,11 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
     }
 
 
-   
+
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
      */
     @Override
@@ -244,7 +244,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override

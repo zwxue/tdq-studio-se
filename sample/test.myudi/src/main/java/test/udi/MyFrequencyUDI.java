@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,7 +18,7 @@ import org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl;
 
 /**
  * @author scorreia
- * 
+ *
  * A very simple example of a java implementation of a user defined indicator. This indicator returns a matching count.
  * It implements the minimum number of required methods.
  */
@@ -26,7 +26,7 @@ public class MyFrequencyUDI extends UserDefIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.Indicator#finalizeComputation()
      */
     public boolean finalizeComputation() {
@@ -36,7 +36,7 @@ public class MyFrequencyUDI extends UserDefIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.Indicator#handle(java.lang.Object)
      */
     public boolean handle(Object data) {
@@ -61,7 +61,7 @@ public class MyFrequencyUDI extends UserDefIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.Indicator#reset()
      */
     public boolean reset() {

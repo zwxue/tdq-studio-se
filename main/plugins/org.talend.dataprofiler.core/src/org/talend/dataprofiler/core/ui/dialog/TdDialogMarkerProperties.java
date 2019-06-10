@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ import org.eclipse.ui.views.markers.internal.MarkerMessages;
 import org.eclipse.ui.views.markers.internal.Util;
 
 /**
- * 
+ *
  * DOC mzhao class global comment. Detailled comment
  */
 @SuppressWarnings("restriction")
@@ -118,7 +118,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
      * Creates the dialog. By default this dialog creates a new marker. To set the resource and initial attributes for
      * the new marker, use <code>setResource</code> and <code>setInitialAttributes</code>. To show or modify an existing
      * marker, use <code>setMarker</code>.
-     * 
+     *
      * @param parentShell the parent shell
      */
     public TdDialogMarkerProperties(Shell parentShell) {
@@ -129,7 +129,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
      * Creates the dialog. By default this dialog creates a new marker. To set the resource and initial attributes for
      * the new marker, use <code>setResource</code> and <code>setInitialAttributes</code>. To show or modify an existing
      * marker, use <code>setMarker</code>.
-     * 
+     *
      * @param parentShell the parent shell
      * @param title the title of the dialog
      */
@@ -142,11 +142,11 @@ public class TdDialogMarkerProperties extends TrayDialog {
      * Creates the dialog. By default this dialog creates a new marker. To set the resource and initial attributes for
      * the new marker, use <code>setResource</code> and <code>setInitialAttributes</code>. To show or modify an existing
      * marker, use <code>setMarker</code>.
-     * 
+     *
      * @param parentShell the parent shell
      * @param title the title of the dialog
      * @param markerName the name used to describe the specific kind of marker shown
-     * 
+     *
      * @since 3.3
      */
     public TdDialogMarkerProperties(Shell parentShell, String title, String markerName) {
@@ -160,9 +160,9 @@ public class TdDialogMarkerProperties extends TrayDialog {
      * <p>
      * IMPORTANT: Although this class is internal, there are public subclasses that expose this method as API. Changes
      * in this implementation should be treated as API changes.
-     * 
+     *
      * @param marker the marker, or <code>null</code> to create a new marker
-     * 
+     *
      * @since 3.3
      */
     public void setMarker(IMarker marker) {
@@ -182,9 +182,9 @@ public class TdDialogMarkerProperties extends TrayDialog {
      * <p>
      * IMPORTANT: Although this method is protected and the class is internal, there are public subclasses that expose
      * this method as API. Changes in this implementation should be treated as API changes.
-     * 
+     *
      * @return the marker
-     * 
+     *
      * @since 3.3
      */
     protected IMarker getMarker() {
@@ -196,7 +196,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
      * <p>
      * IMPORTANT: Although this class is internal, there are public subclasses that expose this method as API. Changes
      * in this implementation should be treated as API changes.
-     * 
+     *
      * @param resource the resource
      */
     public void setResource(IResource resource) {
@@ -209,9 +209,9 @@ public class TdDialogMarkerProperties extends TrayDialog {
      * <p>
      * IMPORTANT: Although this method is protected and the class is internal, there are public subclasses that expose
      * this method as API. Changes in this implementation should be treated as API changes.
-     * 
+     *
      * @return the resource
-     * 
+     *
      * @since 3.3
      */
     protected IResource getResource() {
@@ -224,9 +224,9 @@ public class TdDialogMarkerProperties extends TrayDialog {
      * <p>
      * IMPORTANT: Although this method is protected and the class is internal, there are public subclasses that expose
      * this method as API. Changes in this implementation should be treated as API changes.
-     * 
+     *
      * @param initialAttributes the initial attributes
-     * 
+     *
      * @since 3.3
      */
     @SuppressWarnings("unchecked")
@@ -240,9 +240,9 @@ public class TdDialogMarkerProperties extends TrayDialog {
      * <p>
      * IMPORTANT: Although this method is protected and the class is internal, there are public subclasses that expose
      * this method as API. Changes in this implementation should be treated as API changes.
-     * 
+     *
      * @return the initial attributes
-     * 
+     *
      * @since 3.3
      */
 
@@ -322,12 +322,12 @@ public class TdDialogMarkerProperties extends TrayDialog {
 
     /**
      * Method createCreationTimeArea.
-     * 
+     *
      * @param parent
      */
     private void createCreationTimeArea(Composite parent) {
         Label label = new Label(parent, SWT.NONE);
-        label.setText(MarkerMessages.propertiesDialog_creationTime_text);//$NON-NLS-1$ 
+        label.setText(MarkerMessages.propertiesDialog_creationTime_text);//$NON-NLS-1$
 
         creationTime = new Label(parent, SWT.NONE);
     }
@@ -362,7 +362,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
     /**
      * This method is intended to be overridden by subclasses. The attributes area is created between the creation time
      * area and the resource area.
-     * 
+     *
      * @param parent the parent composite
      */
     protected void createAttributesArea(Composite parent) {
@@ -553,9 +553,9 @@ public class TdDialogMarkerProperties extends TrayDialog {
 
     /**
      * Sets the marker type when creating a new marker.
-     * 
+     *
      * @param type the marker type
-     * 
+     *
      * @since 3.3 this method is protected.
      */
     protected void setType(String type) {
@@ -564,9 +564,9 @@ public class TdDialogMarkerProperties extends TrayDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.window.Dialog#getDialogBoundsSettings()
-     * 
+     *
      * @since 3.2
      */
     protected IDialogSettings getDialogBoundsSettings() {
@@ -581,7 +581,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
     /**
      * Return the string that describes a modify marker operation. Subclasses may override to more specifically describe
      * the marker.
-     * 
+     *
      * @since 3.3
      */
     protected String getModifyOperationTitle() {
@@ -595,7 +595,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
     /**
      * Return the string that describes a create marker operation. Subclasses may override to more specifically describe
      * the marker.
-     * 
+     *
      * @since 3.3
      */
     protected String getCreateOperationTitle() {
@@ -609,7 +609,7 @@ public class TdDialogMarkerProperties extends TrayDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#isResizable()
      */
     protected boolean isResizable() {

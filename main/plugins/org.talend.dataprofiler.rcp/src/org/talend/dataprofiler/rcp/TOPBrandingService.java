@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,7 +24,7 @@ import org.talend.core.ui.branding.AbstractCommonBrandingService;
 import org.talend.core.ui.branding.IBrandingConfiguration;
 
 /**
- * 
+ *
  * DOC zshen class global comment. Detailled comment
  */
 public class TOPBrandingService extends AbstractCommonBrandingService {
@@ -36,7 +36,7 @@ public class TOPBrandingService extends AbstractCommonBrandingService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.branding.IBrandingService#getBrandingConfiguration()
      */
     @Override
@@ -49,7 +49,7 @@ public class TOPBrandingService extends AbstractCommonBrandingService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.branding.IBrandingService#getLoginHImage()
      */
     @Override
@@ -59,7 +59,7 @@ public class TOPBrandingService extends AbstractCommonBrandingService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.branding.IBrandingService#getLoginVImage()
      */
     @Override
@@ -69,7 +69,7 @@ public class TOPBrandingService extends AbstractCommonBrandingService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.branding.IBrandingService#isPoweredbyTalend()
      */
     @Override
@@ -91,7 +91,7 @@ public class TOPBrandingService extends AbstractCommonBrandingService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.service.IBrandingService#getCorporationName()
      */
     @Override
@@ -101,7 +101,7 @@ public class TOPBrandingService extends AbstractCommonBrandingService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.service.IBrandingService#getShortProductName()
      */
     @Override
@@ -131,7 +131,7 @@ public class TOPBrandingService extends AbstractCommonBrandingService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.branding.IBrandingService#getUserManuals()
      */
     @Override

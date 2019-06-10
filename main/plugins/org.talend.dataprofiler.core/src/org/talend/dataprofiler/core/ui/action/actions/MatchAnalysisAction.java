@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ import org.talend.repository.model.RepositoryNode;
 
 /**
  * created by sizhaoliu on 18 oct. 2013 Detailled comment
- * 
+ *
  */
 public class MatchAnalysisAction extends Action {
 
@@ -83,7 +83,7 @@ public class MatchAnalysisAction extends Action {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -125,7 +125,7 @@ public class MatchAnalysisAction extends Action {
 
     /**
      * Getter for selection.
-     * 
+     *
      * @return the selection
      */
     public TreeSelection getSelection() {
@@ -134,7 +134,7 @@ public class MatchAnalysisAction extends Action {
 
     /**
      * Sets the selection.
-     * 
+     *
      * @param selection the selection to set
      */
     public void setSelection(TreeSelection selection) {

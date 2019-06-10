@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -70,7 +70,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
 
     /**
      * DOC jet ColumnDependencyResultPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -83,7 +83,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#getAnalysisHandler()
      */
     @Override
@@ -93,7 +93,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
      * .ui.editor.analysis.AbstractAnalysisMetadataPage)
@@ -119,7 +119,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
@@ -172,7 +172,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
      * DOC jet create result chart.
      * <p>
      * the chart must include
-     * 
+     *
      * @param sectionClient
      * @param analysis
      */
@@ -202,7 +202,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
 
     /**
      * DOC xqliu Comment method "createTable".
-     * 
+     *
      * @param composite
      */
     private void createTable(Composite composite) {
@@ -268,7 +268,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
 
     /**
      * DOC xqliu Comment method "initCustomerDataset".
-     * 
+     *
      * @return
      */
     private CustomerDefaultCategoryDataset initCustomerDataset() {
@@ -304,7 +304,7 @@ public class FunctionalDependencyAnalysisResultPage extends AbstractAnalysisResu
      * according to ColumnDependencyIndicator get chart label.
      * <p>
      * value is columnA.getName() -> columnB.getName()
-     * 
+     *
      * @param indicator
      * @return
      * @deprecated

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -158,7 +158,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * DOC bZhou Comment method "getIntactElemenetName".
-     * 
+     *
      * @return
      * @throws BusinessException
      */
@@ -306,7 +306,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * DOC bZhou Comment method "createMetadataTextFiled".
-     * 
+     *
      * @param text
      * @param parent
      * @return MOD sgandon 16/03/2010 bug 11760 : unecessary parameter removed
@@ -411,7 +411,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * DOC zshen Comment method "getCurrentProperty".
-     * 
+     *
      * @return
      * @deprecated use getProperty() instead of it
      */
@@ -469,7 +469,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Sets the formTitle.
-     * 
+     *
      * @param formTitle the formTitle to set
      */
     public void setFormTitle(String formTitleParameter) {
@@ -478,7 +478,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Getter for formTitle.
-     * 
+     *
      * @return the formTitle
      */
     public String getFormTitle() {
@@ -487,7 +487,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Sets the metadataTitle.
-     * 
+     *
      * @param metadataSectionTitle the metadataTitle to set
      */
     protected void setMetadataSectionTitle(String metadataTitleParameter) {
@@ -496,7 +496,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Getter for metadataTitle.
-     * 
+     *
      * @return the metadataTitle
      */
     protected String getMetadataSectionTitle() {
@@ -505,7 +505,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Getter for metadataSectionDescription.
-     * 
+     *
      * @return the metadataSectionDescription
      */
     public String getMetadataSectionDescription() {
@@ -514,7 +514,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Sets the metadataSectionDescription.
-     * 
+     *
      * @param metadataSectionDescription the metadataSectionDescription to set
      */
     public void setMetadataSectionDescription(String metadataSectionDescription) {
@@ -541,7 +541,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-     * 
+     *
      * @param fields
      */
     public void addWhitespaceValidate(Text... fields) {
@@ -585,9 +585,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     public abstract ReturnCode canSave();
 
     /**
-     * 
+     *
      * check if the nameText is a dupilcate name.
-     * 
+     *
      * @return
      */
     protected ReturnCode canModifyName(ERepositoryObjectType objectType) {
@@ -629,7 +629,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * install proposal on the control.
-     * 
+     *
      * @param control
      */
     public void installProposals(Control control) {
@@ -639,7 +639,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * create the Context Group section.
-     * 
+     *
      * @param form
      * @param topComp
      */
@@ -660,7 +660,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * get the default context group name from the current editor.
-     * 
+     *
      * @return
      */
     protected String getDefaultContextGroupName(SupportContextEditor currentEditor) {
@@ -669,7 +669,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * get the last run context group name from the report editor.
-     * 
+     *
      * @return
      */
     protected String getLastRunContextGroupName() {
@@ -678,7 +678,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * get the context list from the report editor.
-     * 
+     *
      * @return
      */
     protected List<ContextType> getContexts() {
@@ -690,7 +690,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * from node to get ModelElement.
-     * 
+     *
      * @return
      */
     public abstract ModelElement getCurrentModelElement();

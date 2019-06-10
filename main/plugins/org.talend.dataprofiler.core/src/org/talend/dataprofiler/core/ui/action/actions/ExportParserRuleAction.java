@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class ExportParserRuleAction extends Action {
 
     /**
      * DOC Administrator ExportParserRuleAction constructor comment.
-     * 
+     *
      * @param node
      */
     public ExportParserRuleAction(IRepositoryNode node) {
@@ -51,10 +51,10 @@ public class ExportParserRuleAction extends Action {
     }
 
     /**
-     * 
+     *
      * Parse the given parameter(isForExchage),then export parser rule,when parameter is true,it will export to exchange
      * ,otherwise local.
-     * 
+     *
      * @param node
      * @param isForExchange
      */

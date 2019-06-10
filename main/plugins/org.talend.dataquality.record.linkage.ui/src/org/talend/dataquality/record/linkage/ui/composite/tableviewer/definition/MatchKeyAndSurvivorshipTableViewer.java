@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * DOC yyin class global comment. Detailled comment
- * 
+ *
  */
 public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTableViewer<MatchKeyAndSurvivorDefinition> {
 
@@ -69,9 +69,9 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
     }
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
@@ -120,7 +120,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     /**
      * use this value to compute the vaule of column width
-     * 
+     *
      * @return
      */
     @Override
@@ -137,7 +137,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorshipTableViewer#
      * createNewKeyDefinition(java.lang.String)
@@ -169,7 +169,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */
@@ -205,7 +205,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpFromModel
      * (java.lang.Object, java.util.List, int)
@@ -221,7 +221,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownFromModel
      * (java.lang.Object, java.util.List, int)
@@ -242,7 +242,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableLabelProvider()
      */
     @Override

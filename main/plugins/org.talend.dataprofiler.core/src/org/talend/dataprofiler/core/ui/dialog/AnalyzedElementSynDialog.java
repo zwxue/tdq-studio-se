@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -139,9 +139,9 @@ public abstract class AnalyzedElementSynDialog extends SelectionStatusDialog imp
     }
 
     /**
-     * 
+     *
      * DOC mzhao Create synchronized analyzed table.
-     * 
+     *
      * @param parent
      * @return
      */
@@ -178,9 +178,9 @@ public abstract class AnalyzedElementSynDialog extends SelectionStatusDialog imp
     protected abstract void reloadInputModel();
 
     /**
-     * 
+     *
      * DOC mzhao AnalyzedElementSynDialog class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     public class SynTreeModel {
@@ -221,9 +221,9 @@ public abstract class AnalyzedElementSynDialog extends SelectionStatusDialog imp
     }
 
     /**
-     * 
+     *
      * DOC mzhao AnalyzedColumnsSynDialog class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class DBTreeViewContentProvider implements ITreeContentProvider {
@@ -269,9 +269,9 @@ public abstract class AnalyzedElementSynDialog extends SelectionStatusDialog imp
     }
 
     /**
-     * 
+     *
      * DOC zhao AnalyzedColumnsSynDialog class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class AnaColSynLabelProvider extends LabelProvider implements ITableLabelProvider {

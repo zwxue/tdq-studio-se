@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,7 +20,7 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class SurvivorShipCellModifier extends AbstractMatchCellModifier<SurvivorshipKeyDefinition> {
 
@@ -38,7 +38,7 @@ public class SurvivorShipCellModifier extends AbstractMatchCellModifier<Survivor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
      */
     @Override
@@ -58,7 +58,7 @@ public class SurvivorShipCellModifier extends AbstractMatchCellModifier<Survivor
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     @Override

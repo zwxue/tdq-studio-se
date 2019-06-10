@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -170,7 +170,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC bZhou IndicatorDefinitionMaterPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -181,7 +181,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getIntactElemenetName()
      */
     @Override
@@ -209,7 +209,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC talend Comment method "isEastAsiaPatternFequencyStatics".
-     * 
+     *
      * @param indicatorDefinition
      * @return
      */
@@ -272,7 +272,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * init TempExpressionList.
-     * 
+     *
      * @param def
      */
     private void initTempExpressionList(IndicatorDefinition def) {
@@ -291,7 +291,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#createFormContent(org.eclipse.ui.forms.IManagedForm
      * )
@@ -320,7 +320,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "createCharactersMappingSection".
-     * 
+     *
      * @param topComp
      */
     private void createCharactersMappingSection() {
@@ -332,7 +332,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "createCharactersMappingComp".
-     * 
+     *
      * @param charactersMappingSection
      * @return
      */
@@ -370,7 +370,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "createCMAddButton".
-     * 
+     *
      * @param composite
      */
     private void createCMAddButton(Composite composite) {
@@ -415,7 +415,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "createNewCharactersMappingLine".
-     * 
+     *
      * @param language
      * @param charactersMapping
      */
@@ -464,7 +464,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "buildCharactersMappingLineComp".
-     * 
+     *
      * @param cmBodyComp
      * @param charactersMapping
      * @param style
@@ -504,7 +504,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC talend Comment method "createDelButton".
-     * 
+     *
      * @param cmBodyComp
      */
     private void createDelButton(final Composite parent, final String language) {
@@ -532,7 +532,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "cloneCharactersMapping".
-     * 
+     *
      * @param charactersMapping
      * @return
      */
@@ -549,7 +549,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "recordCharactersMapping".
-     * 
+     *
      * @param charactersMappingMap
      * @param charactersMapping
      */
@@ -565,7 +565,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "createAdditionalFunctionsSection".
-     * 
+     *
      */
     private void createAdditionalFunctionsSection() {
         additionalFunctionsSection = createSection(form, topComp,
@@ -576,7 +576,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "createAdditionalFunctionsComp".
-     * 
+     *
      * @return
      */
     private Composite createAdditionalFunctionsComp() {
@@ -620,7 +620,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "createNewAFExpressLine".
-     * 
+     *
      * @param language
      * @param aggregateDateExpression
      */
@@ -683,7 +683,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "buildAggregateDateComp".
-     * 
+     *
      * @param expressionBodyComp
      * @param aggregateDateExpression
      * @param style
@@ -744,7 +744,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "recordAFExpression".
-     * 
+     *
      * @param expressionMap
      * @param aggregateExpression
      * @param dateExpression
@@ -776,7 +776,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "createAFAddButton".
-     * 
+     *
      * @param composite
      */
     private void createAFAddButton(Composite composite) {
@@ -840,9 +840,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     /**
      * DOC bZhou Comment method "createPatternDefinitionComp". MOD mzhao feature 11128 Be able to add Java UDI,
      * 2010-01-27
-     * 
+     *
      * @param definitionSection
-     * 
+     *
      * @return
      */
     protected Composite createDefinitionComp() {
@@ -879,7 +879,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * create Database Title Composite.
-     * 
+     *
      */
     protected void createDatabaseTitleComp() {
         dataBaseTitleComp = new Composite(dataBaseComp, SWT.NONE);
@@ -904,7 +904,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * 
+     *
      * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
     protected class NeedToSetDirtyListener implements ModifyListener {
@@ -948,7 +948,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC msjian Comment method "putTdExpressToTempMap".
-     * 
+     *
      * @param expression
      * @param combo
      */
@@ -962,7 +962,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * set To Temp Map.
-     * 
+     *
      * @param expression
      * @param combo
      * @param list
@@ -989,7 +989,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC bZhou Comment method "creatNewLine". MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-27
-     * 
+     *
      * @param expression
      */
     private void createNewLine() {
@@ -1025,7 +1025,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC msjian Comment method "updateLineAndOtherCombos".
-     * 
+     *
      * @param combo
      * @param expression
      * @param oldLanguage
@@ -1038,7 +1038,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * 
+     *
      * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
     protected class ExpressTextModListener implements ModifyListener {
@@ -1103,7 +1103,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * Language Combo Selection Listener class
-     * 
+     *
      */
     protected class LangCombSelectionListener extends SelectionAdapter {
 
@@ -1166,7 +1166,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC msjian Comment method "updateLineForExpression".
-     * 
+     *
      * @param combo
      * @param expression
      * @param oldLanguage
@@ -1196,7 +1196,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * update DatabaseLine For Java.
-     * 
+     *
      * @param combo
      * @param expression
      */
@@ -1206,7 +1206,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * create DataBase Line Component.
-     * 
+     *
      * @param combo
      * @param expression
      * @param detailComp
@@ -1240,7 +1240,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC yyin Comment method "isPatternTextEditable".
-     * 
+     *
      * @return boolean
      */
     protected boolean isPatternTextEditable() {
@@ -1249,7 +1249,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "updateOtherCombos". MOD xqliu 2010-03-23 feature 11201
-     * 
+     *
      * @param combo
      */
     protected void updateOtherCombos(CCombo combo) {
@@ -1271,7 +1271,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * create Expression Delete Button.
-     * 
+     *
      * @param expressComp
      * @param languageCombo
      */
@@ -1295,10 +1295,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * the delete action for delete button.
-     * 
+     *
      * @param expressComp
      * @param language
-     * 
+     *
      */
     protected void doDelete(final Composite expressComp, String language) {
         // remove title line comp and combo line
@@ -1338,10 +1338,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC yyi 2009-09-11 Feature:9030.
-     * 
+     *
      * @param expressComp
      * @param patternText
-     * 
+     *
      * @return
      */
     private void createExpressionEditButton(Composite expressComp, final Text patternText, final CCombo combo,
@@ -1381,7 +1381,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * get TdExpression.
-     * 
+     *
      * @param combo
      * @param version
      * @return TdExpression
@@ -1404,7 +1404,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * get Current Language Expression.
-     * 
+     *
      * @param tempViewValidRowsExpList
      * @param language
      * @param version
@@ -1425,7 +1425,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * create Add Button.
-     * 
+     *
      * @param parent Composite
      */
     private void createAddButton(final Composite parent) {
@@ -1454,7 +1454,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
@@ -1468,7 +1468,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#doSave(org.eclipse.core.runtime.IProgressMonitor)
      */
@@ -1521,7 +1521,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * currently mainly used for save some UDI special related values.
-     * 
+     *
      * @param javaUDICombo
      */
     protected void saveUDIValues(CCombo javaUDICombo) {
@@ -1531,7 +1531,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * check whether the java type is exist.
-     * 
+     *
      * @param combo
      * @return boolean
      */
@@ -1541,7 +1541,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * check the tempExpressionMap contains java expression.
-     * 
+     *
      * @return boolean
      */
     protected boolean checkContainJavaInTempExpressionMap() {
@@ -1555,7 +1555,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC msjian Comment method "updateExpressions".
-     * 
+     *
      * @return
      */
     private CCombo updateExpressions() {
@@ -1623,7 +1623,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC msjian Comment method "saveFromTempMapToDefinition".
-     * 
+     *
      * @param expressions
      * @return
      */
@@ -1644,7 +1644,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu Comment method "checkBeforeSave". ADD xqliu 2010-02-25 feature 11201
-     * 
+     *
      * @return
      */
     protected ReturnCode checkBeforeSave() {
@@ -1677,7 +1677,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC talend Comment method "checkDuplicateLanguage".
-     * 
+     *
      * @param rc
      * @return
      */
@@ -1712,7 +1712,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC talend Comment method "checkDuplicateLanguage".
-     * 
+     *
      * @param rc
      * @return
      */
@@ -1775,7 +1775,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC bZhou Comment method "checkMappingString".
-     * 
+     *
      * @param c
      * @param r
      * @return
@@ -1786,7 +1786,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private static final class AggregateDateExpression implements Cloneable {
@@ -1873,7 +1873,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private final class AggregateVO {
@@ -2040,7 +2040,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private final class CommonContentProvider implements IStructuredContentProvider {
@@ -2063,7 +2063,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class AggregateLabelProvider extends LabelProvider implements ITableLabelProvider {
@@ -2095,7 +2095,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private final class DateVO {
@@ -2290,7 +2290,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class DateLabelProvider extends LabelProvider implements ITableLabelProvider {
@@ -2388,7 +2388,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class CharactersMappingLabelProvider extends LabelProvider implements ITableLabelProvider {
@@ -2417,7 +2417,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * clone Expression.
-     * 
+     *
      * @param exp
      * @return
      */
@@ -2435,7 +2435,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
      */
     @Override
@@ -2450,7 +2450,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
      */
     @Override
@@ -2460,7 +2460,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
      */
     @Override
@@ -2470,7 +2470,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
      */
     @Override
@@ -2524,7 +2524,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     /**
      * get PatternRepNode From editorInput
-     * 
+     *
      * @param editorInput
      * @return
      */

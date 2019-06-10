@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -44,9 +44,9 @@ public class ToolTipChartComposite extends ChartComposite {
 
     /**
      * Returns a string for the tooltip.
-     * 
+     *
      * @param e the mouse event.
-     * 
+     *
      * @return A tool tip or <code>null</code> if no tooltip is available.
      */
     @Override
@@ -69,7 +69,7 @@ public class ToolTipChartComposite extends ChartComposite {
     /**
      * This method attempts to get a tooltip by converting the screen X,Y into Chart Area X,Y and then looking for a
      * data point in a data set that lies inside a hotspot around that value.
-     * 
+     *
      * @param point The Java 2D point
      * @return A string for the data at the point or null if no data is found.
      */

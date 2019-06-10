@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,7 +39,7 @@ import org.talend.utils.sql.TalendTypeConvert;
 
 /**
  * this select data page only used for Nominal Values analysis
- * 
+ *
  */
 public class NominalValuesDPSelectionPage extends ColumnAnalysisDOSelectionPage {
 
@@ -49,7 +49,7 @@ public class NominalValuesDPSelectionPage extends ColumnAnalysisDOSelectionPage 
 
     /**
      * Getter for addTextIndicator.
-     * 
+     *
      * @return the addTextIndicator
      */
     public boolean isAddTextIndicator() {
@@ -58,7 +58,7 @@ public class NominalValuesDPSelectionPage extends ColumnAnalysisDOSelectionPage 
 
     /**
      * Sets the addTextIndicator.
-     * 
+     *
      * @param addTextIndicator the addTextIndicator to set
      */
     public void setAddTextIndicator(boolean addTextIndicator) {
@@ -72,7 +72,7 @@ public class NominalValuesDPSelectionPage extends ColumnAnalysisDOSelectionPage 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnAnalysisDOSelectionPage#addListeners()
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,28 +18,28 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author scorreia
- * 
+ *
  * Interface for executing an analysis.
  */
 public interface IAnalysisExecutor {
 
     /**
      * Method "execute".
-     * 
+     *
      * @param analysis the analysis to execute
      * @return a return code with an error message in case when something went bad
      */
     public abstract ReturnCode execute(final Analysis analysis);
 
     /**
-     * 
+     *
      * DOC xqliu Comment method "setMonitor".
-     * 
+     *
      * @param monitor
      */
     public void setMonitor(IProgressMonitor monitor);
 
-    
+
     // TODO scorreia add a method in order to separate preparation of analysis and execution.
     // public abstract ReturnCode prepareAnalysis(final Analysis analysis)
 }

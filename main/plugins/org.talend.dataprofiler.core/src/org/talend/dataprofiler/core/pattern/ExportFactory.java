@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -161,7 +161,7 @@ public final class ExportFactory {
 
     /**
      * DOC klliu Comment method "getParserRuleEnumValues".
-     * 
+     *
      * @return
      */
     private static ParserRuleToExcelEnum[] getParserRuleEnumValues() {
@@ -223,7 +223,7 @@ public final class ExportFactory {
 
     /**
      * DOC klliu Comment method "relpaceTempHasEscapeCharactor".
-     * 
+     *
      * @param temp
      */
     private static String relpaceTempHasEscapeCharactor(String temps) {
@@ -371,7 +371,7 @@ public final class ExportFactory {
 
     /**
      * DOC xqliu Comment method "exportFile".
-     * 
+     *
      * @param exportFile
      * @param sourceFile
      * @throws IOException
@@ -390,7 +390,7 @@ public final class ExportFactory {
 
     /**
      * DOC yyi Comment method "toLocalFileName".
-     * 
+     *
      * @param src
      * @return localFileName
      */

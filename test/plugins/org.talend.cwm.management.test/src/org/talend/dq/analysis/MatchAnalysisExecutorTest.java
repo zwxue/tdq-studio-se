@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -45,7 +45,7 @@ import org.talend.dq.helper.UnitTestBuildHelper;
 
 /**
  * created by zhao on Aug 28, 2013 Detailled comment
- * 
+ *
  */
 public class MatchAnalysisExecutorTest {
 
@@ -108,7 +108,7 @@ public class MatchAnalysisExecutorTest {
 
     /**
      * DOC zhao Comment method "assertScenario1".
-     * 
+     *
      * @param matchAnalysisExecutor
      * @param analysis
      * @param name
@@ -139,7 +139,7 @@ public class MatchAnalysisExecutorTest {
 
     /**
      * DOC zhao Comment method "assertScenario2".
-     * 
+     *
      * @param matchAnalysisExecutor
      * @param analysis
      * @param name
@@ -171,7 +171,7 @@ public class MatchAnalysisExecutorTest {
 
     /**
      * DOC zhao Comment method "assertScenario3".
-     * 
+     *
      * @param matchAnalysisExecutor
      * @param analysis
      * @param name
@@ -204,7 +204,7 @@ public class MatchAnalysisExecutorTest {
 
     /**
      * DOC zhao Comment method "assertScenario3".
-     * 
+     *
      * @param matchAnalysisExecutor
      * @param analysis
      * @param name
@@ -255,7 +255,7 @@ public class MatchAnalysisExecutorTest {
 
     /**
      * DOC zhao Comment method "executeAnalysis".
-     * 
+     *
      * @param matchAnalysisExecutor
      * @param analysis
      * @param matchIndicator
@@ -277,7 +277,7 @@ public class MatchAnalysisExecutorTest {
 
     /**
      * DOC zhao Comment method "createMatchIndicatorWithOneMathRule".
-     * 
+     *
      * @param nameVar
      * @param matchIndicator
      * @param groupQualityThreshold

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,15 +35,15 @@ import com.talend.csv.CSVReader;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
- * 
+ *
  */
 public class FilePreviewProcess implements IPreview {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.preview.IPreview#preview(org.talend.repository.preview.IProcessDescription,
      * java.lang.String)
      */
@@ -53,7 +53,7 @@ public class FilePreviewProcess implements IPreview {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.preview.IPreview#preview(org.talend.repository.preview.IProcessDescription,
      * java.lang.String, boolean)
      */
@@ -119,7 +119,7 @@ public class FilePreviewProcess implements IPreview {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.preview.IPreview#stopLoading()
      */
     public void stopLoading() {
@@ -132,9 +132,9 @@ public class FilePreviewProcess implements IPreview {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "initCsvReader".
-     * 
+     *
      * @param csvReader
      * @param description
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,9 +26,9 @@ import org.talend.resource.ResourceManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
- * 
+ *
  */
 
 public class CreatePatternWizardPage1 extends MetadataWizardPage {
@@ -47,7 +47,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets .Composite)
      */
     @Override
@@ -62,7 +62,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
              */
             @Override
@@ -82,7 +82,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#
      * createExtendedControl(org.eclipse.swt.widgets.Composite )
      */
@@ -93,7 +93,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
     /**
      * Getter for pathText.
-     * 
+     *
      * @return the pathText
      */
     public Text getPathText() {
@@ -102,7 +102,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
     /**
      * Setter for purpose.
-     * 
+     *
      * @return the purpose
      */
     public void setPurpose(String purpose) {

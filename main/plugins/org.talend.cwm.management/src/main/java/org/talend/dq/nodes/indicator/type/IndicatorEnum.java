@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -493,7 +493,7 @@ public enum IndicatorEnum {
 
     /**
      * DOC rli Comment method "setChildren".
-     * 
+     *
      * @param children
      */
     private void setChildren(IndicatorEnum[] children) {
@@ -529,7 +529,7 @@ public enum IndicatorEnum {
 
     /**
      * Getter for indicatorClassifierId.
-     * 
+     *
      * @return the indicatorClassifierId
      */
     public int getIndicatorClassifierId() {
@@ -550,7 +550,7 @@ public enum IndicatorEnum {
 
     /**
      * Getter for parent.
-     * 
+     *
      * @return the parent
      */
     public IndicatorEnum getParent() {
@@ -721,9 +721,9 @@ public enum IndicatorEnum {
     }
 
     /**
-     * 
+     *
      * Judge the enum is plainIndicatorEnum
-     * 
+     *
      * @param indicatorEnumn
      * @return True if indicatorEnumn is plainIndicatorEnum
      */
@@ -733,9 +733,9 @@ public enum IndicatorEnum {
     }
 
     /**
-     * 
+     *
      * Judge the enum is SpecialIndicatorEnum
-     * 
+     *
      * @param indicatorEnumn
      * @return True if indicatorEnumn is SpecialIndicatorEnum
      */

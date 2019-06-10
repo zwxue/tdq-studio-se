@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -88,7 +88,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     @Override
     /**
      * DOC mzhao bug 9240 mzhao 2009-11-05.
-     * 
+     *
      * @param columnSetList
      */
     protected void unfoldToCheckedElements() {
@@ -136,7 +136,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#restoreCheckStatus()
      */
     @Override
@@ -310,7 +310,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#updateOKStatus()
      */
     @Override
@@ -384,7 +384,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * This class will combine catlogName and/or schemaName as a key.
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class RepositoryNodeKey {
@@ -517,7 +517,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         List<IRepositoryNode> allCheckedTables = getAllCheckedTables();
         // Added TDQ-8718 20140505 yyin: if no columns checked, warn the user
         if (allCheckedTables.size() == 0) {
-            MessageDialogWithToggle.openWarning(this.getShell(), DefaultMessagesImpl.getString("ColumnSelectionDialog.warning"),//$NON-NLS-1$ 
+            MessageDialogWithToggle.openWarning(this.getShell(), DefaultMessagesImpl.getString("ColumnSelectionDialog.warning"),//$NON-NLS-1$
                     DefaultMessagesImpl.getString("TablesSelectionDialog.NoTableSelected"));//$NON-NLS-1$
             return;
         }// ~
@@ -527,7 +527,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * label provider for table viewer.
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class TableLabelProvider extends LabelProvider {
@@ -629,7 +629,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     /**
      * filter for table and view according to the dialog's type.
-     * 
+     *
      * @param nodes
      * @return
      */

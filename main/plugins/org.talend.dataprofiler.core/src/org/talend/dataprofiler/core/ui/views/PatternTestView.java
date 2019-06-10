@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -213,7 +213,7 @@ public class PatternTestView extends ViewPart {
         Label dummyLabel = new Label(coboCom, SWT.NONE);
         dummyLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
         functionLabel = new Label(coboCom, SWT.NONE);
-        functionLabel.setText(DefaultMessagesImpl.getString("PatternTestView.FunctionName"));//$NON-NLS-1$ 
+        functionLabel.setText(DefaultMessagesImpl.getString("PatternTestView.FunctionName"));//$NON-NLS-1$
         functionNameText = new Text(coboCom, SWT.BORDER);
         functionNameText.setText(PluginConstant.EMPTY_STRING);
 
@@ -276,8 +276,8 @@ public class PatternTestView extends ViewPart {
         textAreaLabel.setLayoutData(textAreaLabelGD);
 
         regularLabel = new Label(textCom, SWT.WRAP);
-        regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter")); //$NON-NLS-1$ 
-        regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter"));//$NON-NLS-1$ 
+        regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter")); //$NON-NLS-1$
+        regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter"));//$NON-NLS-1$
         GridData regularLabelGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
         regularLabelGD.heightHint = 40;
         regularLabelGD.widthHint = 70;
@@ -408,7 +408,7 @@ public class PatternTestView extends ViewPart {
 
     /**
      * DOC klliu Comment method "expandImageComposite".
-     * 
+     *
      * @param expand
      */
     protected void expandImageComposite() {
@@ -544,7 +544,7 @@ public class PatternTestView extends ViewPart {
     /**
      * Set the pattern and regularExpression value to the corresponding field, it can be called after the control
      * created.
-     * 
+     *
      * @param pattern
      * @param regularExpression
      */
@@ -669,7 +669,7 @@ public class PatternTestView extends ViewPart {
 
     /**
      * DOC rli Comment method "getDbmsLanguage".
-     * 
+     *
      * @param language
      * @return
      */
@@ -690,13 +690,13 @@ public class PatternTestView extends ViewPart {
 
     /**
      * MOD gdbu 2011-5-31 bug : 19119
-     * 
+     *
      * DOC gdbu Comment method "fillComboData".
-     * 
+     *
      * In this method, we have done several things , e.g. 1:get the combo's data , and then set those data in combo.
      * 2:according to the value of combo(dbCombo.getText()) to determine if display the
      * functionInfo(functionText,functionLabel). 3:add SelectionListener to combo.
-     * 
+     *
      */
     private void fillComboData() {
         listTdDataProviders = RepositoryNodeHelper.getDBConnectionRepositoryNodes(true);
@@ -728,9 +728,9 @@ public class PatternTestView extends ViewPart {
 
     /**
      * MOD gdbu 2011-5-31 bug : 19119
-     * 
+     *
      * DOC gdbu Comment method "createDBComboListiner".
-     * 
+     *
      * used to add dbCombo's Selectionlistener.
      */
     private void createDBComboListener() {
@@ -753,9 +753,9 @@ public class PatternTestView extends ViewPart {
 
     /**
      * MOD gdbu 2011-5-31 bug : 19119
-     * 
+     *
      * DOC gdbu Comment method "setFunctionTextVisibleFromDBCOnn".
-     * 
+     *
      * @param tdDataProvider
      */
     private void setFunctionTextVisibleFromDBCOnn(Connection tdDataProvider) {
@@ -772,11 +772,11 @@ public class PatternTestView extends ViewPart {
 
     /**
      * MOD gdbu 2011-5-31 bug : 19119
-     * 
+     *
      * DOC gdbu Comment method "setFunctionInfoVisible".
-     * 
+     *
      * used to set functionLabel(Label) and functionName(Text)'s visible.
-     * 
+     *
      * @param visible
      */
     private void setFunctionInfoVisible(boolean visible) {
@@ -785,12 +785,12 @@ public class PatternTestView extends ViewPart {
         if (visible) {
             textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.areaParameterOne")); //$NON-NLS-1$
             textAreaLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.areaParameterOne"));//$NON-NLS-1$
-            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter")); //$NON-NLS-1$ 
-            regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameterTwo")); //$NON-NLS-1$ 
+            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter")); //$NON-NLS-1$
+            regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameterTwo")); //$NON-NLS-1$
         } else {
-            textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$ 
-            textAreaLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$ 
-            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter")); //$NON-NLS-1$ 
+            textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$
+            textAreaLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$
+            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter")); //$NON-NLS-1$
             regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter"));//$NON-NLS-1$
         }
         GridData formData = new GridData(GridData.FILL_HORIZONTAL);
@@ -800,9 +800,9 @@ public class PatternTestView extends ViewPart {
 
     /**
      * MOD gdbu 2011-5-31 bug : 19119
-     * 
+     *
      * DOC gdbu Comment method "getDBConnectionFromDBName".
-     * 
+     *
      * @param dbName
      * @return
      */
@@ -820,7 +820,7 @@ public class PatternTestView extends ViewPart {
 
     /**
      * DOC gdbu Comment method "getFunctionName".
-     * 
+     *
      * @return
      */
     public static String getFunctionName() {

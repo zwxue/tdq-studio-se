@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -44,7 +44,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataprofiler.core.ui.wizard.MetadataWizardPage# createExtendedControl()
      */
     @Override
@@ -65,7 +65,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createControl (org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -76,7 +76,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#addListeners()
      */
     @Override
@@ -85,7 +85,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
              */
             @Override

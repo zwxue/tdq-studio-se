@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,7 +34,7 @@ public abstract class AbstractTableComparisonLevel extends AbstractComparisonLev
 
     /**
      * DOC yyin AbstractTableComparisonLevel constructor comment.
-     * 
+     *
      * @param selObj
      */
     public AbstractTableComparisonLevel(Object selObj) {
@@ -91,7 +91,7 @@ public abstract class AbstractTableComparisonLevel extends AbstractComparisonLev
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#getLeftResource()
      */
     @Override
@@ -102,7 +102,7 @@ public abstract class AbstractTableComparisonLevel extends AbstractComparisonLev
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#getRightResource()
      */
     @Override
@@ -113,7 +113,7 @@ public abstract class AbstractTableComparisonLevel extends AbstractComparisonLev
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#getSavedReloadObject()
      */
     @Override

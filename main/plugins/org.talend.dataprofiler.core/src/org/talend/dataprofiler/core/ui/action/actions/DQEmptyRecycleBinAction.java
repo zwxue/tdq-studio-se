@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -69,7 +69,7 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
 
     /**
      * ADD gdbu 2011-11-24 TDQ-4068 To get all the nodes those need to be deleted when empty Recycle Bin node.
-     * 
+     *
      * @return
      */
     private Collection<IRepositoryNode> needDeleteNodes() {

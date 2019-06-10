@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -16,7 +16,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 
 /**
  * @author scorreia
- * 
+ *
  * This class helps to transform patterns found in data into regular expressions.
  */
 public class PatternTransformer {
@@ -30,15 +30,15 @@ public class PatternTransformer {
     private char upperCase = 'A';
 
     private char numeric = '9';
-    
+
     private String specialChar = ".*?^${}()\\+|[]"; //$NON-NLS-1$
 
     private DbmsLanguage dbmsLanguage;
-    
-    
+
+
     /**
      * Getter for dbmsLanguage.
-     * 
+     *
      * @return the dbmsLanguage
      */
     public DbmsLanguage getDbmsLanguage() {
@@ -64,12 +64,12 @@ public class PatternTransformer {
         if (specialChar.contains(String.valueOf(inputCharacter))) {
             return "\\" + inputCharacter; //$NON-NLS-1$
         }
-        return String.valueOf(inputCharacter);        
+        return String.valueOf(inputCharacter);
     }
 
     /**
      * Method "getRegexp".
-     * 
+     *
      * @param input a pattern string where each letter has the meaning of a character class
      * @return a regular expression built from the input pattern
      */
@@ -86,10 +86,10 @@ public class PatternTransformer {
         builder.append(END);
         return builder.toString();
     }
-    
+
     /**
      * Getter for lowerCase.
-     * 
+     *
      * @return the lowerCase
      */
     public char getLowerCase() {
@@ -98,7 +98,7 @@ public class PatternTransformer {
 
     /**
      * Sets the lowerCase.
-     * 
+     *
      * @param lowerCase the lowerCase to set
      */
     public void setLowerCase(char lowerCase) {
@@ -107,7 +107,7 @@ public class PatternTransformer {
 
     /**
      * Getter for upperCase.
-     * 
+     *
      * @return the upperCase
      */
     public char getUpperCase() {
@@ -116,7 +116,7 @@ public class PatternTransformer {
 
     /**
      * Sets the upperCase.
-     * 
+     *
      * @param upperCase the upperCase to set
      */
     public void setUpperCase(char upperCase) {
@@ -125,7 +125,7 @@ public class PatternTransformer {
 
     /**
      * Getter for numeric.
-     * 
+     *
      * @return the numeric
      */
     public char getNumeric() {
@@ -134,11 +134,11 @@ public class PatternTransformer {
 
     /**
      * Sets the numeric.
-     * 
+     *
      * @param numeric the numeric to set
      */
     public void setNumeric(char numeric) {
         this.numeric = numeric;
     }
-   
+
 }

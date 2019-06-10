@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -62,9 +62,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
- * 
+ *
  * A singleton class to handle dependencies between objects.
- * 
+ *
  * PTODO scorreia clean code of this class.
  */
 public final class DependenciesHandler {
@@ -93,7 +93,7 @@ public final class DependenciesHandler {
     /**
      * Method "clearDependencies" is to be used before a file is deleted. The root element is given as argument and the
      * dependencies on this element are removed in all resources that depend on this element.
-     * 
+     *
      * @param elementToDelete a root element which file will be deleted.
      * @return the list of modified dependencies
      */
@@ -150,7 +150,7 @@ public final class DependenciesHandler {
      * Method "removeDependenciesBetweenModels" is to be used before a model dependency(elementToRemove) removed from
      * the elementFromRemove. The elementToRemove not truly to deleted, not a file to deleted, just remove the
      * dependency between elementFromRemove and elementToRemove,
-     * 
+     *
      * @param elementFromRemove
      * @param elementToRemove
      * @return
@@ -184,10 +184,10 @@ public final class DependenciesHandler {
     }
 
     /**
-     * 
+     *
      * This method removes supplier dependencies. See
      * {@link DependenciesHandler#removeDependenciesBetweenModels(ModelElement, List)}
-     * 
+     *
      * @param rule
      * @param analyses
      * @return
@@ -220,13 +220,13 @@ public final class DependenciesHandler {
 
     /**
      * Method "createUsageDependencyOn".
-     * 
+     *
      * Example Analysis depends on the exitence of a DataProvider. This method must be called
      * createUsageDependencyOn(Analysis, DataProvider). The created dependency is added to the DataProvider in its
      * "client dependencies" and to the Analysis in its "supplier dependencies". See OMG CWM spec paragraph 4.3.2.7.
-     * 
+     *
      * The resource in which the dependency is stored is the supplier's resource.
-     * 
+     *
      * @param kind the kind of dependency
      * @param clientElement the element that requires the requiredElement
      * @param supplierElement the required element
@@ -243,7 +243,7 @@ public final class DependenciesHandler {
 
     /**
      * Method "createUsageDependencyOn".
-     * 
+     *
      * @param clientElement the analysis that depends on the data provider.
      * @param dataManager the data provider
      * @return a true return code if the dependency has been correctly added to the resource of the supplier element.
@@ -259,7 +259,7 @@ public final class DependenciesHandler {
 
     /**
      * Method "setDependencyOn" sets the dependency between the analysis and the data manager.
-     * 
+     *
      * @param analysis the analysis which requires the data manager
      * @param dataManager the data manager required by the analysis
      * @return a true return code if the dependency has been correctly added to the resource of the supplier element.
@@ -271,7 +271,7 @@ public final class DependenciesHandler {
 
     /**
      * Method "setUsageDependencyOn".
-     * 
+     *
      * @param client the element which depends on the supplier
      * @param supplier the element needed by the client element
      * @return the dependency object between the two given elements
@@ -306,7 +306,7 @@ public final class DependenciesHandler {
 
     /**
      * DOC zshen Comment method "removeClientDependency".
-     * 
+     *
      * @param client
      * @param supplier
      */
@@ -325,7 +325,7 @@ public final class DependenciesHandler {
 
     /**
      * DOC zshen Comment method "checkClientDependency".
-     * 
+     *
      * @param client
      * @param supplier
      * @return
@@ -344,7 +344,7 @@ public final class DependenciesHandler {
 
     /**
      * Method "setDependencyOn" sets the dependency between the report and the analysis.
-     * 
+     *
      * @param report
      * @param analysis
      * @return a true return code if the dependency has been correctly added to the resource of the supplier element.
@@ -367,10 +367,10 @@ public final class DependenciesHandler {
     }
 
     /**
-     * 
+     *
      * @param object
      * @return SupplierDependency
-     * 
+     *
      * getSupplierDependency
      */
     public List<IRepositoryViewObject> getSupplierDependency(IRepositoryViewObject object) {
@@ -401,10 +401,10 @@ public final class DependenciesHandler {
     }
 
     /**
-     * 
+     *
      * @param property
      * @return SupplierDependency
-     * 
+     *
      * getClintDependency
      */
     public List<Property> getClintDependency(Property property) {
@@ -436,7 +436,7 @@ public final class DependenciesHandler {
 
     /**
      * get Indicator Dependency.
-     * 
+     *
      * @return get the list for analysis which use parameter to be a Indicator
      */
     public List<IRepositoryViewObject> getIndicatorDependency(IRepositoryViewObject viewObject) {
@@ -471,9 +471,9 @@ public final class DependenciesHandler {
 
     /**
      * get Analysis Dependency (for indicator only).
-     * 
+     *
      * @return get the list of indicator which in use by the analysis
-     * 
+     *
      */
     public List<Property> getAnaDependency(Property property) {
         Item item = property.getItem();
@@ -513,7 +513,7 @@ public final class DependenciesHandler {
 
     /**
      * get Client Dependency List.
-     * 
+     *
      * @param Analysis the analysis which we want to save
      * @return The list all of client dependency(Pattern UDI Connection DQRule)
      */
@@ -533,9 +533,9 @@ public final class DependenciesHandler {
     }
 
     /**
-     * 
+     *
      * Comment method "removeDependenciesBetweenModel".
-     * 
+     *
      * @param supplier
      * @param client
      * @return
@@ -573,12 +573,12 @@ public final class DependenciesHandler {
     }
 
     /**
-     * 
+     *
      * delete the dependency between analysis and connection,then save the connection and analysis.
-     * 
+     *
      * @param analysis
      * @return whether it has been deleted
-     * 
+     *
      */
     public boolean removeConnDependencyAndSave(TDQAnalysisItem analysisItem) {
         Analysis analysis = analysisItem.getAnalysis();

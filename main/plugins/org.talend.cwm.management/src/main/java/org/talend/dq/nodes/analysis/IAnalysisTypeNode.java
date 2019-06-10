@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,11 +23,11 @@ public  interface  IAnalysisTypeNode {
     //get and set the name of node
     public String getName();
     public void setName(String name);
-    
+
     //get and set the children
     public void setChildren(Object[] children);
     public Object[] getChildren();
-    
+
     //get the parent
     public Object getParent();
     public void setParent(Object parent);

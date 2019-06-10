@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,7 +26,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 
 /**
  * Abstract class for TdCellRenderer this renderer is fouse on cell of item
- * 
+ *
  */
 public class AbstractTdCellRenderer extends GridCellRenderer {
 
@@ -46,7 +46,7 @@ public class AbstractTdCellRenderer extends GridCellRenderer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.nebula.widgets.grid.IInternalWidget#notify(int, org.eclipse.swt.graphics.Point,
      * java.lang.Object)
      */
@@ -57,7 +57,7 @@ public class AbstractTdCellRenderer extends GridCellRenderer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.nebula.widgets.grid.IRenderer#paint(org.eclipse.swt.graphics.GC, java.lang.Object)
      */
     public void paint(GC gc, Object value) {
@@ -112,7 +112,7 @@ public class AbstractTdCellRenderer extends GridCellRenderer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.nebula.widgets.grid.IRenderer#computeSize(org.eclipse.swt.graphics.GC, int, int,
      * java.lang.Object)
      */
@@ -143,7 +143,7 @@ public class AbstractTdCellRenderer extends GridCellRenderer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.nebula.widgets.grid.GridCellRenderer#getTextBounds(org.eclipse.nebula.widgets.grid.GridItem,
      * boolean)
      */
@@ -179,7 +179,7 @@ public class AbstractTdCellRenderer extends GridCellRenderer {
      * Shortens a supplied string so that it fits within the area specified by the width argument. Strings that have
      * been shorted have an "..." attached to the middle of the string. The width is computed using the
      * {@link GC#stringExtent(String)}. .e.g, "abcde...uvwx"
-     * 
+     *
      * @param gc GC used to perform calculation.
      * @param t text to modify.
      * @param width Pixels to display.

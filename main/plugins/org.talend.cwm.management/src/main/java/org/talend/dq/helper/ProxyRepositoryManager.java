@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,9 +40,9 @@ import org.talend.resource.EResourceConstant;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
- * 
+ *
  */
 public class ProxyRepositoryManager {
 
@@ -55,7 +55,7 @@ public class ProxyRepositoryManager {
     }
 
     /**
-     * 
+     *
      * DOC qiongli:just update/commit .
      */
     public void save() {
@@ -75,7 +75,7 @@ public class ProxyRepositoryManager {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "refresh".
      */
     public void refresh() {
@@ -87,9 +87,9 @@ public class ProxyRepositoryManager {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "lock".
-     * 
+     *
      * @param item
      */
     public void lock(final Item item) {
@@ -108,9 +108,9 @@ public class ProxyRepositoryManager {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "unLock".
-     * 
+     *
      * @param item
      */
     public void unLock(final Item item) {

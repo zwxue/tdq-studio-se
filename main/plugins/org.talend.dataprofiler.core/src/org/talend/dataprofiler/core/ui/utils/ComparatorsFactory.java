@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -69,7 +69,7 @@ public final class ComparatorsFactory {
 
     /**
      * DOC zqin Comment method "sort".
-     * 
+     *
      * @param objects
      * @param comparatorId
      * @return
@@ -85,7 +85,7 @@ public final class ComparatorsFactory {
 
     /**
      * DOC zqin Comment method "sort".
-     * 
+     *
      * @param objects
      * @param comparatorId
      * @return
@@ -288,7 +288,7 @@ public final class ComparatorsFactory {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
         public int compare(IRepositoryNode o1, IRepositoryNode o2) {
@@ -306,7 +306,7 @@ public final class ComparatorsFactory {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
         public int compare(ItemRecord o1, ItemRecord o2) {
@@ -343,7 +343,7 @@ public final class ComparatorsFactory {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
          */
 

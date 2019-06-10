@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -81,7 +81,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * Look up the conn pool from instance map, if there not have, creata a new one.
-     * 
+     *
      * @param analysis
      * @return the specific connection pool by analylsis.
      */
@@ -97,7 +97,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * close the connection pool: 1) close all the connections belong to it; 2) remove it from the map.
-     * 
+     *
      * @param analysis
      */
     public static void closeConnectionPool(Analysis analysis) {
@@ -112,7 +112,7 @@ public class TdqAnalysisConnectionPool {
     /**
      * because in the HiveDriver class have done registerDriver, and sometimes caused the DriverManager to find the
      * error driver(e.g: need to find a hsql driver, but get a hive driver), so need to deregister it.
-     * 
+     *
      * @param analysis
      */
     private static void deregisterHiveDriver(Analysis analysis) {
@@ -138,7 +138,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * return the connection to the pool.
-     * 
+     *
      * @param analysis
      * @param connection
      */
@@ -171,7 +171,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu TdqAnalysisConnectionPool constructor comment.
-     * 
+     *
      * @param tConnection
      */
     public TdqAnalysisConnectionPool(Analysis analysis, int maxConnections) {
@@ -181,7 +181,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "getPConnections".
-     * 
+     *
      * @return
      */
     public Vector<PooledTdqAnalysisConnection> getPConnections() {
@@ -193,7 +193,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "setPConnections".
-     * 
+     *
      * @param pConnections
      */
     public void setPConnections(Vector<PooledTdqAnalysisConnection> pConnections) {
@@ -202,7 +202,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "getConnection".
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -221,7 +221,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "newConnection".
-     * 
+     *
      * @return
      */
     private Connection newConnection() {
@@ -299,7 +299,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "isFull".
-     * 
+     *
      * @return
      */
     private synchronized boolean isFull() {
@@ -315,7 +315,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "findFreeConnection".
-     * 
+     *
      * @return
      */
     private synchronized Connection findFreeConnection() {
@@ -345,7 +345,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "returnConnection".
-     * 
+     *
      * @param conn
      */
     public synchronized void returnConnection(Connection conn) {
@@ -443,7 +443,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "closeConnection".
-     * 
+     *
      * @param conn
      */
     public void closeConnection(Connection conn) {
@@ -461,7 +461,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "removeConnection".
-     * 
+     *
      * @param conn
      */
     public synchronized void removeConnection(Connection conn) {
@@ -481,7 +481,7 @@ public class TdqAnalysisConnectionPool {
 
     /**
      * DOC xqliu Comment method "wait".
-     * 
+     *
      * @param mSeconds
      */
     private void wait(int mSeconds) {

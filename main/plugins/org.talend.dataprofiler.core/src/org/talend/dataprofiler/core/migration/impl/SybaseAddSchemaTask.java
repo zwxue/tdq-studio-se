@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ public class SybaseAddSchemaTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -55,7 +55,7 @@ public class SybaseAddSchemaTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -64,7 +64,7 @@ public class SybaseAddSchemaTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -94,7 +94,7 @@ public class SybaseAddSchemaTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC talend Comment method "retrieveSchema".
-     * 
+     *
      * @param item
      * @param connection
      * @throws PersistenceException
@@ -115,7 +115,7 @@ public class SybaseAddSchemaTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC talend Comment method "linkSchemaToCatalog".
-     * 
+     *
      * @param catalog
      * @return
      */
@@ -153,7 +153,7 @@ public class SybaseAddSchemaTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC talend Comment method "linkTablesToSchema".
-     * 
+     *
      * @param catalog
      * @param SchemaToTableListMap
      */
@@ -172,7 +172,7 @@ public class SybaseAddSchemaTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AWorkspaceTask#valid()
      */
     @Override

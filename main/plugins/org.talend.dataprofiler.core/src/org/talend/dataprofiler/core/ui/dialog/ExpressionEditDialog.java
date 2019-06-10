@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -241,7 +241,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Getter for isUDIndicatorDefinition.
-     * 
+     *
      * @return the isUDIndicatorDefinition
      */
     public boolean isUDIndicatorDefinition() {
@@ -250,7 +250,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the isUDIndicatorDefinition.
-     * 
+     *
      * @param isUDIndicatorDefinition the isUDIndicatorDefinition to set
      */
     public void setUDIndicatorDefinition(boolean isUDIndicatorDefinition) {
@@ -259,7 +259,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the category.
-     * 
+     *
      * @param category the category to set
      */
     public void setCategory(IndicatorCategory category) {
@@ -268,7 +268,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the language.
-     * 
+     *
      * @param language the language to set
      */
     public void setLanguage(String language) {
@@ -277,7 +277,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the version.
-     * 
+     *
      * @param version the version to set
      */
     public void setVersion(String version) {
@@ -286,7 +286,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Getter for tempViewRowsExp.
-     * 
+     *
      * @return the tempViewRowsExp
      */
     public TdExpression getTempViewRowsExp() {
@@ -295,7 +295,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the tempViewRowsExp.
-     * 
+     *
      * @param tempViewRowsExp the tempViewRowsExp to set
      */
     public void setTempViewRowsExp(TdExpression tempViewRowsExp) {
@@ -304,7 +304,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Getter for tempViewValidRowsExp.
-     * 
+     *
      * @return the tempViewValidRowsExp
      */
     public TdExpression getTempViewValidRowsExp() {
@@ -313,7 +313,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the tempViewValidRowsExp.
-     * 
+     *
      * @param tempViewValidRowsExp the tempViewValidRowsExp to set
      */
     public void setTempViewValidRowsExp(TdExpression tempViewValidRowsExp) {
@@ -322,7 +322,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Getter for tempViewInvalidRowsExp.
-     * 
+     *
      * @return the tempViewInvalidRowsExp
      */
     public TdExpression getTempViewInvalidRowsExp() {
@@ -331,7 +331,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the tempViewInvalidRowsExp.
-     * 
+     *
      * @param tempViewInvalidRowsExp the tempViewInvalidRowsExp to set
      */
     public void setTempViewInvalidRowsExp(TdExpression tempViewInvalidRowsExp) {
@@ -340,7 +340,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Getter for tempViewValidValuesExp.
-     * 
+     *
      * @return the tempViewValidValuesExp
      */
     public TdExpression getTempViewValidValuesExp() {
@@ -349,7 +349,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the tempViewValidValuesExp.
-     * 
+     *
      * @param tempViewValidValuesExp the tempViewValidValuesExp to set
      */
     public void setTempViewValidValuesExp(TdExpression tempViewValidValuesExp) {
@@ -358,7 +358,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Getter for tempViewInvalidValuesExp.
-     * 
+     *
      * @return the tempViewInvalidValuesExp
      */
     public TdExpression getTempViewInvalidValuesExp() {
@@ -367,7 +367,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the tempViewInvalidValuesExp.
-     * 
+     *
      * @param tempViewInvalidValuesExp the tempViewInvalidValuesExp to set
      */
     public void setTempViewInvalidValuesExp(TdExpression tempViewInvalidValuesExp) {
@@ -376,7 +376,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * Sets the tempExpression.
-     * 
+     *
      * @param tempExpression the tempExpression to set
      */
     public void setTempExpression(TdExpression tempExpression) {
@@ -385,7 +385,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * get this tempExpression.
-     * 
+     *
      * @return
      */
     public TdExpression getTempExpression() {
@@ -394,7 +394,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * create Dialog Area For Not UDI.
-     * 
+     *
      * @param parent
      * @return
      */
@@ -422,7 +422,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -440,7 +440,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * create Dialog Area For UDI.
-     * 
+     *
      * @param parent
      * @return
      */
@@ -598,7 +598,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * create Reset Button.
-     * 
+     *
      * @param sform
      */
     public Button createResetButton(Composite sform) {
@@ -642,7 +642,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * create tab1,tab2(for match is tab3456) part
-     * 
+     *
      * @param comp
      */
     public void createTabPart(Composite comp) {
@@ -715,7 +715,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * create a Text with the given title, height, textContent.
-     * 
+     *
      * @param sform
      * @param title
      * @param height
@@ -751,7 +751,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * when Text Is Empty, return true.
-     * 
+     *
      * @return
      */
     public boolean whenTextIsEmpty(Text text) {
@@ -810,7 +810,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * check whether use the auto generated query.
-     * 
+     *
      * @param old content
      * @return
      */
@@ -826,7 +826,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * get tdExpression body Value, when it is null, return blank.
-     * 
+     *
      * @return
      */
     public String getExpressValue(TdExpression tdExp) {
@@ -835,7 +835,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * create Tab Page content.
-     * 
+     *
      * @param sform
      */
     public void createTabPage(SashForm sform) {
@@ -922,7 +922,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * set Reset Button Status and the overwrite flag value. when reset button is true, the overwrite flag is false
-     * 
+     *
      * @param isEnable
      */
     private void setResetButtonStatus(boolean isEnable) {
@@ -947,7 +947,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * set Reset Button Status and the overwrite flag value. when reset button is true, the overwrite flag is false
-     * 
+     *
      * @param isEnable
      */
     private void setTextOverWriteStatus(boolean canBeOverwriten) {
@@ -972,7 +972,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * create Tab0 Page content.
-     * 
+     *
      * @param sform
      */
     public void createTab0Page(SashForm sform) {
@@ -1079,7 +1079,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * get Varible value From variableMap.
-     * 
+     *
      * @param key
      * @return
      */
@@ -1089,7 +1089,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * create templates Table Part(only TAB0 use old paramaters, and others use new paramaters)
-     * 
+     *
      * @param sform
      */
     public void createTemplatesTablePart(SashForm sform) {
@@ -1124,7 +1124,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * add Drop Variable Listener To Text.
-     * 
+     *
      * @param text
      */
     public void addDropVariableListenerToText(final Text text) {
@@ -1148,7 +1148,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#create()
      */
     @Override
@@ -1178,7 +1178,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#okPressed()
      */
     @Override
@@ -1236,7 +1236,7 @@ public class ExpressionEditDialog extends TrayDialog {
 
     /**
      * set Text value as body of TdExpression.
-     * 
+     *
      * @param text
      */
     public TdExpression storeTdExpValuesFromText(Text text) {

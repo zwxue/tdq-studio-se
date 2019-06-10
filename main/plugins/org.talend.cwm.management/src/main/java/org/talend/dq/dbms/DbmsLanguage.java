@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -71,10 +71,10 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
- * 
+ *
  * This class handle DBMS specific SQL terms and functions. It provides methods to handle SQL clause and evrything
  * related to a specific DBMS.
- * 
+ *
  * this class provides a default implementation. Subclasses exist for each DBMS so that specific implementation can be
  * written.
  */
@@ -170,7 +170,7 @@ public class DbmsLanguage {
      */
     private String dbQuoteString = ""; //$NON-NLS-1$
 
-    private String regularExpressionFunction = ""; //$NON-NLS-1$ 
+    private String regularExpressionFunction = ""; //$NON-NLS-1$
 
     // default soundex string
     private final String SOUNDEX_PREFIX = "SOUNDEX";//$NON-NLS-1$
@@ -186,7 +186,7 @@ public class DbmsLanguage {
 
     /**
      * DbmsLanguage constructor.
-     * 
+     *
      * @param dbmsType the name of the DBMS (MySQL, Oracle,...)
      */
     DbmsLanguage(String dbmsType) {
@@ -197,7 +197,7 @@ public class DbmsLanguage {
 
     /**
      * DbmsLanguage constructor. Use this constructor when functions are specific to a given release of the DBMS.
-     * 
+     *
      * @param dbmsType the database name
      * @param dbVersion the database version number
      */
@@ -208,7 +208,7 @@ public class DbmsLanguage {
 
     /**
      * Method "quote".
-     * 
+     *
      * @param sqlIdentifier the SQL identifier to quote
      * @return the sqlIdentifier quoted.
      */
@@ -256,7 +256,7 @@ public class DbmsLanguage {
 
     /**
      * Method "isNull".
-     * 
+     *
      * @return IS NULL surrounded with spaces.
      */
     public String isNull() {
@@ -265,7 +265,7 @@ public class DbmsLanguage {
 
     /**
      * Method "isNotNull".
-     * 
+     *
      * @return " IS NOT NULL " surrounded with spaces.
      */
     public String isNotNull() {
@@ -274,7 +274,7 @@ public class DbmsLanguage {
 
     /**
      * Method "equal".
-     * 
+     *
      * @return the = sign
      */
     public String equal() {
@@ -283,7 +283,7 @@ public class DbmsLanguage {
 
     /**
      * Method "notEqual".
-     * 
+     *
      * @return "<>" by default or "!=" on some specific DBMS
      */
     public String notEqual() {
@@ -316,7 +316,7 @@ public class DbmsLanguage {
 
     /**
      * Method "eos".
-     * 
+     *
      * @return the end of SQL statement token (";")
      */
     public String eos() {
@@ -333,7 +333,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getDefaultLanguage".
-     * 
+     *
      * @return the default String to use when no dbms is defined.
      */
     public static String getDefaultLanguage() {
@@ -360,9 +360,9 @@ public class DbmsLanguage {
 
     /**
      * Getter for delimiter between catalog and schema
-     * 
+     *
      * This may be different from the default delimiter for some databases, ex: Informix.
-     * 
+     *
      * @return catalog delimiter
      */
     protected String getCatalogDelimiter() {
@@ -371,7 +371,7 @@ public class DbmsLanguage {
 
     /**
      * wrap context mode parameters by tags. otherwise, add quotes database identifier quotes.
-     * 
+     *
      * @param param
      * @return
      */
@@ -384,9 +384,9 @@ public class DbmsLanguage {
 
     /**
      * Getter for default SQL delimiter of the database.
-     * 
+     *
      * For the delimiter between catalog and schema, we should use {@link #getCatalogDelimiter()} instead of this.
-     * 
+     *
      * @return default SQL delimiter
      */
     public String getDelimiter() {
@@ -395,7 +395,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getPatternFinderDefaultFunction".
-     * 
+     *
      * @param expression a column name or a string
      * @return a default SQL expression which can be used as Pattern Frequency Statistics or null
      * @deprecated use {@link #getPatternFinderFunction(String, String, String)} instead
@@ -418,7 +418,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getPatternFinderFunction".
-     * 
+     *
      * @param expression a column name or a string
      * @param charsToReplace the list of characters to remove
      * @param replacementChars the replacement characters
@@ -430,7 +430,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getPatternFinderFunction".
-     * 
+     *
      * @param colName a column name or a string
      * @param charactersMapping the mapping of the character to replace
      * @return an SQL expression which can be used as Pattern Frequency Statistics or null
@@ -446,9 +446,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Get CharactersMapping from charactersMappingList, if not found, use the default "SQL" CharactersMapping.
-     * 
+     *
      * @param charactersMappingList all of charactersMapping
      * @return if there is CharactersMapping return it else if there is default "SQL" CharactersMapping else return
      * null.
@@ -488,7 +488,7 @@ public class DbmsLanguage {
 
     /**
      * Method "replaceOneChar".
-     * 
+     *
      * @param partialExpression
      * @param toReplace
      * @param replacement
@@ -500,7 +500,7 @@ public class DbmsLanguage {
 
     /**
      * Method "translateUsingPattern".
-     * 
+     *
      * @param expression
      * @param charsToReplace
      * @param replacementChars
@@ -516,7 +516,7 @@ public class DbmsLanguage {
 
     /**
      * Method "isNotBlank".
-     * 
+     *
      * @param colName a column name
      * @return the expression saying that the given column is not blank.
      */
@@ -562,7 +562,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getTopNQuery".
-     * 
+     *
      * @param query
      * @param n
      * @return the n first row of the given query
@@ -573,7 +573,7 @@ public class DbmsLanguage {
 
     /**
      * Method "countRowInSubquery".
-     * 
+     *
      * @param subquery
      * @param alias the mandatory alias for the subquery
      * @return the select count(*) from aliased subquery
@@ -594,7 +594,7 @@ public class DbmsLanguage {
     }
 
     public String selectColumnsFromTable(List<String> columns, String table) {
-        return " SELECT " + StringUtils.join(columns.iterator(), ',') + from() + table; //$NON-NLS-1$ 
+        return " SELECT " + StringUtils.join(columns.iterator(), ',') + from() + table; //$NON-NLS-1$
     }
 
     public String in() {
@@ -611,7 +611,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getDbQuoteString".
-     * 
+     *
      * @return the quote identifier string set in this object.
      */
     public String getDbQuoteString() {
@@ -635,7 +635,7 @@ public class DbmsLanguage {
 
     /**
      * Method "is".
-     * 
+     *
      * @param dbName a DBMS name
      * @return true if this DBMS is given string
      */
@@ -653,7 +653,7 @@ public class DbmsLanguage {
 
     /**
      * Method "addWhereToSqlStringStatement". The list
-     * 
+     *
      * @param completedSqlString a generic SQL expression in which the where clause variable will be replaced.
      * @param whereExpressions the list of where expressions to concatenate (must not be null)
      * @return the SQL statement with the where clause
@@ -664,7 +664,7 @@ public class DbmsLanguage {
 
     /**
      * add the where clause to the sql statement.
-     * 
+     *
      * @param completedSqlString a generic SQL expression in which the where clause variable will be replaced.
      * @param whereExpressions the list of where expressions to concatenate (must not be null)
      * @param valid if false add ! before where clause
@@ -684,7 +684,7 @@ public class DbmsLanguage {
 
     /**
      * Method "addWhereToStatement".
-     * 
+     *
      * @param statement a statement already prepared for parsing
      * @param whereClause (must not be null, but can be empty when there is no where clause)
      * @return the new statement
@@ -713,7 +713,7 @@ public class DbmsLanguage {
 
     /**
      * Method "buildWhereExpression".
-     * 
+     *
      * @param whereExpression a list of boolean clauses
      * @return clauses between parentheses and concatenated with "AND"
      */
@@ -743,7 +743,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getSqlExpression".
-     * 
+     *
      * @param indicatorDefinition contains a list of possible expression (one for each supported database)
      * @return the expression for this database language or for the default SQL or null when not found
      */
@@ -760,7 +760,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getChartacterMappingExpression".
-     * 
+     *
      * @param indicatorDefinition contains a list of possible expression (one for each supported database)
      * @return the expression for this database language or for the default SQL or null when not found
      */
@@ -776,9 +776,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Get the query Expression for one column
-     * 
+     *
      * @param column
      * @param where
      * @return
@@ -802,9 +802,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Get the query Expression for one table of column
-     * 
+     *
      * @param column
      * @param where
      * @return
@@ -827,9 +827,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Get select column string
-     * 
+     *
      * @param metadataTable
      * @return if columns size is zero will return * else return look like a,b,c
      */
@@ -853,9 +853,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Get the query Expression for one table of column
-     * 
+     *
      * @param column
      * @param where
      * @return
@@ -878,9 +878,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Get the query Expression for one table
-     * 
+     *
      * @param column
      * @param where
      * @return
@@ -905,7 +905,7 @@ public class DbmsLanguage {
 
     /**
      * DOC talend Comment method "getQuerySql".
-     * 
+     *
      * @param name
      * @param qualifiedName
      */
@@ -918,9 +918,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "getsoundexFunction".
-     * 
+     *
      * @param table, the name of table.
      * @param colName, the name of column.
      * @return sub Select Statement which instead the function of soundex().And if the database support for soundex()
@@ -932,9 +932,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "getsoundexFunction".
-     * 
+     *
      * @param table, the name of table.
      * @param colName, the name of column.
      * @param key, the condition of sql query.
@@ -946,7 +946,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getAggregate1argFunctions".
-     * 
+     *
      * @param indicatorDefinition
      * @return the ordered list of aggregate functions
      */
@@ -957,7 +957,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getDate1argFunctions".
-     * 
+     *
      * @param indicatorDefinition
      * @return the ordered list of functions applicable to date columns
      */
@@ -981,7 +981,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getRegexPatternString".
-     * 
+     *
      * @param indicator
      * @return the regular expression or null if none was found
      */
@@ -1008,7 +1008,7 @@ public class DbmsLanguage {
 
     /**
      * get language Sql Expression from TdExpression list with dbVersion, if not found, use the default "SQL" language.
-     * 
+     *
      * @param language
      * @param sqlGenericExpression
      * @param dbVersion
@@ -1066,7 +1066,7 @@ public class DbmsLanguage {
 
     /**
      * get language Sql Expression from TdExpression list with dbVersion, if not found, use the default "SQL" language.
-     * 
+     *
      * @param language
      * @param sqlGenericExpression
      * @param dbVersion
@@ -1147,10 +1147,10 @@ public class DbmsLanguage {
 
     /**
      * Method "getRegexp".
-     * 
+     *
      * When in SQL engine, retrieve the regex with the matching Dbms Language. If null, return the regex with default
      * SQL (even if it's null)
-     * 
+     *
      * @param pattern a pattern
      * @return the body of the regular expression applicable to this dbms or null
      */
@@ -1194,7 +1194,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getExpression".
-     * 
+     *
      * @param patternComponent
      * @return the expression for the correct language or null
      */
@@ -1216,7 +1216,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getApplicableExpression".
-     * 
+     *
      * @param expression an expression (not null)
      * @return
      */
@@ -1240,7 +1240,7 @@ public class DbmsLanguage {
     /**
      * Method "getRegexpTestString" returns the SQL SELECT statement that can be used to check a string against a
      * regular expression.
-     * 
+     *
      * @param stringToCheck a string to check (not a column name)
      * @param regularExpression
      * @return the appropriate SQL SELECT statement that can be used to check a string against a regular expression.
@@ -1258,7 +1258,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getSelectRegexpTestString".
-     * 
+     *
      * @param stringToCheck a string to check against the regular expression (can contain quotes at start and end)
      * @param regex a regular expression
      * @return the appropriate SQL SELECT statement that can be used to check a string against a regular expression.
@@ -1282,11 +1282,11 @@ public class DbmsLanguage {
      * Method "regexLike". By default, it will try to extract the function name from user defined regular expression. If
      * the database support the regex like regular expression function , the sub-class will have to override this method
      * in order to return the correct regex like name.
-     * 
+     *
      * @param element
      * @param regex
      * @return get the String of Regular function(for example : "regex_like(element,regex)").
-     * 
+     *
      */
     public String regexLike(String element, String regex) {
         // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
@@ -1296,13 +1296,13 @@ public class DbmsLanguage {
                 || existEmptyInParameter(element, regex)) {
             return null;
         }
-        String functionNameSQL = regularExpressionFunction + "( " + element + "," + regex + " )";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$  
+        String functionNameSQL = regularExpressionFunction + "( " + element + "," + regex + " )";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         return surroundWithSpaces(functionNameSQL);
     }
 
     /**
-     * 
+     *
      * @param element
      * @param regex
      * @return false if every one is not empty else return true
@@ -1313,13 +1313,13 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * method "regexNotLike"
-     * 
+     *
      * @param element
      * @param regex
      * @return get the String of Regular function which is not match(for example :"not regex_like(element,regex)")
-     * 
+     *
      */
 
     public String regexNotLike(String element, String regex) {
@@ -1335,7 +1335,7 @@ public class DbmsLanguage {
     /**
      * Method "getHardCodedQuoteIdentifier" returns the hard coded quote identifier string. You should call
      * {@link #getDbQuoteString()} instead.
-     * 
+     *
      * @return hard coded quote identifier string
      */
     public String getHardCodedQuoteIdentifier() {
@@ -1344,7 +1344,7 @@ public class DbmsLanguage {
 
     /**
      * Method "supportAliasesInGroupBy".
-     * 
+     *
      * @return true when the DB supports aliases in group by clause
      */
     public boolean supportAliasesInGroupBy() {
@@ -1354,7 +1354,7 @@ public class DbmsLanguage {
 
     /**
      * Method "isPkIndexSupported".
-     * 
+     *
      * @return true when the driver supports primary key and index
      */
     public boolean isPkIndexSupported() {
@@ -1363,7 +1363,7 @@ public class DbmsLanguage {
 
     /**
      * Method "supportCatalogSelection". See {@link java.sql.Connection#setCatalog(String catalog)}
-     * 
+     *
      * @return true when the driver can select a catalog as a subspace of the connection
      */
     public boolean supportCatalogSelection() {
@@ -1372,7 +1372,7 @@ public class DbmsLanguage {
 
     /**
      * Method "supportNonIntegerConstantInGroupBy".
-     * 
+     *
      * @return true if expression like "GROUP BY 'toto'" are supported
      */
     public boolean supportNonIntegerConstantInGroupBy() {
@@ -1383,7 +1383,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getSelectRemarkOnTable".
-     * 
+     *
      * @param tableName a table name
      * @return the select statement to execute to get the comment on the table, or null
      */
@@ -1393,7 +1393,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getSelectRemarkOnColumn".
-     * 
+     *
      * @param columnName a column name
      * @return the select statement to execute to get the comment on the column, or null
      */
@@ -1403,7 +1403,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getSelectOrderedAggregate".
-     * 
+     *
      * @param distinct whether to add distinct keyword in select statement
      * @param columns the list of columns to select
      * @param table the table
@@ -1456,7 +1456,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getGenericInvalidDetailedValues".
-     * 
+     *
      * @return the generic query to get the invalid detailed values in the functional dependency analysis
      */
     public String getFDGenericInvalidDetailedValues() {
@@ -1485,7 +1485,7 @@ public class DbmsLanguage {
 
     /**
      * Method "getInstantiatedExpression".
-     * 
+     *
      * @param indicator
      * @return the appropriate expression or the default one (or null when it does not exists)
      */
@@ -1500,7 +1500,7 @@ public class DbmsLanguage {
 
     /**
      * DOC scorreia Comment method "fillGenericQueryWithColumnTableAndAlias".
-     * 
+     *
      * @param genericQuery
      * @param columns
      * @param table
@@ -1525,7 +1525,7 @@ public class DbmsLanguage {
 
     /**
      * DOC scorreia Comment method "fillGenericQueryWithColumnTableLimitOffset".
-     * 
+     *
      * @param genericQuery
      * @param colName
      * @param table
@@ -1547,7 +1547,7 @@ public class DbmsLanguage {
 
     /**
      * DOC scorreia Comment method "fillGenericQueryWithJoin".
-     * 
+     *
      * @param body
      * @param tableName
      * @param joinclause
@@ -1559,7 +1559,7 @@ public class DbmsLanguage {
 
     /**
      * Method "charLength".
-     * 
+     *
      * @param columnName
      * @return CHAR_LENGTH(columnName)
      */
@@ -1569,9 +1569,9 @@ public class DbmsLanguage {
 
     /**
      * DOC bzhou Comment method "supportRegexp".
-     * 
+     *
      * check if the database surpport the Regexp.
-     * 
+     *
      * @return false by default.
      */
     public boolean supportRegexp() {
@@ -1586,7 +1586,7 @@ public class DbmsLanguage {
 
     /**
      * create left join condiction string.
-     * 
+     *
      * @param leftTable
      * @param joinElements
      * @param catalogName
@@ -1600,7 +1600,7 @@ public class DbmsLanguage {
 
     /**
      * create right join condiction string.
-     * 
+     *
      * @param leftTable
      * @param joinElements
      * @param catalogName
@@ -1614,7 +1614,7 @@ public class DbmsLanguage {
 
     /**
      * create full join condiction string.
-     * 
+     *
      * @param leftTable
      * @param joinElements
      * @param catalogName
@@ -1628,7 +1628,7 @@ public class DbmsLanguage {
 
     /**
      * create join condiction string.
-     * 
+     *
      * @param leftTable
      * @param joinElements
      * @param catalogName
@@ -1700,7 +1700,7 @@ public class DbmsLanguage {
 
     /**
      * Method "innerJoin".
-     * 
+     *
      * @param tableA
      * @param tableAliasA
      * @param columnAName
@@ -1752,7 +1752,7 @@ public class DbmsLanguage {
 
     /**
      * DOC scorreia Comment method "joinClauseStartsWithWrongTable".
-     * 
+     *
      * @param leftTable
      * @param table
      * @return
@@ -1763,7 +1763,7 @@ public class DbmsLanguage {
 
     /**
      * Method "createJoinClause" appends a join condition to the builder.
-     * 
+     *
      * @param builder
      * @param tableA the name of the table or null
      * @param columnAName a column name (or an alias)
@@ -1806,7 +1806,7 @@ public class DbmsLanguage {
     /**
      * DOC jet adapt to {@link GenericSQLHandler}("").createGenericSqlWithRegexFunction() method.
      * <p>
-     * 
+     *
      * @see GenericSQLHandler
      * @param function UDF function name.
      * @return special sql statement
@@ -1817,7 +1817,7 @@ public class DbmsLanguage {
 
     /**
      * DOC yyi 2011-06-14 22246:view rows for aveagge length
-     * 
+     *
      * @return average length sql statement
      */
     public String getAverageLengthRows() {
@@ -1846,7 +1846,7 @@ public class DbmsLanguage {
 
     /**
      * DOC qiongli TDQ-2474: view rows for average length with blank.
-     * 
+     *
      * @return average length with blank sql statement
      */
     public String getAverageLengthWithBlankRows() {
@@ -1856,7 +1856,7 @@ public class DbmsLanguage {
 
     /**
      * DOC qiongli TDQ-2474 :view rows for average length with null blank.
-     * 
+     *
      * @return average length with null blank sql statement
      */
     public String getAverageLengthWithNullBlankRows() {
@@ -1865,7 +1865,7 @@ public class DbmsLanguage {
 
     /**
      * DOC qiongli TDQ-2474:view rows for average length with null.
-     * 
+     *
      * @return average length with null sql statement
      */
     public String getAverageLengthWithNullRows() {
@@ -1875,7 +1875,7 @@ public class DbmsLanguage {
 
     /**
      * DOC xqliu Comment method "createStatement".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -1888,7 +1888,7 @@ public class DbmsLanguage {
 
     /**
      * DOC msjian Comment method "createStatement".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -1898,9 +1898,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Get query string with prefix (catalog/schema.table.column) given column array.
-     * 
+     *
      * @param columns
      * @return
      */
@@ -1919,9 +1919,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * move this method from ColumnSetNameHelper.getColumnSetQualifiedName().
-     * 
+     *
      * @param columnset
      * @return
      */
@@ -1942,7 +1942,7 @@ public class DbmsLanguage {
 
     /**
      * DOC qiongli Comment method "getQualifiedColumnSetName".
-     * 
+     *
      * @param columnset
      * @param catalogName
      * @param schemaName
@@ -1969,9 +1969,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * move this method from ColumnSetNameHelper.getColumnSetQualifiedName().
-     * 
+     *
      * @param columnset
      * @return
      */
@@ -1996,9 +1996,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Get invalid clause for Benford indicator.
-     * 
+     *
      * @param columnName
      * @return
      */
@@ -2007,9 +2007,9 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Cast column name to char type. .e.g.vertica column name is to_char(columnName) in query clause.
-     * 
+     *
      * @param columnName
      * @return
      */
@@ -2019,7 +2019,7 @@ public class DbmsLanguage {
 
     /**
      * get the catalog name from the context in the DatabaseConnection(the database connection must be context mode).
-     * 
+     *
      * @param dbConn
      * @return catalog name or null
      */
@@ -2029,7 +2029,7 @@ public class DbmsLanguage {
 
     /**
      * get the schema name from the context in the DatabaseConnection(the database connection must be context mode).
-     * 
+     *
      * @param dbConn
      * @return schema name or null
      */
@@ -2040,7 +2040,7 @@ public class DbmsLanguage {
     /**
      * clone the database connection with original value according to the context(the database connection must be
      * context mode).
-     * 
+     *
      * @param dbConn
      * @return
      */
@@ -2065,7 +2065,7 @@ public class DbmsLanguage {
 
     /**
      * get the catalog or schema name according to the analyzed column.
-     * 
+     *
      * @param analyzedColumn
      * @return if the catalog is not null, return catalog's name, else if schema is not null, return schema's name, else
      * return null
@@ -2106,7 +2106,7 @@ public class DbmsLanguage {
 
     /**
      * get the schema from the columnSetOwner.
-     * 
+     *
      * @param columnSetOwner
      * @return
      */
@@ -2120,7 +2120,7 @@ public class DbmsLanguage {
 
     /**
      * get the catalog from the columnSetOwner.
-     * 
+     *
      * @param columnSetOwner it should be a table or schema
      * @return
      */
@@ -2134,7 +2134,7 @@ public class DbmsLanguage {
 
     /**
      * Getter for soundexPrefix.
-     * 
+     *
      * @return the soundexPrefix
      */
     public String getSoundexPrefix() {
@@ -2142,15 +2142,15 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Extract the name of regular Expression Function If current database type need to use UDF deal regular expression,
      * the expresssion which will definition on "Regular Expression Matching.definition" should like below:
-     * 
+     *
      * "* + when REGULAR_FUNCTION(+ * +) + *". else this method will not return correct result which you want
-     * 
+     *
      * @param expression
      * @return the name of regular Expression Function or empty string when the expression is invalid
-     * 
+     *
      */
     public String extractRegularExpressionFunction(Expression expression, String regexp) {
         String functionName = null;
@@ -2166,7 +2166,7 @@ public class DbmsLanguage {
 
     /**
      * DOC talend Comment method "splictExpression".
-     * 
+     *
      * @param expression
      * @return
      */
@@ -2180,16 +2180,16 @@ public class DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * Extract the return value of regular Expression Function If current database type need to use UDF deal regular
      * expression, the expresssion which will definition on "Regular Expression Matching.definition" should like below:
-     * 
+     *
      * "* + when REGULAR_FUNCTION(+ * +) + return value + then". else this method will not return correct result which
      * you want
-     * 
+     *
      * @param expression
      * @return the return value of regular Expression Function or empty string when the expression is invalid
-     * 
+     *
      */
     public String extractRegularExpressionFunctionReturnValue(Expression expression, String regexp) {
         String tempString = splictExpression(expression);
@@ -2199,15 +2199,15 @@ public class DbmsLanguage {
         String splitKey = regexp.toUpperCase() + ")"; //$NON-NLS-1$
         int keyIndex = tempString.indexOf(splitKey) + splitKey.length();
         tempString = tempString.indexOf(splitKey) > -1 ? tempString.substring(keyIndex) : PluginConstant.EMPTY_STRING;
-        tempString = tempString.split("THEN").length > 1 ? tempString.split("THEN")[0] : PluginConstant.EMPTY_STRING; //$NON-NLS-1$ //$NON-NLS-2$ 
+        tempString = tempString.split("THEN").length > 1 ? tempString.split("THEN")[0] : PluginConstant.EMPTY_STRING; //$NON-NLS-1$ //$NON-NLS-2$
         return tempString.trim();
     }
 
     /**
-     * 
+     *
      * remember the result value for regular expression.So that we can get complete expression and it should be "=1"
      * always
-     * 
+     *
      * @param expression
      */
     public void setFunctionReturnValue(String returnValue) {
@@ -2216,7 +2216,7 @@ public class DbmsLanguage {
 
     /**
      * Getter for regularfunctionReturnValue.
-     * 
+     *
      * @return the regularfunctionReturnValue if it is null then return ""
      */
     public String getFunctionReturnValue() {
@@ -2228,7 +2228,7 @@ public class DbmsLanguage {
 
     /**
      * Method "castColumn".
-     * 
+     *
      * @param indicator
      * @param tdColumn
      * @param colName the name of the given column (tdColumn.getName() ) (could contain quotes)
@@ -2258,7 +2258,7 @@ public class DbmsLanguage {
 
     /**
      * DOC msjian Comment method "getRandomQuery".
-     * 
+     *
      * @param query
      * @return query with random method
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,7 +18,7 @@ import org.talend.cwm.compare.exception.ReloadCompareException;
 
 /**
  * @author scorreia
- * 
+ *
  * Interface for handling UI comparison.
  */
 public interface IUIHandler {
@@ -26,7 +26,7 @@ public interface IUIHandler {
     /**
      * Method "popComparisonUI" opens a pop-up which displays the differences listed in the given file. MOD mzhao
      * 2009-03-09 Add dbname method for displaying db name info in compare editor.
-     * 
+     *
      * @param diffResourcePath the path to the difference file
      * @throws ReloadCompareException
      */
@@ -36,7 +36,7 @@ public interface IUIHandler {
 
     /**
      * Method "popRemoveElement" pops-up a dialog to display the impacts of a change in the data provider.
-     * 
+     *
      * @param provider the data provider which is to be changed.
      */
     public void popRemoveElement(final Connection provider);

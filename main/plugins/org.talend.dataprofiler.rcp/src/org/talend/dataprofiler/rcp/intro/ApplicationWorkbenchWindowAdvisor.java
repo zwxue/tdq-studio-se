@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
 /**
  * DOC rli class global comment. Detailled comment <br/>
- * 
+ *
  */
 public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
@@ -61,7 +61,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.application.WorkbenchWindowAdvisor#postWindowOpen()
      */
     @SuppressWarnings("restriction")
@@ -71,7 +71,7 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
         this.getWindowConfigurer().getWindow().getShell().setMaximized(true);
         super.postWindowOpen();
         ChangePerspectiveAction.getAction().switchTitle();
-       
+
 
         IWorkbenchWindowConfigurer workbenchWindowConfigurer = getWindowConfigurer();
 

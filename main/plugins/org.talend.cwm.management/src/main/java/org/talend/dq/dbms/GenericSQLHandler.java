@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -67,7 +67,7 @@ public class GenericSQLHandler {
 
     /**
      * GenericSQLHandler constructor comment.
-     * 
+     *
      * @param genericString a generic string
      */
     public GenericSQLHandler(final String genericString) {
@@ -78,7 +78,7 @@ public class GenericSQLHandler {
 
     /**
      * Getter for originalSQL.
-     * 
+     *
      * @return the originalSQL
      */
     public String getOriginalSQL() {
@@ -166,7 +166,7 @@ public class GenericSQLHandler {
 
     /**
      * Method "getSqlString".
-     * 
+     *
      * @return the modified sql string
      */
     public String getSqlString() {
@@ -175,7 +175,7 @@ public class GenericSQLHandler {
 
     /**
      * Method "createGenericSqlWithRegexFunction".
-     * 
+     *
      * @param function a two arguments function.
      * @return the full generic statement
      */
@@ -248,24 +248,24 @@ public class GenericSQLHandler {
     }
 
     public GenericSQLHandler replaceUDIQueryToMatch() {
-        sqlString = sqlString.replace("WHERE " + UDI_WHERE + PluginConstant.SPACE_STRING //$NON-NLS-1$ 
+        sqlString = sqlString.replace("WHERE " + UDI_WHERE + PluginConstant.SPACE_STRING //$NON-NLS-1$
                 + AND_WHERE_CLAUSE, WHERE_CLAUSE);
-        sqlString = sqlString.replace("AND " + UDI_WHERE + PluginConstant.SPACE_STRING //$NON-NLS-1$ 
+        sqlString = sqlString.replace("AND " + UDI_WHERE + PluginConstant.SPACE_STRING //$NON-NLS-1$
                 + AND_WHERE_CLAUSE, AND_WHERE_CLAUSE);
-        sqlString = sqlString.replace("ORDER BY " + UDI_ORDER_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
-        sqlString = sqlString.replace("GROUP BY " + UDI_GROUP_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("ORDER BY " + UDI_ORDER_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$
+        sqlString = sqlString.replace("GROUP BY " + UDI_GROUP_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$
         sqlString = sqlString.replace("WHERE  AND", "WHERE "); //$NON-NLS-1$ //$NON-NLS-2$
-        sqlString = sqlString.replace("AND  " + AND_WHERE_CLAUSE, AND_WHERE_CLAUSE); //$NON-NLS-1$ 
-        sqlString = sqlString.replace("AND ()", " "); //$NON-NLS-1$ //$NON-NLS-2$ 
+        sqlString = sqlString.replace("AND  " + AND_WHERE_CLAUSE, AND_WHERE_CLAUSE); //$NON-NLS-1$
+        sqlString = sqlString.replace("AND ()", " "); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("( AND", "("); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("AND )", ")"); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("( AND )", " "); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("NOT   " + AND_WHERE_CLAUSE, "NOT " + WHERE_CLAUSE); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("NOT ( ) " + AND_WHERE_CLAUSE, "NOT " + WHERE_CLAUSE); //$NON-NLS-1$ //$NON-NLS-2$
-        sqlString = sqlString.replace("WHERE   " + AND_WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$ 
-        sqlString = sqlString.replace("WHERE  " + AND_WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$ 
-        sqlString = sqlString.replace("WHERE () " + AND_WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$ 
-        sqlString = sqlString.replace("WHERE " + WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("WHERE   " + AND_WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$
+        sqlString = sqlString.replace("WHERE  " + AND_WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$
+        sqlString = sqlString.replace("WHERE () " + AND_WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$
+        sqlString = sqlString.replace("WHERE " + WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$
         sqlString = sqlString.replace("WHERE  = <%=__INDICATOR_VALUE__%> <%=__AND_WHERE_CLAUSE__%>", WHERE_CLAUSE); //$NON-NLS-1$
         sqlString = sqlString.replace("GROUP BY   ORDER BY", " ORDER BY"); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.trim();

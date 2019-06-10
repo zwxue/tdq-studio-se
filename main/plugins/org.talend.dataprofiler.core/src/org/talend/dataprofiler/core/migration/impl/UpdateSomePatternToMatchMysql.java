@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,7 +36,7 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
- * 
+ *
  * zshen add a RegularExpression for mysql lanagaue in the International_phone_number pattern if the pattern is exist
  * and it dont't contain a RegularExpression for mysql lanagaue.
  */
@@ -98,7 +98,7 @@ public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC rli Comment method "retireAnalysis".
-     * 
+     *
      * @param fileResource
      * @return
      */

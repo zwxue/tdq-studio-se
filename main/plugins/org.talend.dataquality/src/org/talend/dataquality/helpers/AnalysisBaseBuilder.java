@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,14 +31,14 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
- * 
+ *
  * Creates an Analysis and its attribute from the given informations. Use one AnalysisBuilder per Analysis to create.
- * 
+ *
  */
 public class AnalysisBaseBuilder {
 
     /**
-     * 
+     *
      */
     private static final String ANALYSIS_NOT_INITIALIZED = "Analysis has not been initialized. Call initializeAnalysis() method before."; //$NON-NLS-1$
 
@@ -50,7 +50,7 @@ public class AnalysisBaseBuilder {
 
     /**
      * Method "initializeAnalysis" creates an Analysis from the given name.
-     * 
+     *
      * @param analysisName
      * @return
      */
@@ -116,7 +116,7 @@ public class AnalysisBaseBuilder {
     /**
      * Method "addElementToAnalyze". The association between the element and the indicators is not done in this method.
      * It must be done before.
-     * 
+     *
      * @param element the element to analyze (for several columns, it is a QueryColumnSet)
      * @param indicator the indicator used for analyzing the element (or part of it).
      * @return true if ok
@@ -139,7 +139,7 @@ public class AnalysisBaseBuilder {
 
     /**
      * DOC abensalem Comment method "addAndLinkElementToAnalyze". Link the analysed element to the indicators.
-     * 
+     *
      * @param element the element to analyze (for several columns, it is a QueryColumnSet)
      * @param indicators the indicator used for analyzing the element (or part of it).
      * @return true if ok
@@ -192,7 +192,7 @@ public class AnalysisBaseBuilder {
 
     /**
      * Method "addFilterOnData". Several filter can be added for one analysis.
-     * 
+     *
      * @param dataFilter the data filter
      * @return
      */
@@ -202,7 +202,7 @@ public class AnalysisBaseBuilder {
 
     /**
      * DOC scorreia Comment method "addElementToContext".
-     * 
+     *
      * @param element
      */
     private void addElementToContext(ModelElement element) {
@@ -212,7 +212,7 @@ public class AnalysisBaseBuilder {
 
     /**
      * Set analysis.
-     * 
+     *
      * @param analysis
      */
     public void setAnalysis(Analysis analysis) {
@@ -221,7 +221,7 @@ public class AnalysisBaseBuilder {
 
     /**
      * Method "getAnalysis".
-     * 
+     *
      * @return the analysis built and filled in other methods.
      */
     public Analysis getAnalysis() {

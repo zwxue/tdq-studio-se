@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,7 +34,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 20, 2013 Detailled comment
- * 
+ *
  */
 public class SelectAlgorithmSection extends AbstractSectionComposite {
 
@@ -66,7 +66,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * DOC zshen SelectAlgorithmSection constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param toolkit
@@ -79,7 +79,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * DOC zshen Comment method "createChooseAlgorithmCom".
-     * 
+     *
      * @param dqRuleDefinitionSection
      */
     public void createChooseAlgorithmCom() {
@@ -163,7 +163,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * DOC zhao Comment method "removeAllSurvivorship".
-     * 
+     *
      * @param redrawn whether needed redrawn the section after remove All of survivorship
      */
     protected void removeAllSurvivorship() {
@@ -221,7 +221,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * Sets the blockKeySection.
-     * 
+     *
      * @param blockKeySection the blockKeySection to set
      */
     public void setBlockkeySection(BlockingKeySection blockKeySection) {
@@ -230,7 +230,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * Sets the matchKeySection.
-     * 
+     *
      * @param matchKeySection the matchKeySection to set
      */
     public void setMatchKeySection(MatchingKeySection matchKeySection) {
@@ -243,7 +243,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * Getter for algorithmName.
-     * 
+     *
      * @return the algorithmName
      */
     public String getAlgorithmName() {
@@ -252,7 +252,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * Sets the matchRuleDef.
-     * 
+     *
      * @param matchRuleDef the matchRuleDef to set
      */
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
@@ -271,7 +271,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * Sets the defaultSurvivorshipDefinitionSection.
-     * 
+     *
      * @param defaultSurvivorshipDefinitionSection the defaultSurvivorshipDefinitionSection to set
      */
     public void setDefaultSurvivorshipDefinitionSection(DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection) {
@@ -280,7 +280,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     /**
      * Sets the particularDefaultSurvivorshipSection.
-     * 
+     *
      * @param particularDefaultSurvivorshipSection the particularDefaultSurvivorshipSection to set
      */
     public void setParticularDefaultSurvivorshipSection(ParticularDefSurshipDefinitionSection particularDefaultSurvivorshipSection) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -257,7 +257,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the subfolder under the project and named for folderName.
-     * 
+     *
      * @param project
      * @param folderName
      * @return
@@ -281,7 +281,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the subfolder under the parent folder and named for folderName.
-     * 
+     *
      * @param parentFolder
      * @param folderName
      * @return
@@ -305,7 +305,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the file under the parentFolder and named for fileName.
-     * 
+     *
      * @param parentFolder
      * @param fileName
      * @return
@@ -336,7 +336,7 @@ public class UnitTestBuildHelper {
 
     /**
      * copy the method from ProxyRepositoryFactory to avoid tos migeration.
-     * 
+     *
      * @param fileName
      * @param pattern
      */
@@ -348,7 +348,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real RepositoryNode for DataProfiling.
-     * 
+     *
      * @param iProject
      * @return
      */
@@ -373,7 +373,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real RepositoryNode for Libraries.
-     * 
+     *
      * @param iProject
      * @return
      */
@@ -398,7 +398,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real RepositoryNode for Metadata.
-     * 
+     *
      * @param iProject
      * @return
      */
@@ -423,7 +423,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create a RepositoryViewObject which is a system folder.
-     * 
+     *
      * @param tProject
      * @param author
      * @param type
@@ -471,7 +471,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create a real file connection witl file url
-     * 
+     *
      * @param fileUrl
      * @param delimitedFileconnection
      * @return
@@ -507,7 +507,7 @@ public class UnitTestBuildHelper {
     /**
      * init the file's related metadata table with columns: name, company, city,country, comment. and add all columns as
      * analyzed elements.
-     * 
+     *
      * @param context
      */
     public MetadataColumn initColumns(AnalysisContext context, MetadataTable metadataTable) {
@@ -550,9 +550,9 @@ public class UnitTestBuildHelper {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "createRealAnalysis".
-     * 
+     *
      * @param name
      * @param folder
      * @param isDelete

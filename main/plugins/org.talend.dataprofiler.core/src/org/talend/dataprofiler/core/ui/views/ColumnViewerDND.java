@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -85,10 +85,10 @@ import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * DOC zqin class global comment. Detailled comment
- * 
+ *
  * When changing the sharing codes with the AnalysisColumnTreeViewer and AnalysisColumnSetTreeViewer pleases test them
  * both are OK in Column Analysis and Column Set Analysis.
- * 
+ *
  * @link org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer
  * @link org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer
  */
@@ -119,7 +119,7 @@ public class ColumnViewerDND {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.dnd.DropTargetAdapter#dragEnter(org.eclipse.swt .dnd.DropTargetEvent)
              */
             @Override
@@ -155,7 +155,7 @@ public class ColumnViewerDND {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.dnd.TreeDropTargetEffect#dragOver(org.eclipse .swt.dnd.DropTargetEvent)
              */
             @Override
@@ -169,7 +169,7 @@ public class ColumnViewerDND {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.dnd.DropTargetAdapter#drop(org.eclipse.swt.dnd .DropTargetEvent)
              */
             @Override
@@ -200,7 +200,7 @@ public class ColumnViewerDND {
     }
 
     /**
-     * 
+     *
      * DOC zqin ColumnDNDFactory class global comment. Detailled comment
      */
     interface ISelectionReceiver {
@@ -211,7 +211,7 @@ public class ColumnViewerDND {
     }
 
     /**
-     * 
+     *
      * DOC zqin ColumnDNDFactory class global comment. Detailled comment
      */
     static class PatternReceiver implements ISelectionReceiver {
@@ -322,7 +322,7 @@ public class ColumnViewerDND {
     }
 
     /**
-     * 
+     *
      * DOC zqin ColumnDNDFactory class global comment. Detailled comment
      */
     static class ColumnReceiver implements ISelectionReceiver {
@@ -498,9 +498,9 @@ public class ColumnViewerDND {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "isSameType". MOD mzhao 9848 2010-01-14, Allowing drag table.
-     * 
+     *
      * @param model1
      * @param model2
      * @return
@@ -655,7 +655,7 @@ public class ColumnViewerDND {
 
     /**
      * DOC xqliu Comment method "installDND". bug 8791 2009-08-31.
-     * 
+     *
      * @param myTable
      */
     public static void installDND(final Table targetControl) {

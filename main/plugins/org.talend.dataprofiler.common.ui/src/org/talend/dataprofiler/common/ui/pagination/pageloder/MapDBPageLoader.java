@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ import org.talend.dataquality.indicators.validation.DataValidationImpl;
 
 /**
  * created by talend on Aug 14, 2014 Detailled comment
- * 
+ *
  */
 public class MapDBPageLoader<T> implements IPageLoader<PageResult<Object[]>> {
 
@@ -75,7 +75,7 @@ public class MapDBPageLoader<T> implements IPageLoader<PageResult<Object[]>> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.nebula.widgets.pagination.IPageLoader#loadPage(org.eclipse.nebula.widgets.pagination.PageableController
      * )

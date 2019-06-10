@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -15,9 +15,9 @@ package org.talend.dq.indicators.ext;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ *
  */
 public class FrequencyExt {
 
@@ -29,7 +29,7 @@ public class FrequencyExt {
 
     /**
      * Getter for key.
-     * 
+     *
      * @return the key
      */
     public Object getKey() {
@@ -38,7 +38,7 @@ public class FrequencyExt {
 
     /**
      * Sets the key.
-     * 
+     *
      * @param key the key to set
      */
     public void setKey(Object key) {
@@ -47,7 +47,7 @@ public class FrequencyExt {
 
     /**
      * Getter for value.
-     * 
+     *
      * @return the value
      */
     public Long getValue() {
@@ -56,7 +56,7 @@ public class FrequencyExt {
 
     /**
      * Sets the value.
-     * 
+     *
      * @param value the value to set
      */
     public void setValue(Long value) {

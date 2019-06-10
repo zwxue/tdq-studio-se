@@ -9,7 +9,7 @@ import org.eclipse.swt.widgets.Event;
 
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,21 +25,21 @@ import org.eclipse.swt.widgets.Event;
  *
  */
 public class TalendGridItem extends GridItem {
-    
+
     boolean lastHideState=false;
 
     /**
      * DOC talend TableGridItem constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
     public TalendGridItem(Grid parent, int style) {
         super(parent, style);
     }
-    
-    
-    
+
+
+
     /**
      * DOC talend TalendGridItem constructor comment.
      * @param parent
@@ -76,7 +76,7 @@ public class TalendGridItem extends GridItem {
 
 
     /**
-     * 
+     *
      * Hide or show the item
      * @param hide reqired hide this item or not
      */
@@ -112,8 +112,8 @@ public class TalendGridItem extends GridItem {
         return ((TalendGridItem)getParentItem());
     }
     /**
-     * 
-     * Judge current item Whether is hided 
+     *
+     * Judge current item Whether is hided
      * @return true if the item has been hided else false
      */
     public boolean isHide(){
@@ -150,6 +150,6 @@ public class TalendGridItem extends GridItem {
 
 
 
-    
+
 
 }

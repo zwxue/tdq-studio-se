@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,7 +20,7 @@ import org.talend.dataquality.indicators.DateGrain;
 
 /**
  * created by talend on Feb 24, 2014 Detailled comment
- * 
+ *
  */
 public class NetezzaDbmsLanguageTest {
 
@@ -54,22 +54,22 @@ public class NetezzaDbmsLanguageTest {
      * Test method for
      * {@link org.talend.dq.dbms.NetezzaDbmsLanguage#extract(org.talend.dataquality.indicators.DateGrain, java.lang.String)}
      * .
-     * 
+     *
      */
     @Test
     public void testExtract() {
         String expectedResult = "DATE_PART(\'" + DateGrain.DAY.getLiteral() + "\',name)"; //$NON-NLS-1$ //$NON-NLS-2$
         NetezzaDbmsLanguage netezzaDbmsLanguage = (NetezzaDbmsLanguage) DbmsLanguageFactory
                 .createDbmsLanguage(SupportDBUrlType.NETEZZADEFAULTURL);
-        String extractString = netezzaDbmsLanguage.extract(DateGrain.DAY, "name"); //$NON-NLS-1$ 
+        String extractString = netezzaDbmsLanguage.extract(DateGrain.DAY, "name"); //$NON-NLS-1$
         Assert.assertEquals(expectedResult, extractString);
     }
 
     /**
      * Test method for {@link org.talend.dq.dbms.NetezzaDbmsLanguage#getInvalidClauseBenFord(java.lang.String)} .
-     * 
+     *
      * for task TDQ-8600
-     * 
+     *
      * Before that we use "cast(colmnName as char(1))" to get the first character of data but there is one error say
      * that "Character width exceeded" when data type of input data is Number and it is null. So we use
      * "Substring(colmnName,1,1)" instead of it to fixed this error.By the way, if we have two conditions and link them

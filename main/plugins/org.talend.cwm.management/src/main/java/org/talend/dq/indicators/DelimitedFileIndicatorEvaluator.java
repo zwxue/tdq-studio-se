@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -67,7 +67,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
     /**
      * DOC qiongli DelimitedFileIndicatorEvaluator constructor comment.
-     * 
+     *
      * @param analysis
      */
     public DelimitedFileIndicatorEvaluator(Analysis analysis) {
@@ -153,7 +153,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
     /**
      * DOC talend Comment method "useDelimitedReader".
-     * 
+     *
      * @param file
      * @param delimitedFileconnection2
      * @param analysisElementList
@@ -192,7 +192,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
     /**
      * DOC zshen Comment method "createFileInputDelimited".
-     * 
+     *
      * @return
      * @throws IOException
      */
@@ -202,7 +202,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
     /**
      * get the final result from duplicate indicator and set it into indicatorToRowMap Added yyin 20120608 TDQ-3589.
-     * 
+     *
      * @param indicator
      * @param indicToRowMap
      */
@@ -272,7 +272,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
     /**
      * DOC zshen Comment method "getCsvReaderLimit".
-     * 
+     *
      * @return
      */
     protected int getCsvReaderLimit() {

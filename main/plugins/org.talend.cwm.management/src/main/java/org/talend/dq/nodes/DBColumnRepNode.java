@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,7 +35,7 @@ public class DBColumnRepNode extends ColumnRepNode {
 
     /**
      * DOC klliu DBColumnRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -54,7 +54,7 @@ public class DBColumnRepNode extends ColumnRepNode {
 
     /**
      * create node of parent
-     * 
+     *
      * @param metadataColumnRepositoryObject2
      */
     private RepositoryNode createParentNode() {
@@ -66,7 +66,7 @@ public class DBColumnRepNode extends ColumnRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dq.nodes.DQRepositoryNode#getParentViewObject(org.talend.core.model.repository.IRepositoryViewObject)
      */
@@ -91,7 +91,7 @@ public class DBColumnRepNode extends ColumnRepNode {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
@@ -121,7 +121,7 @@ public class DBColumnRepNode extends ColumnRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getDisplayText()
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,7 +29,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * created by zshen on Nov 11, 2013 Detailled comment
- * 
+ *
  */
 public class MatchCustomJarSelectDialog extends AbstractJarSelectDialog<IAttributeMatcher> {
 
@@ -37,7 +37,7 @@ public class MatchCustomJarSelectDialog extends AbstractJarSelectDialog<IAttribu
 
     /**
      * DOC zshen MatchCustomJarSelectDialog constructor comment.
-     * 
+     *
      * @param definition
      * @param parent
      * @param labelProvider
@@ -49,7 +49,7 @@ public class MatchCustomJarSelectDialog extends AbstractJarSelectDialog<IAttribu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#checkJarDependency(java.io.File)
      */
     @Override
@@ -70,7 +70,7 @@ public class MatchCustomJarSelectDialog extends AbstractJarSelectDialog<IAttribu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#initfValidator()
      */
     @Override
@@ -92,7 +92,7 @@ public class MatchCustomJarSelectDialog extends AbstractJarSelectDialog<IAttribu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#getSuperClass()
      */
     @Override
@@ -103,7 +103,7 @@ public class MatchCustomJarSelectDialog extends AbstractJarSelectDialog<IAttribu
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#spliteJarFile()
      */
     @Override

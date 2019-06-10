@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,7 +24,7 @@ public class IndicatorDefaultValueService implements IIndicatorDefaultValueServi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.service.IIndicatorDefaultValueService#getLowFrequencyLimitResult()
      */
     public int getLowFrequencyLimitResult() {
@@ -35,7 +35,7 @@ public class IndicatorDefaultValueService implements IIndicatorDefaultValueServi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.service.IIndicatorDefaultValueService#getFrequencyLimitResult()
      */
     public int getFrequencyLimitResult() {
@@ -46,7 +46,7 @@ public class IndicatorDefaultValueService implements IIndicatorDefaultValueServi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.service.IIndicatorDefaultValueService#setLowFrequencyLimitResult(int)
      */
     public void setLowFrequencyLimitResult(int limit) {
@@ -56,7 +56,7 @@ public class IndicatorDefaultValueService implements IIndicatorDefaultValueServi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.service.IIndicatorDefaultValueService#setFrequencyLimitResult(int)
      */
     public void setFrequencyLimitResult(int limit) {

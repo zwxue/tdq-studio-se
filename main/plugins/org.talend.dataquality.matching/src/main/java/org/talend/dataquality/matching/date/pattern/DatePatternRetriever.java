@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.apache.log4j.Logger;
 import org.talend.dataquality.matching.i18n.Messages;
 
 /**
- * 
+ *
  * @author Hallam Mohamed Amine
  * @date 11/08/2009
  */
@@ -102,7 +102,7 @@ public class DatePatternRetriever {
 
     /**
      * DOC msjian Comment method "getModels".
-     * 
+     *
      * @param expression
      * @return
      */
@@ -117,7 +117,7 @@ public class DatePatternRetriever {
     /**
      * Find the matcher whiche is match with expression notice: sometimes, when expression may have more than one
      * matchers for example: 2000-04-05 matches both "yyyy MM dd" and "yyyy dd MM"
-     * 
+     *
      * @param expression
      */
     public List<ModelMatcher> findMatchers(String expression) {
@@ -150,9 +150,9 @@ public class DatePatternRetriever {
     }
 
     /**
-     * 
+     *
      * method "getRegex".
-     * 
+     *
      * @param model the model of matcher.
      * @return if can find corresponding to matcher return it's the Regex of matcher else return null;
      */
@@ -166,9 +166,9 @@ public class DatePatternRetriever {
     }
 
     /**
-     * 
+     *
      * method "get Matcher by model".
-     * 
+     *
      * @param model the model of matcher.
      * @return if can find corresponding to matcher return it else return null;
      */

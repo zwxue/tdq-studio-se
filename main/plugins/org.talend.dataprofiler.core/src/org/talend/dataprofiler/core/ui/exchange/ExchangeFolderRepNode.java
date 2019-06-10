@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,7 +35,7 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
 
     /**
      * ExchangeFolderRepNode constructor.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -73,7 +73,7 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
 
     /**
      * DOC xqliu Comment method "buildRepositoryNode".
-     * 
+     *
      * @param result
      * @return
      */
@@ -96,8 +96,8 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
                     ExchangeCategoryRepNode exchangeCategoryRepNode = new ExchangeCategoryRepNode(category, this,
                             ENodeType.REPOSITORY_ELEMENT, getProject());
                     exchangeCategoryRepNode.setFlag(true);
-                    exchangeCategoryRepNode.setMsg("");//$NON-NLS-1$ 
-                    if (!(name.equals("ParserRule") && PluginChecker.isOnlyTopLoaded())) {//$NON-NLS-1$ 
+                    exchangeCategoryRepNode.setMsg("");//$NON-NLS-1$
+                    if (!(name.equals("ParserRule") && PluginChecker.isOnlyTopLoaded())) {//$NON-NLS-1$
                         list.add(exchangeCategoryRepNode);
                     }
                 }

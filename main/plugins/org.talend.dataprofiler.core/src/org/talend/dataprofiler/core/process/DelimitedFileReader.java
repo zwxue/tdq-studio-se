@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,9 +20,9 @@ import java.io.InputStreamReader;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
- * 
+ *
  * @author xtan
- * 
+ *
  */
 public class DelimitedFileReader {
 
@@ -351,8 +351,8 @@ public class DelimitedFileReader {
 
     /**
      * skip the some records of the beginning in the file, and set the "currentRecord = 0"
-     * 
-     * 
+     *
+     *
      */
     public void skipHeaders(int header) throws IOException {
         checkClosed();
@@ -371,7 +371,7 @@ public class DelimitedFileReader {
      * </p>
      * <li>public static final int MAX_CHARS_IN_ONE_COLUMN = 100000;</li> <li>public static final int
      * MAX_COLUMNS_IN_ONE_RECORD = 100000;</li>
-     * 
+     *
      */
     public void setAutoReallocateForHuge(boolean autoReallocateForHuge) {
         this.autoReallocateForHuge = autoReallocateForHuge;
@@ -408,9 +408,9 @@ public class DelimitedFileReader {
 
     /**
      * a buffer: save the end chars of the last buffer and begin chars of the current buffer in the memory
-     * 
+     *
      * @author xtan
-     * 
+     *
      */
     private class ColumnBuffer4Joiner {
 
@@ -456,7 +456,7 @@ public class DelimitedFileReader {
     /**
      * <b> a buffer with funtion: join the last data and read the next buffer, for supporting the multi-separator</b>
      * Notice: "count, currentPosition, currentPosition, columnStart", they are import here
-     * 
+     *
      * @author xtan
      */
     private class StreamBuffer {
@@ -667,7 +667,7 @@ public class DelimitedFileReader {
     }
 
     /**
-     * 
+     *
      * DOC Administrator DelimitedFileReader class global comment. Detailled comment
      */
     public enum LineMode {

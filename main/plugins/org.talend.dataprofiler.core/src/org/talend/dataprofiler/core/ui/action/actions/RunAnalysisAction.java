@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -79,7 +79,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * Run Analysis Action.
- * 
+ *
  */
 public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
@@ -95,7 +95,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     /**
      * Important: keep using the Item, no need to used AnalysisRepNode in this class, remember this!!!
-     * 
+     *
      */
     private TDQAnalysisItem[] items;
 
@@ -119,7 +119,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -200,7 +200,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                     final boolean isSupportDynamicChart = isSupportDynamicChart(anaItem);
                     monitor.beginTask(
-                            DefaultMessagesImpl.getString("RunAnalysisAction.running", anaItem.getAnalysis().getName()), 100); //$NON-NLS-1$ 
+                            DefaultMessagesImpl.getString("RunAnalysisAction.running", anaItem.getAnalysis().getName()), 100); //$NON-NLS-1$
                     Display.getDefault().syncExec(new Runnable() {
 
                         public void run() {
@@ -278,7 +278,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see
                  * org.eclipse.core.runtime.jobs.JobChangeAdapter#done(org.eclipse.core.runtime.jobs.IJobChangeEvent)
                  */
@@ -296,7 +296,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     /**
      * only sql mode, and column, table, dependency analysis support dynamic chart now.
-     * 
+     *
      * @return boolean
      */
     private boolean isSupportDynamicChart(TDQAnalysisItem runItem) {
@@ -353,7 +353,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     /**
      * popup dialog isContinueRun.
-     * 
+     *
      * @return
      */
     private Boolean isContinueRun() {
@@ -381,7 +381,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     /**
      * check whether the connection of analysis is available.
-     * 
+     *
      * @return true when the connection is well connected
      */
     private boolean isConnectedAvailable(TDQAnalysisItem runItem) {
@@ -398,7 +398,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     /**
      * check whether the item is locked by Others.
-     * 
+     *
      * @return
      */
     private boolean ifLockByOthers(TDQAnalysisItem runItem) {
@@ -419,7 +419,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     /**
      * validate analysis.
-     * 
+     *
      * @throws BusinessException
      */
     private void validateAnalysis(TDQAnalysisItem runItem) throws BusinessException {
@@ -440,7 +440,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[], org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
@@ -463,7 +463,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     /**
      * display Result Status.
-     * 
+     *
      * @param executed
      */
     private void displayResultStatus(final ReturnCode executed, final TDQAnalysisItem runItem) {
@@ -471,7 +471,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             int executionDuration = runItem.getAnalysis().getResults().getResultMetadata().getExecutionDuration();
             log.info(DefaultMessagesImpl
                     .getString(
-                            "RunAnalysisAction.displayInformation", new Object[] { runItem.getAnalysis().getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ 
+                            "RunAnalysisAction.displayInformation", new Object[] { runItem.getAnalysis().getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$
         }
 
         if (!StringUtils.isBlank(executed.getMessage())) {

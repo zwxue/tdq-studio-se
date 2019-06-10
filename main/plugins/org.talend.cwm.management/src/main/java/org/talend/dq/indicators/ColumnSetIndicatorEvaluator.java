@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -97,9 +97,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "getAnalyzedElementsName".
-     * 
+     *
      * @return
      */
     private List<String> getAnalyzedElementsName() {
@@ -116,9 +116,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     }
 
     /**
-     * 
+     *
      * orgnize EList 'objectLs' by SQL.
-     * 
+     *
      * @param sqlStatement
      * @param ok
      * @return
@@ -177,9 +177,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     }
 
     /**
-     * 
+     *
      * orgnize EList 'objectLs' for DelimitedFile connection.
-     * 
+     *
      * @param sqlStatement
      * @param returnCode
      * @return
@@ -192,7 +192,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         IPath iPath = new Path(path);
         File file = iPath.toFile();
         if (!file.exists()) {
-            returnCode.setReturnCode(Messages.getString("ColumnSetIndicatorEvaluator.FileNotFound", file.getName()), false); //$NON-NLS-1$ 
+            returnCode.setReturnCode(Messages.getString("ColumnSetIndicatorEvaluator.FileNotFound", file.getName()), false); //$NON-NLS-1$
             return returnCode;
         }
         CSVReader csvReader = null;
@@ -269,9 +269,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
     }
 
     /**
-     * 
+     *
      * orgnize a List by a row,then call 'handleObjects(...)'.
-     * 
+     *
      * @param rowValues
      * @param currentRow
      * @param analysisElementList
@@ -314,7 +314,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     /**
      * DOC qiongli Comment method "handleObjects".
-     * 
+     *
      * @param objectLs
      * @throws SQLException
      */
@@ -337,7 +337,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     /**
      * handle Objects and store data for delimited file .
-     * 
+     *
      * @param objectLs
      * @param rowValues
      * @param metadataColumn is one of analysedElements.it is used to get its Table then get the table's columns.
@@ -401,7 +401,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     /*
      * ADD yyi 2011-02-22 17871:delimitefile
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#checkConnection()
      */
     @Override
@@ -414,7 +414,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     /*
      * ADD yyi 2011-02-24 17871:delimitefile
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#closeConnection()
      */
     @Override
@@ -445,7 +445,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     /**
      * store data which from 'simpleIndicator.getListRows()' except RowCountIndicator.
-     * 
+     *
      * @param indicToRowMap
      */
     private void storeDataSet() {

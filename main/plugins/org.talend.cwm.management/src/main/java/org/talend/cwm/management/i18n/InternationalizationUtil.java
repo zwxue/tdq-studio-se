@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,16 +18,16 @@ import org.talend.dataquality.PluginConstant;
 
 /**
  * get internationalization string util class
- * 
+ *
  */
 
 public class InternationalizationUtil {
 
     /**
-     * 
+     *
      * get Internationalization Label of SystemIndicatorDefinition
-     * 
-     * 
+     *
+     *
      * @param originalName the value of parameter should be lable of property(for "Row_Count.definition"
      * indicatorDefinition it should be "Row_Count")
      * @return if originalName is null we will return EMPTY string else will return internationalization string
@@ -41,16 +41,16 @@ public class InternationalizationUtil {
     }
 
     /**
-     * 
+     *
      * get Internationalization Label of Category. We must do a replace operation is because of we can only get
      * "Advanced Statistics" from frequency indicatorDefinition but we can not use it to do a interational key.So we
      * replace it from "Advanced Statistics" to "Advanced_Statistics" then do international operation.
-     * 
+     *
      * It will be used on Category of User Definition Indicator and presistence report file by now.
-     * 
+     *
      * @param originalName the value of parameter should be lable of category(for
      * "Bin_Low_Frequency_Table_0.1.definition" indicatorDefinition it should be "Advanced Statistics")
-     * 
+     *
      * @return if originalName is null we will return EMPTY string else will return internationalization string
      */
     public static String getCategoryInternationalizationLabel(String originalName) {
@@ -59,9 +59,9 @@ public class InternationalizationUtil {
     }
 
     /**
-     * 
+     *
      * get Internationalization Label of SystemIndicatorDefinition
-     * 
+     *
      * @param property the property of indicatorDefinition
      * @return if property is null or label of property is null we will return EMPTY string else will return
      * internationalization string

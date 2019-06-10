@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -50,7 +50,7 @@ public class TableAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "addTableToAnalyze".
-     * 
+     *
      * @param table
      * @return
      */
@@ -62,7 +62,7 @@ public class TableAnalysisHandler extends AnalysisHandler {
 
     /**
      * DOC xqliu Comment method "addTableToAnalyze".
-     * 
+     *
      * @param table
      * @return
      */
@@ -109,7 +109,7 @@ public class TableAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "getIndicators".
-     * 
+     *
      * @param table
      * @return the indicators attached to this table
      */
@@ -126,7 +126,7 @@ public class TableAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "getIndicatorLeaves" returns the indicators for the given table at the leaf level.
-     * 
+     *
      * @param table
      * @return the indicators attached to this table
      */
@@ -145,7 +145,7 @@ public class TableAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "setStringDataFilter".
-     * 
+     *
      * @param datafilterString
      * @return true when a new data filter is created, false if it is only updated
      */
@@ -160,11 +160,11 @@ public class TableAnalysisHandler extends AnalysisHandler {
     public EList<ModelElement> getAnalyzedTables() {
         return analysis.getContext().getAnalysedElements();
     }
-    
+
     @Override
     public String getCatalogNames() {
         List<String> catalogNames = new ArrayList<String>();
-        
+
         for (ModelElement element : getAnalyzedColumns()) {
             if (element instanceof Table) {
                 ColumnSet columnSet = (ColumnSet) element;

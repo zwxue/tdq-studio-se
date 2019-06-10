@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ public class RepositoryObjectComparisonLevel extends DataProviderComparisonLevel
 
     /**
      * DOC zshen RepositoryObjectComparisonLevel constructor comment.
-     * 
+     *
      * @param selObj
      */
     public RepositoryObjectComparisonLevel(Object selObj) {
@@ -34,7 +34,7 @@ public class RepositoryObjectComparisonLevel extends DataProviderComparisonLevel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#findDataProvider()
      */
     @Override

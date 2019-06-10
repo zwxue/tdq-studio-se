@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ public class TalendFormatTime extends Time {
     private String pattern = "HH:mm:ss.SSS";//$NON-NLS-1$
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 2840349445774526174L;
 
@@ -39,7 +39,7 @@ public class TalendFormatTime extends Time {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Timestamp#toString()
      */
     @Override

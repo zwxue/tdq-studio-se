@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,9 +32,9 @@ import org.talend.model.emf.CwmResourceFactory;
 /**
  * @author scorreia This class creates the EMF resources and save them. All resources are stored in a ResourceSet (which
  * can be changed with the setter and getter methods). By default, path are platform relative.
- * 
+ *
  * This class also offers some static methods to help handling resources.
- * 
+ *
  */
 public final class EMFUtil {
 
@@ -62,7 +62,7 @@ public final class EMFUtil {
 
     /**
      * This CTOR initializes all packages and create a resource set.
-     * 
+     *
      * @param fileExtensions the list of extensions (without the dot).
      */
     public EMFUtil() {
@@ -102,7 +102,7 @@ public final class EMFUtil {
      * Creates a new Resource in the ResourceSet. The file will be actually written when the save() method will be
      * called. By default, paths are platform relative. In order to call this method outside an Eclipse platform, set
      * the usePlatformRelativePath boolean to false.
-     * 
+     *
      * @param uri the uri of the file in which the pool will be stored
      * @param eObject the pool that contains objects.
      * @return true (as per the general contract of the <tt>Collection.add</tt> method).
@@ -115,7 +115,7 @@ public final class EMFUtil {
     /**
      * Creates a new Resource in the ResourceSet. The file will be actually written when the save() method will be
      * called. Do not use this method is you need to save with platform relative URIs.
-     * 
+     *
      * @param file the file in which the pool will be stored
      * @param eObject the pool that contains objects.
      * @return true (as per the general contract of the <tt>Collection.add</tt> method).
@@ -127,7 +127,7 @@ public final class EMFUtil {
     /**
      * Creates a new Resource in the ResourceSet. The file will be actually written when the save() method will be
      * called.
-     * 
+     *
      * @param uri the uri of the file in which the pool will be stored
      * @param eObject the pool that contains objects.
      * @return true (as per the general contract of the <tt>Collection.add</tt> method).
@@ -143,7 +143,7 @@ public final class EMFUtil {
 
     /**
      * Saves each resource of the resource set.
-     * 
+     *
      * @return true if ok
      */
     public boolean save() {
@@ -193,7 +193,7 @@ public final class EMFUtil {
 
     /**
      * Method "getLastErrorMessage".
-     * 
+     *
      * @return the last error message or null when no error happened since the creation of this object.
      */
     public String getLastErrorMessage() {
@@ -202,10 +202,10 @@ public final class EMFUtil {
 
     /**
      * Utility method.
-     * 
+     *
      * Changes the uri of a given resource. The new uri is formed with the name of the input resource's uri appended to
      * the path outputUri.
-     * 
+     *
      * @param res the input resource
      * @param destinationUri the destination directory
      * @return the new uri.
@@ -219,10 +219,10 @@ public final class EMFUtil {
 
     /**
      * Utility method.
-     * 
+     *
      * Method "saveResource" saves the given resource. This method is a helper for saving quickly a given resource and
      * all its related resources (if any).
-     * 
+     *
      * @param resource the resource to save
      * @return true if no problem
      */
@@ -232,11 +232,11 @@ public final class EMFUtil {
 
     /**
      * Utility method.
-     * 
+     *
      * Method "saveSingleResource" saves the given resource only. This method is a helper for saving quickly a given
      * resource. It does not saved the related resources. This could result in an exception when other related resources
      * should be saved with this resource.
-     * 
+     *
      * @param resource the resource to save
      * @return true if no problem
      */
@@ -261,7 +261,7 @@ public final class EMFUtil {
 
     /**
      * Getter for usePlatformRelativePath.
-     * 
+     *
      * @return the usePlatformRelativePath
      */
     public boolean isUsePlatformRelativePath() {
@@ -270,7 +270,7 @@ public final class EMFUtil {
 
     /**
      * Sets the usePlatformRelativePath.
-     * 
+     *
      * @param usePlatformRelativePath the usePlatformRelativePath to set
      */
     public void setUsePlatformRelativePath(boolean usePlatformRelativePath) {

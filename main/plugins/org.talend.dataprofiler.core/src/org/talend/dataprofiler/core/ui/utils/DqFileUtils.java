@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public final class DqFileUtils {
 
     /**
      * DOC bZhou Comment method "getFile".
-     * 
+     *
      * @param parent
      * @param fileName
      * @return
@@ -74,7 +74,7 @@ public final class DqFileUtils {
 
     /**
      * DOC bZhou Comment method "existFile".
-     * 
+     *
      * @param parent
      * @param fileName
      * @return
@@ -86,7 +86,7 @@ public final class DqFileUtils {
 
     /**
      * DOC bZhou Comment method "existFile".
-     * 
+     *
      * @param parent
      * @param targetFile
      * @return
@@ -97,7 +97,7 @@ public final class DqFileUtils {
 
     /**
      * DOC bZhou Comment method "existFile".
-     * 
+     *
      * @param parent
      * @param targetPath
      * @return
@@ -108,7 +108,7 @@ public final class DqFileUtils {
 
     /**
      * DOC bZhou Comment method "searchAllFile".
-     * 
+     *
      * @param result
      * @param parent
      * @param recursive
@@ -134,7 +134,7 @@ public final class DqFileUtils {
 
     /**
      * DOC bZhou Comment method "searchAllFileInPlugin".
-     * 
+     *
      * @param result
      * @param plugin
      * @param srcPath
@@ -176,7 +176,7 @@ public final class DqFileUtils {
 
     /**
      * check whether the file is the local project file.(for example: we can use to check the dependency file when export)
-     * 
+     *
      * @param file
      * @return boolean
      */
@@ -186,7 +186,7 @@ public final class DqFileUtils {
 
     /**
      * check if the DQ file under the basePath.(for example: we can use to check the dependency file when import)
-     * 
+     *
      * @param file
      * @param basePath
      * @return boolean

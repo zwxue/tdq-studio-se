@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -80,7 +80,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * A class to select elements out of a tree structure.
- * 
+ *
  * @since 2.0
  */
 public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog implements ISelectionChangedListener {
@@ -156,7 +156,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Constructs an instance of <code>ElementTreeSelectionDialog</code>.
-     * 
+     *
      * @param parent The shell to parent from.
      * @param labelProvider the label provider to render the entries
      * @param contentProvider the content provider to evaluate the tree structure
@@ -192,7 +192,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * If set, the checked /gray state of containers (inner nodes) is derived from the checked state of its leaf nodes.
-     * 
+     *
      * @param containerMode The containerMode to set
      */
     public void setContainerMode(boolean containerMode) {
@@ -201,7 +201,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Sets the message to be displayed if the list is empty.
-     * 
+     *
      * @param message the message to be displayed.
      */
     public void setEmptyListMessage(String message) {
@@ -210,7 +210,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Sets the sorter used by the tree viewer.
-     * 
+     *
      * @param sorter
      * @deprecated since 3.3, use {@link TwoPartCheckSelectionDialog#setComparator(ViewerComparator)} instead
      */
@@ -221,7 +221,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Sets the comparator used by the tree viewer.
-     * 
+     *
      * @param comparator
      * @since 3.3
      */
@@ -231,7 +231,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Adds a filter to the tree viewer.
-     * 
+     *
      * @param filter a filter.
      */
     public void addFilter(ViewerFilter filter) {
@@ -244,7 +244,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     /**
      * Sets an optional validator to check if the selection is valid. The validator is invoked whenever the selection
      * changes.
-     * 
+     *
      * @param validator the validator to validate the selection.
      */
     public void setValidator(ISelectionStatusValidator validator) {
@@ -253,7 +253,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Sets the tree input.
-     * 
+     *
      * @param input the tree input.
      */
     public void setInput(Object input) {
@@ -266,7 +266,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Expands elements in the tree.
-     * 
+     *
      * @param elements The elements that will be expanded.
      */
     public void setExpandedElements(Object[] elements) {
@@ -275,7 +275,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Sets the size of the tree in unit of characters.
-     * 
+     *
      * @param width the width of the tree.
      * @param height the height of the tree.
      */
@@ -286,7 +286,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Validate the receiver and update the status with the result.
-     * 
+     *
      */
     protected void updateOKStatus() {
         if (!fIsEmpty) {
@@ -305,7 +305,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.window.Window#open()
      */
     @Override
@@ -338,7 +338,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.window.Window#create()
      */
     @Override
@@ -377,7 +377,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets .Composite)
      */
     @Override
@@ -466,7 +466,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Creates the tree viewer.
-     * 
+     *
      * @param parent the parent composite
      * @return the tree viewer
      */
@@ -539,7 +539,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Returns the tree viewer.
-     * 
+     *
      * @return the tree viewer
      */
     protected CheckboxTreeViewer getTreeViewer() {
@@ -552,7 +552,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Adds the selection and deselection buttons to the dialog.
-     * 
+     *
      * @param composite the parent composite
      * @return Composite the composite the buttons were created in.
      */
@@ -577,7 +577,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Add the listeners for all select(deselect) button.
-     * 
+     *
      * @param selectButton
      * @param deselectButton
      */
@@ -613,7 +613,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     // ADD msjian 2011-7-8 feature 22206: Add filters
     /**
      * Adds the table and column filter texts to the dialog.
-     * 
+     *
      * @param composite the parent composite
      * @return Composite the composite the filter texts were created in.
      */
@@ -631,7 +631,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         if (DIALOG_TYPE_TABLE == this.getDialogType()) {
             leftFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.SchemaCatalogFilter"));//$NON-NLS-1$
         } else {
-            leftFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.TableFilter"));//$NON-NLS-1$    
+            leftFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.TableFilter"));//$NON-NLS-1$
         }
         GridData gd1 = new GridData(GridData.FILL_HORIZONTAL);
         gd1.horizontalSpan = 1;
@@ -647,7 +647,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
         Label rightFilterLabel = new Label(filterTextsComposite, SWT.NONE);
         if (DIALOG_TYPE_TABLE == this.getDialogType()) {
-            rightFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.TableFilter"));//$NON-NLS-1$    
+            rightFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.TableFilter"));//$NON-NLS-1$
         } else {
             rightFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.ColumnFilter"));// $NON-NSL-1$
         }
@@ -672,7 +672,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
         /**
          * set the filter string.
-         * 
+         *
          * @param text
          */
         public void setFilter(String text) {
@@ -681,7 +681,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
         /**
          * Sets the viewer.
-         * 
+         *
          * @param viewer (fViewer or sTableViewer)
          */
         public void setViewer(boolean isfViewer) {
@@ -779,7 +779,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * Add the listeners for (table, column)filter texts.
-     * 
+     *
      * @param leftFilterText
      * @param rightFilterText
      */
@@ -824,7 +824,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.dialogs.SelectionDialog#setMessage(java.lang.String)
      */
     @Override
@@ -838,7 +838,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * judge whether is hided node
-     * 
+     *
      * @param selectNode
      * @return
      */
@@ -853,7 +853,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * judge whether is hided node
-     * 
+     *
      * @param selectNode
      * @return
      */
@@ -866,7 +866,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * DOC talend Comment method "getRealNodeFromRepository".
-     * 
+     *
      * @param selectNode
      * @return
      */
@@ -884,7 +884,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * find the last one which is visible Real repository node.
-     * 
+     *
      * @param reposNode
      */
     protected IRepositoryNode findLastVisibleNode(IRepositoryNode reposNode) {
@@ -920,7 +920,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     /**
      * get TableFolderNode or ViewFolderNode.
-     * 
+     *
      * @param childNode
      * @return
      */

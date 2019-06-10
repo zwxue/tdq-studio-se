@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC scorreia OracleDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      * @param majorVersion
      * @param minorVersion
@@ -71,7 +71,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#notEqual()
      */
     @Override
@@ -83,7 +83,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getPatternFinderDefaultFunction(java.lang.String)
      */
     @Override
@@ -100,7 +100,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#replaceNullsWithString(java.lang.String, java.lang.String)
      */
     @Override
@@ -114,7 +114,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#isNotBlank(java.lang.String)
      */
     @Override
@@ -125,7 +125,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getTopNQuery(java.lang.String, int)
      */
     @Override
@@ -135,7 +135,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#countRowInSubquery(java.lang.String, java.lang.String)
      */
     @Override
@@ -146,7 +146,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#sumRowInSubquery(java.lang.String, java.lang.String,
      * java.lang.String)
      */
@@ -158,7 +158,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#extract(org.talend.dataquality.indicators.DateGrain,
      * java.lang.String)
      */
@@ -183,7 +183,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
      */
     @Override
@@ -193,7 +193,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
      */
     @Override
@@ -203,7 +203,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
      */
     @Override
@@ -213,17 +213,17 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
      */
     @Override
     public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces(this.not() + getRegularExpressionFunction() + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
+        return surroundWithSpaces(this.not() + getRegularExpressionFunction() + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override
@@ -233,7 +233,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getSelectRemarkOnTable(java.lang.String)
      */
     @Override
@@ -243,7 +243,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getSelectRemarkOnColumn(java.lang.String)
      */
     @Override
@@ -253,7 +253,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#charLength(java.lang.String)
      */
     @Override
@@ -263,7 +263,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     @Override
     public String getSelectRegexp(String regexLikeExpression) {
-        return "SELECT '1' FROM dual WHERE " + regexLikeExpression; //$NON-NLS-1$ 
+        return "SELECT '1' FROM dual WHERE " + regexLikeExpression; //$NON-NLS-1$
     }
 
     @Override
@@ -278,12 +278,12 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC yyi 2011-06-20 22246:view rows for average length for Oracle
-     * 
+     *
      * @return average length sql statement
      */
     @Override
     public String getAverageLengthRows() {
-        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$ 
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
     }
 
     @Override
@@ -293,7 +293,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
      */
     @Override
@@ -303,7 +303,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
      * DatabaseConnection)
      */
@@ -314,7 +314,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
      */
     @Override
@@ -325,7 +325,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
      */
     @Override
@@ -335,7 +335,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullRows()
      */
     @Override
@@ -345,9 +345,9 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     }
 
     /**
-     * 
+     *
      * when the column value is null or blank,the length should be 0.
-     * 
+     *
      * @param columnName
      * @return
      */
@@ -357,7 +357,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRandomQuery(java.lang.String)
      */
     @Override
@@ -367,7 +367,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#quote(java.lang.String)
      */
     @Override

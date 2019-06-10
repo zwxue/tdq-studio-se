@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -79,7 +79,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- * 
+ *
  * DOC zhaoxinyi class global comment. Detailled comment
  */
 public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropTree {
@@ -118,7 +118,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getMasterPage()
      */
     @Override
@@ -163,9 +163,9 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "createButtonSection".
-     * 
+     *
      * @param topComp create the button with delButton,moveUpButton,moveDownButton
      */
     private void createButtonSection(Composite topComp) {
@@ -227,11 +227,11 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "enabledButtons".
-     * 
+     *
      * @param enabled the state of buttons.
-     * 
+     *
      * change the state of buttons.
      */
     public void enabledButtons(boolean enabled) {
@@ -241,12 +241,12 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "moveElement".
-     * 
+     *
      * @param columnsElementViewer
      * @param isDown
-     * 
+     *
      * move the element of the columnList to up or down.
      */
 
@@ -301,7 +301,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     /**
      * DOC bZhou Comment method "addTargetDND".
-     * 
+     *
      * @param newTree
      */
     private void addTargetDND(final Tree newTree) {
@@ -310,7 +310,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     /**
      * DOC bZhou Comment method "addSourceDND".
-     * 
+     *
      * @param newTree
      */
     private void addSourceDND(final Tree newTree) {
@@ -351,7 +351,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     /**
      * DOC xzhao Comment method "createTreeMenu".
-     * 
+     *
      * @param newTree
      * @param containEdit
      */
@@ -368,7 +368,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
              */
             @Override
@@ -389,7 +389,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
              */
             @Override
@@ -417,7 +417,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org .eclipse.swt.events.SelectionEvent)
                  */
                 @Override
@@ -476,7 +476,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     /**
      * DOC xqliu Comment method "getColumnNodes".
-     * 
+     *
      * @param columnNodes
      * @return
      */
@@ -592,7 +592,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     /**
      * DOC xzhao Comment method "deleteTreeElements".
-     * 
+     *
      * @param columnIndicators
      * @param deleteColumnIndiciators
      */
@@ -614,7 +614,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     /**
      * Remove the selected elements(eg:TdColumn or Indicator) from tree.
-     * 
+     *
      * @param newTree
      */
     private void removeSelectedElements(final Tree newTree) {
@@ -702,7 +702,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getTheSuitedComposite(org.eclipse.swt
      * .events.SelectionEvent)
@@ -729,7 +729,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     /**
      * Getter for analysis.
-     * 
+     *
      * @return the analysis
      */
     public Analysis getAnalysis() {

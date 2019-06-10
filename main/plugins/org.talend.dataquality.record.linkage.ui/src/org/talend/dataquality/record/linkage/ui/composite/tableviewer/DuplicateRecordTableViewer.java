@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.talend.dataquality.rules.KeyDefinition;
 
 /**
  * created by zhao on Aug 19, 2013 Detailled comment
- * 
+ *
  */
 public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer<Object> {
 
@@ -40,7 +40,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /**
      * DOC zhao DuplicateRecordTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -61,7 +61,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getDisplayWeight
      * ()
@@ -73,7 +73,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableHeightHint
      * ()
@@ -85,7 +85,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableLabelProvider
      * ()
@@ -100,7 +100,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getTableContentProvider()
      */
@@ -114,7 +114,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableCellModifier
      * ()
@@ -126,7 +126,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addElement(java
      * .lang.String, org.talend.dataquality.analysis.Analysis)
@@ -139,7 +139,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (java.lang.String, org.talend.dataquality.analysis.Analysis)
@@ -147,7 +147,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addContextMenu()
      */
@@ -159,7 +159,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * createNewKeyDefinition(java.lang.String)
      */
@@ -170,7 +170,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (java.lang.String, java.util.List)
@@ -183,7 +183,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
      * (java.util.List, java.util.Map)

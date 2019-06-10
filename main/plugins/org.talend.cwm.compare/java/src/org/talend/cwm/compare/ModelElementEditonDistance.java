@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ public class ModelElementEditonDistance extends EditionDistance {
 
     /**
      * DOC qiongli ModelElementEditonDistance constructor comment.
-     * 
+     *
      * @param registry
      */
     public ModelElementEditonDistance(Registry registry) {
@@ -46,7 +46,7 @@ public class ModelElementEditonDistance extends EditionDistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.emf.compare.match.eobject.EditionDistance#distance(org.eclipse.emf.compare.Comparison,
      * org.eclipse.emf.ecore.EObject, org.eclipse.emf.ecore.EObject)
      */

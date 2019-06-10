@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ public class CreateNewAnalysisWizard extends Wizard {
 
     /**
      * DOC klliu CreateNewAnalysisWizard constructor comment.
-     * 
+     *
      * @param path
      * @param node
      */
@@ -59,7 +59,7 @@ public class CreateNewAnalysisWizard extends Wizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#performFinish()
      */
     @Override
@@ -71,7 +71,7 @@ public class CreateNewAnalysisWizard extends Wizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -84,7 +84,7 @@ public class CreateNewAnalysisWizard extends Wizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#canFinish()
      */
     @Override

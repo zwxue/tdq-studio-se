@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -89,7 +89,7 @@ public class ColumnSetMultiValueIndicatorImplTest {
 
     /**
      * create a TdXmlElementType, the DatamingType is Other.
-     * 
+     *
      * @return
      */
     private ModelElement createColumn4() {
@@ -101,7 +101,7 @@ public class ColumnSetMultiValueIndicatorImplTest {
 
     /**
      * create a MetadataColumn, the DatamingType is Unstructured Text.
-     * 
+     *
      * @return
      */
     private ModelElement createColumn3() {
@@ -117,7 +117,7 @@ public class ColumnSetMultiValueIndicatorImplTest {
 
     /**
      * create a TdColumn, the DatamingType is Interval.
-     * 
+     *
      * @return
      */
     private ModelElement createColumn2() {
@@ -132,7 +132,7 @@ public class ColumnSetMultiValueIndicatorImplTest {
 
     /**
      * create a TdColumn, the DatamingType is Nominal, the getSqlDataType is DATE.
-     * 
+     *
      * @return
      */
     private ModelElement createColumn12() {
@@ -147,7 +147,7 @@ public class ColumnSetMultiValueIndicatorImplTest {
 
     /**
      * create a TdColumn, the DatamingType is Nominal, the getSqlDataType is NUMERIC.
-     * 
+     *
      * @return
      */
     private ModelElement createColumn11() {
@@ -253,7 +253,7 @@ public class ColumnSetMultiValueIndicatorImplTest {
 
     /**
      * DOC talend Comment method "init".
-     * 
+     *
      * @param datas
      */
     private List<EList<Object>> initdatas() {

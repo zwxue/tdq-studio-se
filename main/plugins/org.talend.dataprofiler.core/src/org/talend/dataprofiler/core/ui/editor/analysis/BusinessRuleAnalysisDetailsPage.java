@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -119,7 +119,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
 
     /**
      * DOC xqliu TableMasterDetailsPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -272,7 +272,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
 
     /**
      * DOC xqliu Comment method "expandTreeItems".
-     * 
+     *
      * @param items
      * @param expandOrCollapse
      */
@@ -605,7 +605,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
      */
     @Override
@@ -630,7 +630,7 @@ public class BusinessRuleAnalysisDetailsPage extends DynamicAnalysisMasterPage i
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.DynamicAnalysisMasterPage#getDynamicDatasets()
      */
     @Override

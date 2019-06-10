@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -53,7 +53,7 @@ public class AnalysisUtils {
 
     /**
      * used for table analysis-- select dq rules, add filter for match rule folder TDQ-8001
-     * 
+     *
      * @return
      */
     public static ViewerFilter createRuleFilter() {
@@ -83,7 +83,7 @@ public class AnalysisUtils {
 
     /**
      * create a DynamicChart Event Receiver, according to its type
-     * 
+     *
      * @param categoryDataset
      * @param index
      * @param oneIndicator
@@ -115,7 +115,7 @@ public class AnalysisUtils {
 
     /**
      * Judge whether chartType is pattern
-     * 
+     *
      * @param chartType
      * @return true when chart type is sql pattern regex pattern or udi matching
      */
@@ -133,7 +133,7 @@ public class AnalysisUtils {
 
     /**
      * DOC yyin Comment method "isBenford".
-     * 
+     *
      * @param eIndicatorChartType
      * @return
      */
@@ -169,7 +169,7 @@ public class AnalysisUtils {
 
     /**
      * DOC yyin Comment method "isFrequency".
-     * 
+     *
      * @param eIndicatorChartType
      * @return
      */
@@ -182,7 +182,7 @@ public class AnalysisUtils {
 
     /**
      * DOC yyin Comment method "createDynamicBAWChartEventReceiver".
-     * 
+     *
      * @param oneCategoryIndicatorModel
      * @param categoryDataset
      * @return
@@ -220,7 +220,7 @@ public class AnalysisUtils {
 
     /**
      * create a Dynamic Model for one category of indicators, who related to the same chart.
-     * 
+     *
      * @param chartType
      * @param indicators
      * @param chart
@@ -246,7 +246,7 @@ public class AnalysisUtils {
 
     /**
      * get Analysis Select Dialog Input Data.
-     * 
+     *
      * @param eResourceConstant
      * @return
      */
@@ -269,7 +269,7 @@ public class AnalysisUtils {
 
     /**
      * get Analysis Select Dialog Input Data.
-     * 
+     *
      * @param eResourceConstant
      * @return
      */
@@ -285,7 +285,7 @@ public class AnalysisUtils {
 
     /**
      * get Select Dialog Input Data.
-     * 
+     *
      * @param eResourceConstant: for select UDI dialog is EResourceConstant.USER_DEFINED_INDICATORS
      * @return DQRepositoryNode
      */
@@ -308,7 +308,7 @@ public class AnalysisUtils {
 
     /**
      * get Metadata Select Dialog Input Data.
-     * 
+     *
      * @param eResourceConstant
      * @return DQRepositoryNode
      */

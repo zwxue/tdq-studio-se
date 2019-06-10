@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -67,7 +67,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     /**
      * Getter for dataset.
-     * 
+     *
      * @return the dataset
      */
     public Object getDataset() {
@@ -76,7 +76,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     /**
      * Sets the dataset.
-     * 
+     *
      * @param dataset the dataset to set
      */
     public void setDataset(Object dataset) {
@@ -85,7 +85,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     /**
      * Getter for entityIndex.
-     * 
+     *
      * @return the entityIndex
      */
     public int getEntityIndex() {
@@ -94,7 +94,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     /**
      * Sets the entityIndex.
-     * 
+     *
      * @param entityIndex the entityIndex to set
      */
     public void setEntityIndex(int entityIndex) {
@@ -103,7 +103,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     /**
      * Getter for indicator.
-     * 
+     *
      * @return the indicator
      */
     public Indicator getIndicator() {
@@ -156,7 +156,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
     }
 
     /**
-     * Reset value of special rowKey and columnKey 
+     * Reset value of special rowKey and columnKey
      */
     protected void clearDataset() {
         TOPChartUtils.getInstance().setValue(dataset, 0.0, getRowKey(), getColumnKey());
@@ -164,7 +164,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     /**
      * Get RowKey current it is the name of indicator sub class maybe override it.
-     * 
+     *
      * @return
      */
     protected String getRowKey() {
@@ -173,7 +173,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     /**
      * Get ColumnKey current it is the name of indicator sub class maybe override it.
-     * 
+     *
      * @return
      */
     protected String getColumnKey() {
@@ -240,7 +240,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
 
     /**
      * Sets the parentChartComposite.
-     * 
+     *
      * @param parentChartComposite the parentChartComposite to set
      */
     public void setParentChartComposite(Composite parentChartComposite) {

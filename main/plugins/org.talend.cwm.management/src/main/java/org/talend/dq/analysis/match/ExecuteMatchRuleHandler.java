@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,7 +35,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 /**
  * created by zshen on Sep 16, 2013 Detailled comment
  * Used for the "chart" button in the analysis.
- * 
+ *
  */
 public class ExecuteMatchRuleHandler {
 
@@ -64,7 +64,7 @@ public class ExecuteMatchRuleHandler {
 
     /**
      * DOC zhao Comment method "computeMatchGroupWithBlockKey".
-     * 
+     *
      * @param recordMatchingIndicator
      * @param blockKeyIndicator
      * @param columnMap
@@ -136,7 +136,7 @@ public class ExecuteMatchRuleHandler {
 
     /**
      * DOC zhao Comment method "computeMatchGroupResult".
-     * 
+     *
      * @param columnMap
      * @param matchResultConsumer
      * @param matchRows

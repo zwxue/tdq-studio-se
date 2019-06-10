@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -68,9 +68,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
+     *
      * Convert from ModelElementIndicators to ModelElement
-     * 
+     *
      * @param ModelElementIndicators
      * @return
      */
@@ -90,9 +90,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
+     *
      * Check whether parameters are come from same table in the database
-     * 
+     *
      * @param ModelElementIndicators
      * @return true it is come from same table else it is not
      */
@@ -102,10 +102,10 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @deprecated
-     * 
+     *
      * use {@link #switchColumnIndicator(ColumnIndicatorUnit)} instead of it
      * @param indicatorUnit
      * @return
@@ -119,9 +119,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
+     *
      * Get columns from modelElementIndicators
-     * 
+     *
      * @param modelElementIndicators
      * @return
      */
@@ -138,9 +138,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
+     *
      * Get column from modelElementIndicator
-     * 
+     *
      * @param modelElementIndicator
      * @return MetadataColumn if convert is normal else return null
      */
@@ -163,9 +163,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
+     *
      * get ColumnIndicator from columnIndicatorUnit
-     * 
+     *
      * @param indicatorUnit
      * @return
      */
@@ -177,9 +177,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
+     *
      * get ColumnIndicator from ModelElementIndicator
-     * 
+     *
      * @param indicatorUnit
      * @return
      */
@@ -191,9 +191,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
+     *
      * get DelimitedFileIndicator from ModelElementIndicator
-     * 
+     *
      * @param indicatorUnit
      * @return
      */
@@ -205,9 +205,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
+     *
      * get Connection from ModelElementIndicator
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -220,9 +220,9 @@ public final class ModelElementIndicatorHelper {
     }
 
     /**
-     * 
+     *
      * Get column names from DelimitedFileIndicator
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -242,7 +242,7 @@ public final class ModelElementIndicatorHelper {
 
     /**
      * DOC xqliu Comment method "getModelElementDisplayName".
-     * 
+     *
      * @param meIndicator
      * @return
      */
@@ -263,7 +263,7 @@ public final class ModelElementIndicatorHelper {
 
     /**
      * Check whether repViewObj and modelElementIndicator is come from same table
-     * 
+     *
      * @param repViewObj
      * @param modelElementIndicators
      */

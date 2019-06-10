@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ import org.talend.cwm.indicator.DataValidation;
 
 /**
  * created by talend on Aug 5, 2014 Detailled comment
- * 
+ *
  */
 public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap<K, V> {
 
@@ -109,9 +109,9 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
     }
 
     /**
-     * 
+     *
      * Generate a random string
-     * 
+     *
      * @param size the length of the string
      * @return
      */
@@ -127,7 +127,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#size()
      */
     @Override
@@ -137,7 +137,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#isEmpty()
      */
     @Override
@@ -155,7 +155,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#containsValue(java.lang.Object)
      */
     @Override
@@ -165,7 +165,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#get(java.lang.Object)
      */
     @Override
@@ -178,7 +178,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -199,7 +199,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#remove(java.lang.Object)
      */
     @Override
@@ -212,7 +212,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#putAll(java.util.Map)
      */
     @Override
@@ -223,7 +223,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#clear()
      */
     @Override
@@ -236,7 +236,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#keySet()
      */
     @Override
@@ -246,7 +246,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#values()
      */
     @Override
@@ -256,7 +256,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Map#entrySet()
      */
     @Override
@@ -266,7 +266,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.AbstractMap#equals(java.lang.Object)
      */
     @Override
@@ -276,7 +276,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.AbstractMap#hashCode()
      */
     @Override
@@ -286,7 +286,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.AbstractMap#toString()
      */
     @Override
@@ -296,7 +296,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentMap#putIfAbsent(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -306,7 +306,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentMap#remove(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -316,7 +316,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentMap#replace(java.lang.Object, java.lang.Object, java.lang.Object)
      */
     @Override
@@ -326,7 +326,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentMap#replace(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -336,7 +336,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#lowerEntry(java.lang.Object)
      */
     @Override
@@ -346,7 +346,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#lowerKey(java.lang.Object)
      */
     @Override
@@ -356,7 +356,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#floorEntry(java.lang.Object)
      */
     @Override
@@ -366,7 +366,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#floorKey(java.lang.Object)
      */
     @Override
@@ -376,7 +376,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#ceilingEntry(java.lang.Object)
      */
     @Override
@@ -386,7 +386,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#ceilingKey(java.lang.Object)
      */
     @Override
@@ -396,7 +396,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#higherEntry(java.lang.Object)
      */
     @Override
@@ -406,7 +406,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#higherKey(java.lang.Object)
      */
     @Override
@@ -416,7 +416,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#firstEntry()
      */
     @Override
@@ -426,7 +426,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#lastEntry()
      */
     @Override
@@ -436,7 +436,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#pollFirstEntry()
      */
     @Override
@@ -446,7 +446,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.NavigableMap#pollLastEntry()
      */
     @Override
@@ -456,7 +456,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.SortedMap#comparator()
      */
     @Override
@@ -466,7 +466,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.SortedMap#firstKey()
      */
     @Override
@@ -476,7 +476,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.SortedMap#lastKey()
      */
     @Override
@@ -486,7 +486,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentNavigableMap#subMap(java.lang.Object, boolean, java.lang.Object, boolean)
      */
     @Override
@@ -496,7 +496,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentNavigableMap#headMap(java.lang.Object, boolean)
      */
     @Override
@@ -506,7 +506,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentNavigableMap#tailMap(java.lang.Object, boolean)
      */
     @Override
@@ -516,7 +516,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentNavigableMap#subMap(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -526,7 +526,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentNavigableMap#headMap(java.lang.Object)
      */
     @Override
@@ -536,7 +536,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentNavigableMap#tailMap(java.lang.Object)
      */
     @Override
@@ -546,7 +546,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentNavigableMap#descendingMap()
      */
     @Override
@@ -556,7 +556,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentNavigableMap#navigableKeySet()
      */
     @Override
@@ -566,7 +566,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.concurrent.ConcurrentNavigableMap#descendingKeySet()
      */
     @Override
@@ -576,7 +576,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.commons.MapDB.utils.AbstractDB#tailSet(java.lang.Object, boolean)
      */
     @Override
@@ -586,7 +586,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.commons.MapDB.utils.AbstractDB#headSet(java.lang.Object, boolean)
      */
     @Override
@@ -596,7 +596,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.commons.MapDB.utils.AbstractDB#iterator()
      */
     @Override
@@ -606,7 +606,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.commons.MapDB.utils.AbstractDB#subSet(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -616,7 +616,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.commons.MapDB.utils.AbstractDB#subList(long, long, java.util.Map)
      */
     @Override
@@ -626,7 +626,7 @@ public class DBMap<K, V> extends AbstractDB<K> implements ConcurrentNavigableMap
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.mapdb.AbstractDB#subList(long, long, java.util.Map,
      * org.talend.cwm.indicator.DataValidation)
      */

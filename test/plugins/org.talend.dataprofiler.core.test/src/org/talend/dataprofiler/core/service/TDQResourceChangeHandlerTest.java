@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -58,7 +58,7 @@ public class TDQResourceChangeHandlerTest {
     }
 
     /**
-     * 
+     *
      * test for a folde node and its children has depnedences.
      */
     @Test
@@ -93,7 +93,7 @@ public class TDQResourceChangeHandlerTest {
     }
 
     /**
-     * 
+     *
      * test for a node(not folder) with client dependences.
      */
     @Test
@@ -116,7 +116,7 @@ public class TDQResourceChangeHandlerTest {
     }
 
     /**
-     * 
+     *
      * test for a node(not folder) without client dependences..
      */
     @Test

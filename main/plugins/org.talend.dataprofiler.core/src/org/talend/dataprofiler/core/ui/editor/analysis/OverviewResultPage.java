@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -184,7 +184,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * DOC msjian OverviewResultPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -317,7 +317,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
@@ -327,7 +327,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seejava.beans.PropertyChangeListener#propertyChange(java.beans. PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -338,7 +338,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
      * .ui.editor.analysis.AbstractAnalysisMetadataPage)
@@ -396,7 +396,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * DOC scorreia Comment method "createCommonStatisticalColumns".
-     * 
+     *
      * @param table
      */
     private void createCommonStatisticalColumns(Table table) {
@@ -444,7 +444,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * The provider for display the data of schema table viewer.
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class SchemaViewerProvier extends AbstractStatisticalViewerProvider {
@@ -474,7 +474,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * The provider for display the data of catalog(contain schemas) table viewer.
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class CatalogSchemaViewerProvier extends AbstractStatisticalViewerProvider {
@@ -514,7 +514,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * DOC scorreia Comment method "createNbRowsCol".
-     * 
+     *
      * @param table
      * @param container
      */
@@ -569,7 +569,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * The provider for display the data of catalog table viewer.
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class CatalogViewerProvier extends AbstractStatisticalViewerProvider {
@@ -600,9 +600,9 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
     }
 
     /**
-     * 
+     *
      * DOC klliu Comment method "displayTableAndViewComp".
-     * 
+     *
      * @param schemaIndicator
      * @param parentNode
      */
@@ -767,7 +767,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * DOC zshen Comment method "wapperInput".
-     * 
+     *
      * @param indicatorViewList
      * @param parentNode
      * @return
@@ -821,7 +821,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * run TableAnalysis with view name.
-     * 
+     *
      * @param viewName
      */
     protected void runTableAnalysis(String viewName) {
@@ -837,7 +837,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * when select menu, run.
-     * 
+     *
      * @param cursor
      * @param message
      */
@@ -856,7 +856,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * DOC klliu Comment method "wapperInput". relations
-     * 
+     *
      * @param indicatorTableList
      * @param parentNode
      * @return
@@ -917,7 +917,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * get view from package by its name.
-     * 
+     *
      * @param pkg
      * @param viewName
      * @return
@@ -980,7 +980,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * DOC xqliu Comment method "addColumnSorters".
-     * 
+     *
      * @param tableViewer
      * @param tableColumns
      * @param sorters
@@ -993,7 +993,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * DOC qzhang Comment method "refreshSumSection".
-     * 
+     *
      * @param summarySection
      */
     private void refreshSumSection() {
@@ -1064,7 +1064,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
         String executeStatus = (resultMetadata.isLastRunOk() ? DefaultMessagesImpl
                 .getString("ConnectionMasterDetailsPage.success") : DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.failure", resultMetadata.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
         Label rightLabel = toolkit.createLabel(rightComp,
-                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionStatus"));//$NON-NLS-1$  
+                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionStatus"));//$NON-NLS-1$
         int executionNumber = resultMetadata.getExecutionNumber();
         if (!resultMetadata.isLastRunOk() && executionNumber != 0) {
             rightLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
@@ -1095,7 +1095,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
 
     /**
      * DOC msjian Comment method "getTdDataProvider".
-     * 
+     *
      * @return Connection
      */
     protected Connection getTdDataProvider() {
@@ -1113,7 +1113,7 @@ public class OverviewResultPage extends AbstractAnalysisResultPage implements Pr
     /**
      * get the connection type from the connection, when the connection is DB. otherwise, just return the labelCOntent
      * which get the value from the properties.
-     * 
+     *
      * @param labelContent
      * @return
      */

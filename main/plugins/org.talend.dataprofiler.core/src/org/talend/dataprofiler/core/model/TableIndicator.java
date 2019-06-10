@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -57,7 +57,7 @@ public class TableIndicator {
 
     /**
      * Getter for columnSet.
-     * 
+     *
      * @return the columnSet
      */
     public NamedColumnSet getColumnSet() {
@@ -66,7 +66,7 @@ public class TableIndicator {
 
     /**
      * Sets the columnSet.
-     * 
+     *
      * @param columnSet the columnSet to set
      */
     public void setColumnSet(NamedColumnSet columnSet) {
@@ -75,7 +75,7 @@ public class TableIndicator {
 
     /**
      * DOC bZhou Comment method "isTable".
-     * 
+     *
      * @return
      */
     public boolean isTable() {
@@ -84,7 +84,7 @@ public class TableIndicator {
 
     /**
      * DOC bZhou Comment method "isView".
-     * 
+     *
      * @return
      */
     public boolean isView() {
@@ -93,7 +93,7 @@ public class TableIndicator {
 
     /**
      * DOC bZhou TableIndicator constructor comment.
-     * 
+     *
      * @param columnSet
      */
     public TableIndicator(NamedColumnSet columnSet) {
@@ -226,9 +226,9 @@ public class TableIndicator {
     }
 
     /**
-     * 
+     *
      * DOC xqliu Comment method "createTableIndicatorWithRowCountIndicator".
-     * 
+     *
      * @param table
      * @return
      */
@@ -269,7 +269,7 @@ public class TableIndicator {
     /**
      * Remove the specialIndicatorUnit from specialIndicatorList, if there exist more than one special Indicator which
      * has same IndicatorEnumn type, the type of IndicatorUnit will be not removed from flatIndicatorEnumList.
-     * 
+     *
      * @param indicatorUnit
      */
     private void removeSpecialIndicatorUnit(TableIndicatorUnit indicatorUnit) {
@@ -295,7 +295,7 @@ public class TableIndicator {
 
     /**
      * DOC xqliu Comment method "removeIndicatorUnit".
-     * 
+     *
      * @param indicatorUnit
      */
     public void removeIndicatorUnit(TableIndicatorUnit indicatorUnit) {

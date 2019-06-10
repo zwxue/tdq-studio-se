@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import org.talend.dq.helper.CustomAttributeMatcherHelper;
 
 /**
  * created by zshen on Aug 27, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
 
@@ -43,7 +43,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
      * }
      * headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
      * headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider#getColumnText(
      * java.lang.Object, int)
@@ -92,7 +92,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
 
     /*
      * (non-Javadoc) differents with parent: lost one column: "column" , so columnIndex+1
-     * 
+     *
      * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
      */
     @Override

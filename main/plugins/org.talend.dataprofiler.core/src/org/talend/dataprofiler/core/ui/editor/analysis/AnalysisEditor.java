@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -55,7 +55,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author rli
- * 
+ *
  */
 public class AnalysisEditor extends SupportContextEditor {
 
@@ -99,7 +99,7 @@ public class AnalysisEditor extends SupportContextEditor {
     private boolean isRefreshResultPage = false;
 
     /**
-     * 
+     *
      */
     public AnalysisEditor() {
 
@@ -278,7 +278,7 @@ public class AnalysisEditor extends SupportContextEditor {
 
     /**
      * Getter for masterPage.
-     * 
+     *
      * @return the masterPage
      */
     @Override
@@ -288,7 +288,7 @@ public class AnalysisEditor extends SupportContextEditor {
 
     /**
      * Getter for resultPage.
-     * 
+     *
      * @return the resultPage
      */
     public AbstractAnalysisResultPage getResultPage() {
@@ -329,7 +329,7 @@ public class AnalysisEditor extends SupportContextEditor {
 
     /**
      * DOC bZhou Comment method "setRunActionButtonState".
-     * 
+     *
      * @param state
      */
     public void setRunActionButtonState(boolean state) {
@@ -340,7 +340,7 @@ public class AnalysisEditor extends SupportContextEditor {
 
     /**
      * DOC bZhou Comment method "setSaveActionButtonState".
-     * 
+     *
      * @param state
      */
     public void setSaveActionButtonState(boolean state) {
@@ -350,9 +350,9 @@ public class AnalysisEditor extends SupportContextEditor {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "getRunAnalysisAction".
-     * 
+     *
      * @return
      */
     public Action getRunAnalysisAction() {
@@ -361,7 +361,7 @@ public class AnalysisEditor extends SupportContextEditor {
 
     /**
      * DOC yyi Comment method "canRun".
-     * 
+     *
      * @return
      */
     public ReturnCode canRun() {
@@ -393,7 +393,7 @@ public class AnalysisEditor extends SupportContextEditor {
      * currently will not open the editor of the analysis when running from menu, so, if the editor is opened and not
      * the current active one, the page will not know that the result is changed. so we need to add the event/listener
      * to them to handle this. Added 20130725 TDQ-7639
-     * 
+     *
      * @param analysis
      */
     private void registerUpdateExecutionEvent() {

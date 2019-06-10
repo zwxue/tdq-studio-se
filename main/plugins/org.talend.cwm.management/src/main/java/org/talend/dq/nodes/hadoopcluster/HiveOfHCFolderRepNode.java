@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -43,7 +43,7 @@ public class HiveOfHCFolderRepNode extends DQFolderRepNode {
 
     /**
      * DOC yyin HiveOfHCFolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -55,7 +55,7 @@ public class HiveOfHCFolderRepNode extends DQFolderRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
@@ -65,7 +65,7 @@ public class HiveOfHCFolderRepNode extends DQFolderRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
      */
     @Override

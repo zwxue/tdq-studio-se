@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -60,7 +60,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -69,7 +69,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -78,7 +78,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -138,7 +138,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC bZhou Comment method "getNeedUpdateFiles".
-     * 
+     *
      * @return
      */
     private ArrayList<File> getNeedUpdateFiles() {
@@ -152,7 +152,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC bZhou Comment method "createNewItemFile".
-     * 
+     *
      * @param file
      */
     private void createNewItemFile(File file) {
@@ -185,7 +185,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC bZhou Comment method "getReferenceResources".
-     * 
+     *
      * @param res
      * @param modelElement
      * @return
@@ -221,7 +221,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC bZhou Comment method "deleteOldFile".
-     * 
+     *
      * @param file
      * @throws CoreException
      */
@@ -242,7 +242,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     /**
      * get the ModelElement from the file.
-     * 
+     *
      * @param parentFile
      * @return
      */
@@ -288,7 +288,7 @@ public class UpdateAfterMergeTosApiTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC bZhou Comment method "isNotSVNFolder".
-     * 
+     *
      * @param file
      * @return
      */

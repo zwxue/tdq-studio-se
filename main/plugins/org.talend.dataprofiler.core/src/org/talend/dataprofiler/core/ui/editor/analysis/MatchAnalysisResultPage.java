@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -43,7 +43,7 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
     /**
      * DOC yyin MatchAnalysisResultPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -56,7 +56,7 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -65,7 +65,7 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#getAnalysisHandler()
      */
     @Override
@@ -75,7 +75,7 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
      * .ui.editor.analysis.AbstractAnalysisMetadataPage)
@@ -124,7 +124,7 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override

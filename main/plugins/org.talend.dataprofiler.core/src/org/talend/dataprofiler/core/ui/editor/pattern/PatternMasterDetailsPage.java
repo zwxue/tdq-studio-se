@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -92,7 +92,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     /**
      * PatternMasterDetailsPage constructor.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -150,7 +150,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     /**
      * DOC rli Comment method "ceatePatternDefinitionComp".
-     * 
+     *
      * @param form
      * @param section
      */
@@ -389,7 +389,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
      */
     @Override
@@ -404,7 +404,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
      */
     @Override
@@ -414,7 +414,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
      */
     @Override
@@ -424,7 +424,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
      */
     @Override
@@ -437,7 +437,7 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     /**
      * get PatternRepNode From editorInput
-     * 
+     *
      * @param editorInput
      * @return
      */

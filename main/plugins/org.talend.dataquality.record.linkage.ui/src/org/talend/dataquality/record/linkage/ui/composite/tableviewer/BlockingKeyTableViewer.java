@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ *
  */
 public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<BlockKeyDefinition> {
 
@@ -50,7 +50,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /**
      * DOC zshen BlockingKeyTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -60,7 +60,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableLabelProvider()
      */
     @Override
@@ -70,7 +70,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableContentProvider()
      */
@@ -81,7 +81,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableCellModifier()
      */
     @Override
@@ -91,7 +91,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getDisplayWeight()
      */
     @Override
@@ -100,9 +100,9 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
     }
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
@@ -119,7 +119,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /**
      * DOC zshen Comment method "createDefaultRow".
-     * 
+     *
      * @param columnName
      * @return
      */
@@ -147,7 +147,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTabveViewer#removeElement
      * (java.lang.String)
@@ -166,7 +166,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addContextMenu()
      */
@@ -178,7 +178,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */

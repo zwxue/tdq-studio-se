@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ public class ReportAnalysisRepNode extends DQRepositoryNode {
 
     /**
      * DOC xqliu ReportAnalysisRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -66,7 +66,7 @@ public class ReportAnalysisRepNode extends DQRepositoryNode {
 
     /**
      * return the report's Item object.
-     * 
+     *
      * @return
      */
     public TDQReportItem getReportItem() {

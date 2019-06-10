@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -61,7 +61,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#runAnalysis(org.talend.dataquality.analysis.Analysis,
      * java.lang.String)
      */
@@ -113,7 +113,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * DOC zshen Comment method "initConnection".
-     * 
+     *
      * @param analysis
      * @param eval
      * @return
@@ -135,7 +135,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
     /**
      * DOC zshen Comment method "createIndicatorEvaluator".
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -145,7 +145,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
@@ -280,7 +280,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#evaluate(org.talend.dataquality.analysis.Analysis,
      * java.sql.Connection, java.lang.String)
      */

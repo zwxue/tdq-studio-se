@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -14,7 +14,7 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider;
 
 /**
  * created by zhao on Aug 19, 2013 Detailled comment
- * 
+ *
  */
 public class DuplicateStatisticsRow {
 
@@ -28,7 +28,7 @@ public class DuplicateStatisticsRow {
 
     /**
      * Getter for isRowCount.
-     * 
+     *
      * @return the isRowCount
      */
     public Boolean getIsRowCount() {
@@ -37,7 +37,7 @@ public class DuplicateStatisticsRow {
 
     /**
      * Sets the isRowCount.
-     * 
+     *
      * @param isRowCount the isRowCount to set
      */
     public void setIsRowCount(Boolean isRowCount) {
@@ -46,7 +46,7 @@ public class DuplicateStatisticsRow {
 
     /**
      * Getter for label.
-     * 
+     *
      * @return the label
      */
     public String getLabel() {
@@ -55,7 +55,7 @@ public class DuplicateStatisticsRow {
 
     /**
      * Sets the label.
-     * 
+     *
      * @param label the label to set
      */
     public void setLabel(String label) {
@@ -64,7 +64,7 @@ public class DuplicateStatisticsRow {
 
     /**
      * Getter for count.
-     * 
+     *
      * @return the count
      */
     public Long getCount() {
@@ -73,7 +73,7 @@ public class DuplicateStatisticsRow {
 
     /**
      * Sets the count.
-     * 
+     *
      * @param count the count to set
      */
     public void setCount(Long count) {
@@ -82,7 +82,7 @@ public class DuplicateStatisticsRow {
 
     /**
      * Getter for percentage.
-     * 
+     *
      * @return the percentage
      */
     public String getPercentage() {
@@ -91,7 +91,7 @@ public class DuplicateStatisticsRow {
 
     /**
      * Sets the percentage.
-     * 
+     *
      * @param percentage the percentage to set
      */
     public void setPercentage(String percentage) {

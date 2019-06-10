@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,14 +19,14 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author scorreia
- * 
+ *
  * Interface for executing a report (this means executing the analyses contained in the report).
  */
 public interface IReportExecutor {
 
     /**
      * Method "execute".
-     * 
+     *
      * @param report the report to execute
      * @return a return code with an error message in case when something went bad
      * @throws AnalysisExecutionException

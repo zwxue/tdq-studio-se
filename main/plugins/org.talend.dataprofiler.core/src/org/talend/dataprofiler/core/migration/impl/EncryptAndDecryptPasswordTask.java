@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,13 +33,13 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 /**
  * DOC hcheng class global comment. Delete the password stored in Tagged values of the dataprovider. Encrypt the
  * password stored in the Tagged values of the providerConnection.
- * 
+ *
  */
 public class EncryptAndDecryptPasswordTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -65,7 +65,7 @@ public class EncryptAndDecryptPasswordTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC hcheng Comment method "encryptDataProvider".
-     * 
+     *
      * @param dataProvider
      * @return
      */
@@ -111,7 +111,7 @@ public class EncryptAndDecryptPasswordTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -120,7 +120,7 @@ public class EncryptAndDecryptPasswordTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataprofiler.core.migration.IWorkspaceMigrationTask# getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,7 +36,7 @@ import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by zhao on Aug 19, 2013 Group statistics section
- * 
+ *
  */
 public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSection {
 
@@ -44,7 +44,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /**
      * DOC zhao GroupStatisticsSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -57,7 +57,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubChart(org.eclipse.
      * swt.widgets.Composite)
@@ -82,7 +82,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubContent(org.eclipse
      * .swt.widgets.Composite)
@@ -126,7 +126,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /**
      * DOC zhao Comment method "setPercentage".
-     * 
+     *
      * @param count
      * @param rowCount
      * @param rowCountRow
@@ -143,7 +143,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#getSectionName()
      */
     @Override
@@ -153,7 +153,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#refreshChart()
      */
     @Override
@@ -166,7 +166,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded(java.lang
      * .String)
@@ -179,7 +179,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createButtons(org.eclipse.swt
      * .widgets.Composite)

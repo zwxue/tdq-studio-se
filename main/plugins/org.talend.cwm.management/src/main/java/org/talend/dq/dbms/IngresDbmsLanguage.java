@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC xqliu IngresDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      * @param dbVersion
      */
@@ -48,7 +48,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC yyi 2011-07-07 22246:view rows for average length for Oracle
-     * 
+     *
      * @return average length sql statement
      */
     @Override
@@ -61,7 +61,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
      */
     @Override
@@ -76,7 +76,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullRows()
      */
     @Override
@@ -92,7 +92,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
      */
     @Override
@@ -106,7 +106,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#charLength(java.lang.String)
      */
     @Override
@@ -116,7 +116,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
 
     /*
      * Added yyin 20121214 TDQ-6571
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getTopNQuery(java.lang.String, int)
      */
     @Override
@@ -127,7 +127,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
      * DatabaseConnection)
      */
@@ -138,7 +138,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection, int)
      */
     @Override

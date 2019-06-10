@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,13 +21,13 @@ import org.talend.resource.ResourceManager;
 
 /**
  * created by talend on Dec 11, 2014 Detailled comment
- * 
+ *
  */
 public class MapDBUtils {
 
     /**
      * Make sure the path of DB file is valid
-     * 
+     *
      * @param ParentPathStr the Path of parent folder
      * @param FileName The name of db File
      * @return If parentPathStr or fileName is null will return null else return the file of special path
@@ -45,9 +45,9 @@ public class MapDBUtils {
     }
 
     /**
-     * 
+     *
      * Get the file of mapDB which used by indicator.
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -56,9 +56,9 @@ public class MapDBUtils {
     }
 
     /**
-     * 
+     *
      * Get the map instance by dbName from indicator
-     * 
+     *
      * @param dbName
      * @param indicator
      * @return
@@ -69,7 +69,7 @@ public class MapDBUtils {
 
     /**
      * Store drill down data into file
-     * 
+     *
      * @param masterObject
      * @param inputRowList
      */

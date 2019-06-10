@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -45,14 +45,14 @@ public class MatchRuleAnlaysisUtilsTest extends TestCase {
 
     /**
      * DOC yyin Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Override
     protected void setUp() throws Exception {
         sortState = new SortState(0);
         sortState.setSelectedColumnIndex(0);
-        sortState.setSelectedColumnName("column_0");//$NON-NLS-1$ 
+        sortState.setSelectedColumnName("column_0");//$NON-NLS-1$
 
         sortData = new ArrayList<Object[]>();
         columns = new ArrayList<ModelElement>();
@@ -63,7 +63,7 @@ public class MatchRuleAnlaysisUtilsTest extends TestCase {
 
     /**
      * DOC yyin Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Override

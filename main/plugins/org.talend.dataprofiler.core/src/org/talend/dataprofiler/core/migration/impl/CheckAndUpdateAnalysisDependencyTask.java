@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -66,13 +66,13 @@ import orgomg.cwm.resource.relational.Catalog;
  * created by yyin on 2013-7-10 check the client dependency of the analysis according to TDQ-7327 if there are more than
  * one client dependency(db connection), remove the not used one, and remove the related dependency in the removed db
  * connection
- * 
+ *
  */
 public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -81,7 +81,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -90,7 +90,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -106,7 +106,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
 
     /**
      * DOC yyin Comment method "getConnections".
-     * 
+     *
      * @return
      */
     private List<DataManager> getConnections() {
@@ -240,7 +240,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
 
     /**
      * only need to check database connection
-     * 
+     *
      * @param connections
      */
     private void checkAndRemoveWrongDataManager(List<DataManager> connections) {
@@ -270,7 +270,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
 
     /**
      * remove the Wrong Data Manager,and save the connection
-     * 
+     *
      * @param catalog
      * @param connection
      * @param parent
@@ -284,7 +284,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
 
     /**
      * check each analysis if it has only one client dependency, if more than one, remove the useless one.
-     * 
+     *
      * @param list
      * @throws CoreException
      */
@@ -363,7 +363,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
 
     /*
      * This task should be done before the import
-     * 
+     *
      * @see org.talend.dataprofiler.migration.AMigrationTask#isModelTask()
      */
     @Override

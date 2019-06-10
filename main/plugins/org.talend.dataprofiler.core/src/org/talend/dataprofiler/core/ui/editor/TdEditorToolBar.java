@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
- * 
+ *
  * DOC mzhao class global comment. Detailled comment
  */
 public class TdEditorToolBar {
@@ -103,7 +103,7 @@ public class TdEditorToolBar {
     }
 
     /**
-     * 
+     *
      * DOC mzhao TdEditorToolBar class global comment. Detailled comment
      */
     private class CollapseSectionAction extends Action {
@@ -121,7 +121,7 @@ public class TdEditorToolBar {
     }
 
     /**
-     * 
+     *
      * DOC mzhao TdEditorToolBar class global comment. Detailled comment
      */
     private class ExpandSectionAction extends Action {
@@ -140,7 +140,7 @@ public class TdEditorToolBar {
 
     /**
      * DOC bZhou Comment method "expandSwitcher".
-     * 
+     *
      * @param expanded
      */
     private void expandSwitcher(boolean expanded) {

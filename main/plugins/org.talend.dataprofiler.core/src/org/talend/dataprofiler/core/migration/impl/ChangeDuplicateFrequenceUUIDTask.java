@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,7 +36,7 @@ public class ChangeDuplicateFrequenceUUIDTask extends AbstractWorksapceUpdateTas
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -45,7 +45,7 @@ public class ChangeDuplicateFrequenceUUIDTask extends AbstractWorksapceUpdateTas
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -54,7 +54,7 @@ public class ChangeDuplicateFrequenceUUIDTask extends AbstractWorksapceUpdateTas
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.AMigrationTask#doExecute()
      */
     @Override

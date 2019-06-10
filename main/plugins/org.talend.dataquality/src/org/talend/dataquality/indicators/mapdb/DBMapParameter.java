@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -14,7 +14,7 @@ package org.talend.dataquality.indicators.mapdb;
 
 /**
  * created by talend on Jul 15, 2014 Detailled comment
- * 
+ *
  */
 public class DBMapParameter {
 
@@ -54,7 +54,7 @@ public class DBMapParameter {
 
     /**
      * Getter for limitSize.
-     * 
+     *
      * @return the limitSize
      */
     public int getLimitSize() {
@@ -63,7 +63,7 @@ public class DBMapParameter {
 
     /**
      * Sets the limitSize.
-     * 
+     *
      * @param limitSize the limitSize to set
      */
     public void setLimitSize(int limitSize) {
@@ -72,7 +72,7 @@ public class DBMapParameter {
 
     /**
      * Getter for mmapFileEnablePartial.
-     * 
+     *
      * @return the mmapFileEnablePartial
      */
     public boolean isMmapFileEnablePartial() {
@@ -81,7 +81,7 @@ public class DBMapParameter {
 
     /**
      * Sets the mmapFileEnablePartial.
-     * 
+     *
      * @param mmapFileEnablePartial the mmapFileEnablePartial to set
      */
     public void setMmapFileEnablePartial(boolean mmapFileEnablePartial) {
@@ -90,7 +90,7 @@ public class DBMapParameter {
 
     /**
      * Getter for deleteFilesAfterClose.
-     * 
+     *
      * @return the deleteFilesAfterClose
      */
     public boolean isDeleteFilesAfterClose() {
@@ -99,7 +99,7 @@ public class DBMapParameter {
 
     /**
      * Sets the deleteFilesAfterClose.
-     * 
+     *
      * @param deleteFilesAfterClose the deleteFilesAfterClose to set
      */
     public void setDeleteFilesAfterClose(boolean deleteFilesAfterClose) {
@@ -108,7 +108,7 @@ public class DBMapParameter {
 
     /**
      * Getter for cacheSize.
-     * 
+     *
      * @return the cacheSize
      */
     public int getCacheSize() {
@@ -117,7 +117,7 @@ public class DBMapParameter {
 
     /**
      * Sets the cacheSize.
-     * 
+     *
      * @param cacheSize the cacheSize to set
      */
     public void setCacheSize(int cacheSize) {
@@ -126,7 +126,7 @@ public class DBMapParameter {
 
     /**
      * Getter for asyncWriteEnable.
-     * 
+     *
      * @return the asyncWriteEnable
      */
     public boolean isAsyncWriteEnable() {
@@ -135,7 +135,7 @@ public class DBMapParameter {
 
     /**
      * Sets the asyncWriteEnable.
-     * 
+     *
      * @param asyncWriteEnable the asyncWriteEnable to set
      */
     public void setAsyncWriteEnable(boolean asyncWriteEnable) {
@@ -144,7 +144,7 @@ public class DBMapParameter {
 
     /**
      * Getter for closeOnJvmShutdown.
-     * 
+     *
      * @return the closeOnJvmShutdown
      */
     public boolean isCloseOnJvmShutdown() {
@@ -153,7 +153,7 @@ public class DBMapParameter {
 
     /**
      * Sets the closeOnJvmShutdown.
-     * 
+     *
      * @param closeOnJvmShutdown the closeOnJvmShutdown to set
      */
     public void setCloseOnJvmShutdown(boolean closeOnJvmShutdown) {

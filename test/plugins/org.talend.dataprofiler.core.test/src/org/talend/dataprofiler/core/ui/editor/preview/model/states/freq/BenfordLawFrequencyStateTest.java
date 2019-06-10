@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -43,7 +43,7 @@ public class BenfordLawFrequencyStateTest {
 
     /**
      * init the state.
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -76,7 +76,7 @@ public class BenfordLawFrequencyStateTest {
      * Test method for
      * {@link org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BenfordLawFrequencyState#setValueToDataset(org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset, org.talend.dq.indicators.ext.FrequencyExt, java.lang.String)}
      * .
-     * 
+     *
      */
     @Test
     public void testSetValueToDataset() {
@@ -121,12 +121,12 @@ public class BenfordLawFrequencyStateTest {
 
     /**
      * test for : when there are some missing numbers, it should be added
-     * 
+     *
      * @Test public void testSortIndicator_2() { FrequencyExt[] freExt = new FrequencyExt[7]; Long value = 100l; for
      * (int i = 0; i < 7; i++) { freExt[i] = new FrequencyExt(); freExt[i].setKey(i + 1); freExt[i].setValue(value);
-     * 
+     *
      * if (i > 4) { value = value * 2; } else { value = value / 2; } } benState.sortIndicator(freExt);
-     * 
+     *
      * Assert.assertEquals(9, freExt.length); Assert.assertTrue(0L == freExt[7].getValue()); Assert.assertTrue(0L ==
      * freExt[8].getValue()); }
      */

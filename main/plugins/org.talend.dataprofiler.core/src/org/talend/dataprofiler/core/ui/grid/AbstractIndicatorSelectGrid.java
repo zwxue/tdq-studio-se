@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ import org.talend.repository.model.IRepositoryNode;
 
 /**
  * Abstract class for Grid control
- * 
+ *
  */
 public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
@@ -104,7 +104,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     /**
      * IndicatorSelectionGrid constructor.
-     * 
+     *
      * @param parent
      * @param style
      * @param modelElementIndicators
@@ -181,7 +181,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     /**
      * IndicatorSelectionGrid constructor.
-     * 
+     *
      * @param parent
      * @param style
      * @param modelElementIndicators
@@ -274,9 +274,9 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
     protected abstract int getPreferWidth(int index);
 
     /**
-     * 
+     *
      * Notify the column has been resized
-     * 
+     *
      * @param newCol
      */
     protected void notifyObservers(Event event) {
@@ -285,7 +285,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     /**
      * DOC talend Comment method "getCellRenderer".
-     * 
+     *
      * @return
      */
     protected GridCellRenderer getCellRenderer() {
@@ -308,7 +308,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     /**
      * DOC talend Comment method "getColumnHeaderRenderer".
-     * 
+     *
      * @return
      */
     protected AbstractColumnHerderRenderer getColumnHeaderRenderer() {
@@ -726,7 +726,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     /**
      * recursively create tree nodes and checked the existing indicators.
-     * 
+     *
      * @param grid
      * @param currentItem
      * @param indicatorNode
@@ -800,7 +800,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     /**
      * recursively check if a entire row/column is selected/
-     * 
+     *
      * @param grid
      * @param parentItem
      * @param currentItem
@@ -888,7 +888,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     /**
      * select/deselect all enabled indicators when Ctrl+Shift+[A|N] is down.
-     * 
+     *
      * @param select
      */
     public void setAllIndicators(boolean select) {
@@ -966,7 +966,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.nebula.widgets.grid.Grid#refreshHoverState()
      */
     @Override
@@ -988,7 +988,7 @@ public abstract class AbstractIndicatorSelectGrid extends TalendGrid {
 
     /**
      * Judge whether is HScroll is in used
-     * 
+     *
      * @return
      */
     private boolean IsHScrollInUsed() {

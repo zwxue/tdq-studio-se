@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -72,7 +72,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
 
     /**
      * Returns the paint used to show the percentage complete.
-     * 
+     *
      * @return The paint (never <code>null</code>.
      */
     public Paint getCompletePaint() {
@@ -82,7 +82,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
     /**
      * Sets the paint used to show the percentage complete and sends a {@link RendererChangeEvent} to all registered
      * listeners.
-     * 
+     *
      * @param paint the paint (<code>null</code> not permitted).
      */
     public void setCompletePaint(Paint paint) {
@@ -95,7 +95,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
 
     /**
      * Returns the paint used to show the percentage incomplete.
-     * 
+     *
      * @return The paint (never <code>null</code>).
      */
     public Paint getIncompletePaint() {
@@ -105,7 +105,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
     /**
      * Sets the paint used to show the percentage incomplete and sends a {@link RendererChangeEvent} to all registered
      * listeners.
-     * 
+     *
      * @param paint the paint (<code>null</code> not permitted).
      */
     public void setIncompletePaint(Paint paint) {
@@ -118,7 +118,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
 
     /**
      * Returns the position of the start of the progress indicator, as a percentage of the bar width.
-     * 
+     *
      * @return The start percent.
      */
     public double getStartPercent() {
@@ -127,7 +127,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
 
     /**
      * Sets the position of the start of the progress indicator, as a percentage of the bar width.
-     * 
+     *
      * @param percent the percent.
      */
     public void setStartPercent(double percent) {
@@ -137,7 +137,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
 
     /**
      * Returns the position of the end of the progress indicator, as a percentage of the bar width.
-     * 
+     *
      * @return The end percent.
      */
     public double getEndPercent() {
@@ -146,7 +146,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
 
     /**
      * Sets the position of the end of the progress indicator, as a percentage of the bar width.
-     * 
+     *
      * @param percent the percent.
      */
     public void setEndPercent(double percent) {
@@ -156,7 +156,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
 
     /**
      * Draws the bar for a single (series, category) data item.
-     * 
+     *
      * @param g2 the graphics device.
      * @param state the renderer state.
      * @param dataArea the data area.
@@ -183,7 +183,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
 
     /**
      * Draws the tasks/subtasks for one item.
-     * 
+     *
      * @param g2 the graphics device.
      * @param state the renderer state.
      * @param dataArea the data plot area.
@@ -299,7 +299,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
 
     /**
      * Draws a single task.
-     * 
+     *
      * @param g2 the graphics device.
      * @param state the renderer state.
      * @param dataArea the data plot area.
@@ -439,7 +439,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
     /**
      * Calculates the coordinate of the first "side" of a bar. This will be the minimum x-coordinate for a vertical bar,
      * and the minimum y-coordinate for a horizontal bar.
-     * 
+     *
      * @param plot the plot.
      * @param orientation the plot orientation.
      * @param dataArea the data area.
@@ -447,7 +447,7 @@ public class HideSeriesGanttRenderer extends IntervalBarRenderer implements Seri
      * @param state the renderer state (has the bar width precalculated).
      * @param row the row index.
      * @param column the column index.
-     * 
+     *
      * @return The coordinate.
      */
     @Override

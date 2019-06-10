@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,7 +21,7 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 /**
  * created by talend on Dec 26, 2012 Detailled comment use this class instead of ChartComposite will avoid "no more
  * handle" in useful
- * 
+ *
  */
 public class TalendChartComposite extends ChartComposite {
 
@@ -29,7 +29,7 @@ public class TalendChartComposite extends ChartComposite {
 
     /**
      * DOC talend TalendChartComposite constructor comment.
-     * 
+     *
      * @param comp
      * @param style
      * @param chart
@@ -41,7 +41,7 @@ public class TalendChartComposite extends ChartComposite {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.experimental.chart.swt.ChartComposite#createPopupMenu(boolean, boolean, boolean, boolean)
      */
     @Override
@@ -52,9 +52,9 @@ public class TalendChartComposite extends ChartComposite {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.jfree.experimental.chart.swt.ChartComposite#dispose()
-     * 
+     *
      * Override this dispose is because of ChartComposite don't dispose some default menuItem. To avoid no more handle
      */
     @Override

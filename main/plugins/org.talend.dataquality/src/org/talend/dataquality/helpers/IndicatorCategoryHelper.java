@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -57,7 +57,7 @@ public final class IndicatorCategoryHelper {
     /**
      * if the IndicatorCategory is one kind of User Defined Category return true, else return false. If
      * indicatorCategory is null return false.
-     * 
+     *
      * @param indicatorCategory
      * @return
      */
@@ -113,7 +113,7 @@ public final class IndicatorCategoryHelper {
 
     /**
      * set the IndicatorCategory for the IndicatorDefinition.
-     * 
+     *
      * @param indicatorDefinition
      * @param indicatorCategory
      */
@@ -133,9 +133,9 @@ public final class IndicatorCategoryHelper {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "isPhoneNumberCategory".
-     * 
+     *
      * @param indicatorCategory
      * @return
      */

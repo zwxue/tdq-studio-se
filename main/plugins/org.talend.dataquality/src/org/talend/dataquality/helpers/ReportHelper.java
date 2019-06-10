@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -64,7 +64,7 @@ public final class ReportHelper {
 
     /**
      * The report types.
-     * 
+     *
      * MOD mzhao 2009-02-19 MOD mzhao 2009-04-15 jrxml template files changed its location.
      */
     public static enum ReportType {
@@ -106,11 +106,11 @@ public final class ReportHelper {
 
         // Analysis: Column set analysis
         BASIC_COLUMN_SET(BASIC, PROPS.getProperty("BASIC_COLUMN_SET")), //$NON-NLS-1$
-        EVOLUTION_COLUMN_SET(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMN_SET")), //$NON-NLS-1$        
+        EVOLUTION_COLUMN_SET(EVOLUTION, PROPS.getProperty("EVOLUTION_COLUMN_SET")), //$NON-NLS-1$
 
         // Analysis: match analysis
         BASIC_MATCH_ANALYSIS(BASIC, PROPS.getProperty("BASIC_MATCH_ANALYSIS")), //$NON-NLS-1$
-        EVOLUTION_MATCH_ANALYSIS(EVOLUTION, PROPS.getProperty("EVOLUTION_MATCH_ANALYSIS")), //$NON-NLS-1$      
+        EVOLUTION_MATCH_ANALYSIS(EVOLUTION, PROPS.getProperty("EVOLUTION_MATCH_ANALYSIS")), //$NON-NLS-1$
 
         USER_MADE(USER_DEFINED, null); // for the user to set his own file path
 
@@ -118,7 +118,7 @@ public final class ReportHelper {
 
         /**
          * Getter for label.
-         * 
+         *
          * @return the label
          */
         public String getLabel() {
@@ -127,7 +127,7 @@ public final class ReportHelper {
 
         /**
          * Getter for jrxmlFilename.
-         * 
+         *
          * @return the jrxmlFilename
          */
         public String getJrxmlFilename() {
@@ -138,7 +138,7 @@ public final class ReportHelper {
 
         /**
          * Sets the jrxmlFilename.
-         * 
+         *
          * @param jrxmlFilename the jrxmlFilename to set
          */
         public void setJrxmlFilename(String jrxmlFilename) {
@@ -162,7 +162,7 @@ public final class ReportHelper {
 
         /**
          * DOC qzhang Comment method "getReportType". MOD mzhao 2009-02-19
-         * 
+         *
          * @param text
          * @return
          */
@@ -363,7 +363,7 @@ public final class ReportHelper {
 
     /**
      * Method "getAnalyses".
-     * 
+     *
      * @param report
      * @return a list of analyses or an empty list. Do not use this list to add analysis to the report.
      */
@@ -383,7 +383,7 @@ public final class ReportHelper {
 
     /**
      * Method "removeAnalyses".
-     * 
+     *
      * @param report
      * @param analyses analyses to remove from the report
      * @return true if the analyses list of the report changed as a result of the call.
@@ -400,7 +400,7 @@ public final class ReportHelper {
 
     /**
      * Method "addAnalyses".
-     * 
+     *
      * @param analyses a collection of analyses.
      * @param report a report (must not be null)
      * @return true if the analysis list changed as a result of the call.
@@ -423,7 +423,7 @@ public final class ReportHelper {
 
     /**
      * Method "mustRefreshAllAnalyses".
-     * 
+     *
      * @param report
      * @param refresh true if all analyses must be refreshed. False means that no analysis will be refreshed.
      */
@@ -437,7 +437,7 @@ public final class ReportHelper {
     /**
      * Method "getExecutionInformations" returns the execution informations of the given report. If none existed, they
      * are created and stored in the report.
-     * 
+     *
      * @param report a report
      * @return the existing execution informations
      */
@@ -452,9 +452,9 @@ public final class ReportHelper {
 
     /**
      * Method "setReportType".
-     * 
+     *
      * MOD mzhao 2009-02-16
-     * 
+     *
      * @param report the report object to update
      * @param reportType the report type to set
      * @param jrxmlFullPath the full path to the jxrxml file (can be null when the type of report is different from the
@@ -480,9 +480,9 @@ public final class ReportHelper {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Set analysis filter date from.
-     * 
+     *
      * @param report
      * @param dateText
      * @return
@@ -493,9 +493,9 @@ public final class ReportHelper {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "setAnalysisFilterDateFrom".
-     * 
+     *
      * @param report
      * @param dateText
      * @return
@@ -507,9 +507,9 @@ public final class ReportHelper {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "getReportType".
-     * 
+     *
      * @param report
      * @param analysis
      * @return
@@ -540,7 +540,7 @@ public final class ReportHelper {
 
     /**
      * DOC bZhou Comment method "setOutputType".
-     * 
+     *
      * @param outputType
      * @param report
      * @return
@@ -551,7 +551,7 @@ public final class ReportHelper {
 
     /**
      * DOC bZhou Comment method "getOutputType".
-     * 
+     *
      * @param tag
      * @param element
      * @return
@@ -560,14 +560,14 @@ public final class ReportHelper {
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.OUTPUT_TYPE_TAG, report.getTaggedValue());
         if (taggedValue == null || taggedValue.getValue() == null) {
             // this default output type should be same with JasperReportBuilder.OUTPUT_FORMAT.pdf
-            return "pdf";//$NON-NLS-1$ 
+            return "pdf";//$NON-NLS-1$
         }
         return taggedValue.getValue();
     }
 
     /**
      * DOC bZhou Comment method "setSingleGenReport".
-     * 
+     *
      * @param single
      * @param report
      * @return
@@ -579,7 +579,7 @@ public final class ReportHelper {
 
     /**
      * set the password context to the report.
-     * 
+     *
      * @param isContext the password is context or not
      * @param report
      * @return
@@ -591,7 +591,7 @@ public final class ReportHelper {
 
     /**
      * DOC bZhou Comment method "getSingleGenReport".
-     * 
+     *
      * @param report
      * @return
      */
@@ -605,7 +605,7 @@ public final class ReportHelper {
 
     /**
      * if the password is context return true, else return false.
-     * 
+     *
      * @param report
      * @return
      */
@@ -620,7 +620,7 @@ public final class ReportHelper {
 
     /**
      * DOC bZhou Comment method "setOutputFileName".
-     * 
+     *
      * @param fileName
      * @param report
      * @return
@@ -631,7 +631,7 @@ public final class ReportHelper {
 
     /**
      * DOC bZhou Comment method "getOutputFileName".
-     * 
+     *
      * @param report
      * @return
      */
@@ -647,7 +647,7 @@ public final class ReportHelper {
 
     /**
      * DOC bZhou Comment method "setOutputFolderName".
-     * 
+     *
      * @param folderName
      * @param report
      * @return
@@ -658,7 +658,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getDbType".
-     * 
+     *
      * @param report
      * @return
      */
@@ -681,7 +681,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getDbName".
-     * 
+     *
      * @param report
      * @return
      */
@@ -695,7 +695,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getUser".
-     * 
+     *
      * @param report
      * @return
      */
@@ -709,7 +709,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getPassword".
-     * 
+     *
      * @param report
      * @return
      */
@@ -730,7 +730,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getDriver".
-     * 
+     *
      * @param report
      * @return
      */
@@ -744,7 +744,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getDialect".
-     * 
+     *
      * @param report
      * @return
      */
@@ -758,7 +758,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getUrl".
-     * 
+     *
      * @param report
      * @return
      */
@@ -772,7 +772,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getHost".
-     * 
+     *
      * @param report
      * @return
      */
@@ -795,7 +795,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getLastRunContext".
-     * 
+     *
      * @param report
      * @return
      */
@@ -810,7 +810,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getPort".
-     * 
+     *
      * @param report
      * @return
      */
@@ -824,7 +824,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getSchema".
-     * 
+     *
      * @param report
      * @return
      */
@@ -838,7 +838,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setDbType".
-     * 
+     *
      * @param dbType
      * @param report
      * @return
@@ -849,7 +849,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "dbVersion".
-     * 
+     *
      * @param dbVersion
      * @param report
      * @return
@@ -860,7 +860,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setDbName".
-     * 
+     *
      * @param dbName
      * @param report
      * @return
@@ -871,7 +871,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setUser".
-     * 
+     *
      * @param user
      * @param report
      * @return
@@ -882,7 +882,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setPassword".
-     * 
+     *
      * @param password
      * @param report
      * @return
@@ -895,7 +895,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setPassword".
-     * 
+     *
      * @param password
      * @param report
      * @param encrypt encrypt the password or not
@@ -914,7 +914,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setDriver".
-     * 
+     *
      * @param driver
      * @param report
      * @return
@@ -925,7 +925,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setDialect".
-     * 
+     *
      * @param dialect
      * @param report
      * @return
@@ -936,7 +936,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setUrl".
-     * 
+     *
      * @param url
      * @param report
      * @return
@@ -947,7 +947,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setHost".
-     * 
+     *
      * @param host
      * @param report
      * @return
@@ -962,7 +962,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setLastRunContext".
-     * 
+     *
      * @param lastRunContext
      * @param report
      * @return
@@ -973,7 +973,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setPort".
-     * 
+     *
      * @param port
      * @param report
      * @return
@@ -984,7 +984,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "setSchema".
-     * 
+     *
      * @param schema
      * @param report
      * @return
@@ -995,7 +995,7 @@ public final class ReportHelper {
 
     /**
      * DOC bZhou Comment method "getOutputFolderName".
-     * 
+     *
      * @param report
      * @return
      */
@@ -1010,7 +1010,7 @@ public final class ReportHelper {
 
     /**
      * DOC xqliu Comment method "getOutputName".
-     * 
+     *
      * @param reportContainer
      * @param simpleName
      * @return
@@ -1023,7 +1023,7 @@ public final class ReportHelper {
 
     /**
      * DOC yyi Comment method "getSubReportsPath".
-     * 
+     *
      * @return
      */
     public static IPath getSubReportsPath() {
@@ -1032,7 +1032,7 @@ public final class ReportHelper {
 
     /**
      * get the report last run context group name, if it is empty, return the default context group name.
-     * 
+     *
      * @param tdReport
      * @return
      */

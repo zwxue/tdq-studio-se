@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * created by qiongli on 2013-12-25 Detailled comment
- * 
+ *
  */
 public class ColumnFilterWizardPage extends MetaDataFilterWizardPage {
 

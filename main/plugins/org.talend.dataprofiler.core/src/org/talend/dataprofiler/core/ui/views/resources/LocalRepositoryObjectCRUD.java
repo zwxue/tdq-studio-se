@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -83,7 +83,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * Local Repository Object CRUD. only when the project is local use this.
- * 
+ *
  */
 public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
@@ -123,7 +123,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * check whether DND is allowed.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @return
@@ -197,7 +197,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * Judge whether both source and target nodes are context type
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @return
@@ -211,7 +211,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * get Selected Repository Nodes.
-     * 
+     *
      * @return
      */
     protected IRepositoryNode[] getSelectedRepositoryNodes() {
@@ -232,7 +232,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * get Selected Repository Nodes from the selection.
-     * 
+     *
      * @param selection
      * @return
      */
@@ -249,7 +249,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * check sourceNode whether has Locked Items.
-     * 
+     *
      * @param sourceNode
      * @return boolean
      */
@@ -281,7 +281,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * check whether the source node is the subtype of target node.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @return
@@ -294,7 +294,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * get Target Node's all Child Types.
-     * 
+     *
      * @param targetObjectType
      * @return
      */
@@ -343,7 +343,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * check whether the node is forbidden to drag.
-     * 
+     *
      * @param sourceNode
      * @return
      */
@@ -419,7 +419,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * move RepositoryNodes to the target RepositoryNode.
-     * 
+     *
      * @param repositoryNodes
      * @param targetNode
      * @throws PersistenceException
@@ -466,7 +466,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * move Jrxml File. MOD yyin 20130123 TDQ-5392
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @param makeRelativeTo
@@ -489,7 +489,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * when move Analysis, Connection node, use this method.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      */
@@ -499,7 +499,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * when move Analysis, Connection, Context node, use this method.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      */
@@ -516,7 +516,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * when move Context node, use this method.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      */
@@ -526,7 +526,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * get Source Node Full path Relative To project full path.
-     * 
+     *
      * @param sourceNode
      * @return
      */
@@ -538,7 +538,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * move the report node (move the report generate doc folder also).
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @throws PersistenceException
@@ -561,7 +561,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * update user define jrxml template path.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @link {@link #moveReportRepNode(IRepositoryNode, IRepositoryNode)}
@@ -592,7 +592,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * when move Common, Source file, Pattern, UDI, Rule, use this method.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @param removeLastSegments
@@ -605,7 +605,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * check can move folder node or not.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @return
@@ -626,7 +626,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * move Folder Node.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @throws PersistenceException
@@ -676,7 +676,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * check whether sourceNode and targetNode is the same Type.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @return
@@ -702,7 +702,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * get FullPath from objectType.
-     * 
+     *
      * @param objectType
      * @return
      */
@@ -742,7 +742,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /**
      * move folder.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @throws PersistenceException
@@ -787,7 +787,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
     /**
      * move the IRepositoryViewObject from the sourceNode to targetNode, don't refresh the source and target node, user
      * need to refresh the dq repository view tree by hand.
-     * 
+     *
      * @param sourceNode
      * @param targetNode
      * @param basePath
@@ -849,7 +849,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#getUISelection()
      */
     @Override
@@ -883,19 +883,19 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#showWarningDialog()
      */
     public void showWarningDialog() {
         MessageDialog
                 .openWarning(
                         PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                        DefaultMessagesImpl.getString("LocalRepositoryObjectCRUD.Title"), DefaultMessagesImpl.getString("LocalRepositoryObjectCRUD.Content")); //$NON-NLS-1$ //$NON-NLS-2$  
+                        DefaultMessagesImpl.getString("LocalRepositoryObjectCRUD.Title"), DefaultMessagesImpl.getString("LocalRepositoryObjectCRUD.Content")); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#refreshDQViewForRemoteProject()
      */
     @Override
@@ -905,7 +905,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#isSelectionAvailable()
      */
     public Boolean isSelectionAvailable() {

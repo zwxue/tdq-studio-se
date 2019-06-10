@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * 
+ *
  * DOC zhaoxinyi class global comment. Detailled comment
  */
 public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
@@ -50,7 +50,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
     // private Collection<Resource> modifiedResources = new HashSet<Resource>();
     /**
      * Method "addColumnToAnalyze".
-     * 
+     *
      * @param column
      * @return
      */
@@ -105,7 +105,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "setDatamingType".
-     * 
+     *
      * @param dataminingTypeLiteral the literal expression of the datamining type used for the analysis
      * @param column a column
      */
@@ -122,7 +122,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
 
     /**
      * DOC BZhou Comment method "getDatamingType".
-     * 
+     *
      * @param column
      * @return
      */
@@ -133,7 +133,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "getIndicators".
-     * 
+     *
      * @param column
      * @return the indicators attached to this column
      */
@@ -150,7 +150,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "getIndicatorLeaves" returns the indicators for the given column at the leaf level.
-     * 
+     *
      * @param column
      * @return the indicators attached to this column
      */
@@ -169,7 +169,7 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
 
     /**
      * Method "setStringDataFilter".
-     * 
+     *
      * @param datafilterString
      * @return true when a new data filter is created, false if it is only updated
      */

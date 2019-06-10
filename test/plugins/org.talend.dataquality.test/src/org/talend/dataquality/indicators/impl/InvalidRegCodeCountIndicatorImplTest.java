@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,14 +24,14 @@ public class InvalidRegCodeCountIndicatorImplTest {
 
     InvalidRegCodeCountIndicatorImpl invalidRegCodeCountIndicatorImpl = null;
 
-    private Object data_invalid[] = { "+08618611281173", "+086 18611281173", "86 18611281173", "086 18611281173", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
-            "08618611281173", "13693273494", "123", "", null }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+    private Object data_invalid[] = { "+08618611281173", "+086 18611281173", "86 18611281173", "086 18611281173", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            "08618611281173", "13693273494", "123", "", null }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     private Object data_mixed[] = {
-            "+41446681800", "+41 446681800", "+86 18611281173", "+8613521588310", "+86 1352 1588 310", "+86 135 2158 8310", "+08618611281173", null };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ 
+            "+41446681800", "+41 446681800", "+86 18611281173", "+8613521588310", "+86 1352 1588 310", "+86 135 2158 8310", "+08618611281173", null };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 
     private Object data_valid[] = {
-            "+41446681800", "+41 446681800", "+86 18611281173", "+8613521588310", "+86 1352 1588 310", "+86 135 2158 8310" };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
+            "+41446681800", "+41 446681800", "+86 18611281173", "+8613521588310", "+86 1352 1588 310", "+86 135 2158 8310" };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
     @Before
     public void setUp() throws Exception {

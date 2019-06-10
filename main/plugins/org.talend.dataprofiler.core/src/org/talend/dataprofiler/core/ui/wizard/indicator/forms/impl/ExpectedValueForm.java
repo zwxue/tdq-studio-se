@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,7 +36,7 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
 
     /**
      * DOC zqin ExpectedValueForm constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param parameter
@@ -48,7 +48,7 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFields()
      */
     @Override
@@ -64,7 +64,7 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFieldsListeners()
      */
     @Override
@@ -81,7 +81,7 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
      */
     @Override
@@ -100,7 +100,7 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormEnum()
      */
     @Override
@@ -110,7 +110,7 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
      */
     @Override
@@ -119,7 +119,7 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
      */
     @Override
@@ -128,7 +128,7 @@ public class ExpectedValueForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#checkFieldsValue()
      */
     @Override

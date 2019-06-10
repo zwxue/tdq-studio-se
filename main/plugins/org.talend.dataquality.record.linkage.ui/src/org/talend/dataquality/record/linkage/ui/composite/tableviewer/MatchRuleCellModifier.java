@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,7 +23,7 @@ import org.talend.dataquality.rules.MatchKeyDefinition;
 
 /**
  * created by zshen on Aug 1, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDefinition> {
 
@@ -36,7 +36,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
      */
     @Override
@@ -61,7 +61,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
      */
     @Override
@@ -90,7 +90,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     @Override
@@ -169,7 +169,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
 
     /**
      * DOC zshen Comment method "validIntegerType".
-     * 
+     *
      * @param newValue
      */
     private boolean validIntegerType(String newValue) {

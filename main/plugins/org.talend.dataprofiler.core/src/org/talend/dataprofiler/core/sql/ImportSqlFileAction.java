@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ public class ImportSqlFileAction extends AbstractImportSourceFileAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractImportSourceFileAction#getFilterExtensions()
      */
     @Override
@@ -48,7 +48,7 @@ public class ImportSqlFileAction extends AbstractImportSourceFileAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractImportFileAction#getRepositoryType()
      */
     @Override
@@ -58,7 +58,7 @@ public class ImportSqlFileAction extends AbstractImportSourceFileAction {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractImportSourceFileAction#createTDQFileItem()
      */
     @Override

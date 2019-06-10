@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -63,7 +63,7 @@ public class TdTaskPropertiesDialog extends TdDialogMarkerProperties {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.ui.views.markers.internal.DialogMarkerProperties#createAttributesArea(org.eclipse.swt.widgets.Composite
      * )
@@ -152,7 +152,7 @@ public class TdTaskPropertiesDialog extends TdDialogMarkerProperties {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.views.markers.internal.DialogMarkerProperties#updateEnablement()
      */
     protected void updateEnablement() {
@@ -163,7 +163,7 @@ public class TdTaskPropertiesDialog extends TdDialogMarkerProperties {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.views.markers.internal.DialogMarkerProperties#updateDialogForNewMarker()
      */
     @SuppressWarnings("unchecked")
@@ -186,7 +186,7 @@ public class TdTaskPropertiesDialog extends TdDialogMarkerProperties {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.views.markers.internal.DialogMarkerProperties#updateDialogFromMarker()
      */
     @SuppressWarnings("unchecked")
@@ -219,7 +219,7 @@ public class TdTaskPropertiesDialog extends TdDialogMarkerProperties {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.views.markers.internal.DialogMarkerProperties#getMarkerAttributes()
      */
     @SuppressWarnings("unchecked")
@@ -236,9 +236,9 @@ public class TdTaskPropertiesDialog extends TdDialogMarkerProperties {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.views.markers.internal.DialogMarkerProperties.getModifyOperationTitle()
-     * 
+     *
      * @since 3.3
      */
     protected String getModifyOperationTitle() {
@@ -247,9 +247,9 @@ public class TdTaskPropertiesDialog extends TdDialogMarkerProperties {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.views.markers.internal.DialogMarkerProperties.getCreateOperationTitle()
-     * 
+     *
      * @since 3.3
      */
     protected String getCreateOperationTitle() {

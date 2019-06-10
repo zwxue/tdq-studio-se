@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,14 +19,14 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
  * @author scorreia
- * 
+ *
  * Interface for exploring data from a specific indicator.
  */
 public interface IDataExplorer {
 
     /**
      * Method "setAnalysis".
-     * 
+     *
      * @param analysis the analysis from which the exploration must be done.
      * @return false if the given analysis cannot be explored
      */
@@ -34,14 +34,14 @@ public interface IDataExplorer {
 
     /**
      * DOC Zqin Comment method "setEnitty".
-     * 
+     *
      * @param entity
      */
     public void setEnitty(ChartDataEntity entity);
 
     /**
      * DOC Zqin Comment method "getQueryMap".
-     * 
+     *
      * @return
      */
     public Map<String, String> getQueryMap();

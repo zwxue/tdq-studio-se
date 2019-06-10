@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ public final class DateFormatUtils {
     }
 
     /**
-     * The date should be displayed as follows : “hour: minute�? format for the date of the current day; “month, date�?
+     * The date should be displayed as follows : “hour: minute�? format for the date of the current day; “month, date�?
      * for the dates of the current year; full numeric format for older dates). For example: "8:14 am","July
      * 4","11/22/07".
      */
@@ -69,7 +69,7 @@ public final class DateFormatUtils {
 
     /**
      * DOC rli Comment method "main".
-     * 
+     *
      * @param args
      */
     public static void main(String[] args) {

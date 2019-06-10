@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,7 +31,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author scorreia
- * 
+ *
  * this class executes the analyses contained in the report that need to be computed.
  */
 public class ReportExecutor implements IReportExecutor {
@@ -42,7 +42,7 @@ public class ReportExecutor implements IReportExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.IReportExecutor#execute(org.talend.dataquality.reports.TdReport)
      */
     public ReturnCode execute(TdReport report, IProgressMonitor monitor) throws AnalysisExecutionException {

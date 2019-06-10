@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,14 +27,14 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
- * 
+ *
  * This class explores the data that matched or did not match a pattern indicator.
  */
 public abstract class PatternExplorer extends DataExplorer {
 
     /**
      * DOC scorreia PatternExplorer constructor comment.
-     * 
+     *
      */
     public PatternExplorer() {
     }
@@ -58,7 +58,7 @@ public abstract class PatternExplorer extends DataExplorer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.explore.DataExplorer#NotShowMenu()
      */
     @Override
@@ -72,9 +72,9 @@ public abstract class PatternExplorer extends DataExplorer {
     }
 
     /**
-     * 
+     *
      * get the Valid Values Statement.
-     * 
+     *
      * @return SELECT statement for the invalid Value of select column
      */
     public String getInvalidValuesStatement() {
@@ -97,9 +97,9 @@ public abstract class PatternExplorer extends DataExplorer {
     abstract protected String getRegexNotLike(String regexPatternString);
 
     /**
-     * 
+     *
      * get the Valid Values Statement.
-     * 
+     *
      * @return SELECT statement for the valid Value of select column
      */
     public String getValidValuesStatement() {
@@ -119,7 +119,7 @@ public abstract class PatternExplorer extends DataExplorer {
 
     /**
      * get the Invalid Rows Statement.
-     * 
+     *
      * @return
      */
     public String getInvalidRowsStatement() {
@@ -141,7 +141,7 @@ public abstract class PatternExplorer extends DataExplorer {
 
     /**
      * get the Valid Rows Statement.
-     * 
+     *
      * @return
      */
     public String getValidRowsStatement() {
@@ -159,7 +159,7 @@ public abstract class PatternExplorer extends DataExplorer {
 
     /**
      * get the Query After Replaced.
-     * 
+     *
      * @param indicatorDefinition
      * @param list
      * @return String

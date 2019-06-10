@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -68,7 +68,7 @@ public class ReloadDatabaseAction extends Action {
 
     /**
      * Getter for returnCode.
-     * 
+     *
      * @return the returnCode
      */
     public ReturnCode getReturnCode() {
@@ -77,7 +77,7 @@ public class ReloadDatabaseAction extends Action {
 
     /**
      * constructor.
-     * 
+     *
      * @param selectedNode
      * @param menuText
      */
@@ -89,7 +89,7 @@ public class ReloadDatabaseAction extends Action {
 
     /**
      * constructor.
-     * 
+     *
      * @param selectedNode
      * @param menuText
      * @param needCompare
@@ -102,7 +102,7 @@ public class ReloadDatabaseAction extends Action {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -119,10 +119,10 @@ public class ReloadDatabaseAction extends Action {
             // popup a dialog to warn the user better do the compare before the reload, and provide two buttons:
             // if the user click the compare button, the compare will be executed.
             // if the user click the reload button, the reload will continue.
-            String[] dialogButtonLabels = { Messages.getString("ReloadDatabaseAction.ReloadLabel") };//$NON-NLS-1$ 
+            String[] dialogButtonLabels = { Messages.getString("ReloadDatabaseAction.ReloadLabel") };//$NON-NLS-1$
             MessageDialog dialog = new MessageDialog(
                     CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    Messages.getString("ReloadDatabaseAction.ReloadLabel"), null, Messages.getString("ReloadDatabaseAction.IsContinue"), 3, dialogButtonLabels, SWT.NONE);//$NON-NLS-1$ //$NON-NLS-2$ 
+                    Messages.getString("ReloadDatabaseAction.ReloadLabel"), null, Messages.getString("ReloadDatabaseAction.IsContinue"), 3, dialogButtonLabels, SWT.NONE);//$NON-NLS-1$ //$NON-NLS-2$
             int open = dialog.open();
             // when click close, do nothing.
             if (open == -1) {
@@ -132,8 +132,8 @@ public class ReloadDatabaseAction extends Action {
             // when click compare
             // if (open == 0) {
             // // go to compare instead of reloading now
-            //                new PopComparisonUIAction(selectedObject, Messages.getString("ReloadDatabaseAction.CompareLabel")).run();//$NON-NLS-1$ 
-            //                returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.IsContinue"), false);//$NON-NLS-1$ 
+            //                new PopComparisonUIAction(selectedObject, Messages.getString("ReloadDatabaseAction.CompareLabel")).run();//$NON-NLS-1$
+            //                returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.IsContinue"), false);//$NON-NLS-1$
             // return;
             // }// ~
         }
@@ -212,7 +212,7 @@ public class ReloadDatabaseAction extends Action {
 
     /**
      * check whether support the reload database action.
-     * 
+     *
      * @return boolean
      */
     private boolean isSupport() {
@@ -231,7 +231,7 @@ public class ReloadDatabaseAction extends Action {
 
     /**
      * get Connection.
-     * 
+     *
      * @return
      */
     private Connection getConnection() {

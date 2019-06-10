@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -14,11 +14,11 @@ package org.talend.dq.indicators.graph.tests;
 
 /*
  * Copyright (c) 2004, the JUNG Project and the Regents of the University of California All rights reserved.
- * 
+ *
  * This software is open-source under the BSD license; see either "license.txt" or
  * http://jung.sourceforge.net/license.txt for a description.
- * 
- * 
+ *
+ *
  * Created on Nov 7, 2004
  */
 
@@ -89,13 +89,13 @@ import edu.uci.ics.jung.visualization.transform.Transformer;
 /**
  * Shows off some of the capabilities of <code>PluggableRenderer</code>. This code provides examples of different ways
  * to provide and change the various functions that provide property information to the renderer.
- * 
+ *
  * <p>
  * This demo creates a random mixed-mode graph with random edge weights using
  * <code>TestGraph.generateMixedRandomGraph</code>. It then runs <code>VoltageRanker</code> on this graph, using half of
  * the "seed" vertices from the random graph generation as voltage sources, and half of them as voltage sinks.
  * </p>
- * 
+ *
  * <p>
  * What the controls do:
  * <ul>
@@ -146,7 +146,7 @@ import edu.uci.ics.jung.visualization.transform.Transformer;
  * </ul>
  * </ul>
  * </p>
- * 
+ *
  * @author Danyel Fisher, Joshua O'Madadhain, Tom Nelson
  */
 public class MyFullDemoMain extends JApplet implements ActionListener {
@@ -696,7 +696,7 @@ public class MyFullDemoMain extends JApplet implements ActionListener {
         /**
          * If this event is over a Vertex, pop up a menu to allow the user to increase/decrease the voltage attribute of
          * this Vertex
-         * 
+         *
          * @param e
          */
         protected void handlePopup(MouseEvent e) {

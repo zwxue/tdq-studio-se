@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ import org.talend.utils.sql.Java2SqlType;
 
 /**
  * @author scorreia
- * 
+ *
  * This class generate select statement for any function found in an instantiated query of the type:
  * "SELECT function(col), COUNT(*) FROM ..."
  */
@@ -43,7 +43,7 @@ public class FunctionFrequencyStatExplorer extends FrequencyStatisticsExplorer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.explore.FrequencyStatisticsExplorer#getFreqRowsStatement()
      */
     @Override

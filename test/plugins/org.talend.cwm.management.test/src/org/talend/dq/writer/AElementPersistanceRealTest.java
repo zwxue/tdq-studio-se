@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -61,7 +61,7 @@ import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * created by xqliu on Jul 23, 2013 Detailled comment
- * 
+ *
  */
 public class AElementPersistanceRealTest {
 
@@ -240,9 +240,9 @@ public class AElementPersistanceRealTest {
 
     /**
      * Test method for {@link org.talend.dq.writer.AElementPersistance#save(Item, boolean)}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case1: between UDI and analysis
      */
     @Ignore
@@ -303,9 +303,9 @@ public class AElementPersistanceRealTest {
 
     /**
      * Test method for {@link org.talend.dq.writer.AElementPersistance#save(Item, boolean)}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case2: between Pattern and analysis
      */
     @Ignore
@@ -384,9 +384,9 @@ public class AElementPersistanceRealTest {
 
     /**
      * Test method for {@link org.talend.dq.writer.AElementPersistance#save(Item, boolean)}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case3: between Rule and analysis
      */
     @Ignore
@@ -446,9 +446,9 @@ public class AElementPersistanceRealTest {
 
     /**
      * Test method for {@link org.talend.dq.writer.AElementPersistance#save(Item, boolean)}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case1: between analysis and report
      */
     @Ignore
@@ -504,7 +504,7 @@ public class AElementPersistanceRealTest {
      * Test method for
      * {@link org.talend.dq.writer.AElementPersistance#saveWithDependencies(org.talend.core.model.properties.Item, orgomg.cwm.objectmodel.core.ModelElement)}
      * .
-     * 
+     *
      * @throws PersistenceException
      */
     @Test
@@ -563,7 +563,7 @@ public class AElementPersistanceRealTest {
      * Test method for
      * {@link org.talend.dq.writer.AElementPersistance#saveWithoutDependencies(org.talend.core.model.properties.Item, orgomg.cwm.objectmodel.core.ModelElement)}
      * .
-     * 
+     *
      * @throws PersistenceException
      */
     @Test

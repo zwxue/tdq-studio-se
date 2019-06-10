@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,7 +24,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author scorreia
- * 
+ *
  * Creates an Analysis and its attribute from the given informations. Use one AnalysisBuilder per Analysis to create.
  */
 public class AnalysisBuilder extends AnalysisBaseBuilder {
@@ -35,7 +35,7 @@ public class AnalysisBuilder extends AnalysisBaseBuilder {
      * Method "saveAnalysis". This method should be called when the creation of the analysis definition (analysis
      * context + parameters) is created. It is not safe to use it for saving the analysis after the evaluation of the
      * analysis result. The domain should be saved before calling this method.
-     * 
+     *
      * @param folder the folder where the analysis is saved.
      * @return true if saved without problem
      */

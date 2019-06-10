@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,7 +39,7 @@ public interface ModelElementIndicator {
      * If the Indicator is a plain indicator, will remove the indicator value from field 'flatIndicatorEnumList' and
      * 'indicatorUnitMap', contains the parent and children of indicatorTypeMapping.getType();Else, will remove it from
      * specialIndicaortUnitList.
-     * 
+     *
      * @param indicatorUnit
      */
     public void removeIndicatorUnit(IndicatorUnit indicatorUnit);

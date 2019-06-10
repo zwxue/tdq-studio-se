@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ import org.talend.dq.analysis.AnalysisRecordGroupingUtils;
 /**
  * For each record: find its related block, and use this block's matching to do the match.
  * Used for running the match analysis
- * 
+ *
  */
 public class BlockAndMatchManager {
 
@@ -104,7 +104,7 @@ public class BlockAndMatchManager {
 
     /**
      * end all blocks matching, and set each block size into the block indicator
-     * 
+     *
      * @throws BusinessException
      */
     private void endAll() throws BusinessException {
@@ -124,7 +124,7 @@ public class BlockAndMatchManager {
 
     /**
      * create the processing manager of one block
-     * 
+     *
      * @param blockKey
      * @return
      * @throws BusinessException
@@ -137,7 +137,7 @@ public class BlockAndMatchManager {
 
     /**
      * get the block key of one record
-     * 
+     *
      * @param record
      * @return
      */
@@ -178,7 +178,7 @@ public class BlockAndMatchManager {
 
         /**
          * Init the algorithm
-         * 
+         *
          * @throws BusinessException
          */
         private void initGrouping(AnalysisMatchRecordGrouping recordGrouping) throws BusinessException {
@@ -196,7 +196,7 @@ public class BlockAndMatchManager {
 
         /*
          * Group on one record
-         * 
+         *
          * @see java.lang.Thread#run()
          */
         public void run(RichRecord currentRecord) throws BusinessException {

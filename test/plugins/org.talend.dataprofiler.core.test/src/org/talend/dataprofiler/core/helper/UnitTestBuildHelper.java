@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -206,7 +206,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create project with a specified name.
-     * 
+     *
      * @param projectName specified project name
      * @return
      */
@@ -289,7 +289,7 @@ public class UnitTestBuildHelper {
 
     /**
      * DOC talend Comment method "createRealReport".
-     * 
+     *
      * @param name the name of report
      * @param folder the path which report location
      * @param isDelete the report whether is logic delate
@@ -347,7 +347,7 @@ public class UnitTestBuildHelper {
 
     /**
      * DOC zshen Comment method "createFolder". create the subfolder under the parentFolder and named for folderName
-     * 
+     *
      * @param parentFolder
      * @param folderName
      * @return
@@ -366,10 +366,10 @@ public class UnitTestBuildHelper {
 
     /**
      * DOC zshen Comment method "checkFileName".
-     * 
+     *
      * @param fileName
      * @param pattern
-     * 
+     *
      * copy the method from ProxyRepositoryFactory to avoid tos migeration.
      */
     private static void checkFileName(String fileName, String pattern) {
@@ -400,7 +400,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real RepositoryNode for DataProfiling.
-     * 
+     *
      * @return
      */
     public static RepositoryNode createRealDataProfilingNode(IProject project) {
@@ -428,7 +428,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real ReportFolderRepNode.
-     * 
+     *
      * @param parentNode
      * @return
      */
@@ -446,7 +446,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create a real ReportSubFolderRepNode.
-     * 
+     *
      * @param parentNode the parent node
      * @param folderName the folder name
      * @return
@@ -483,7 +483,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create a real ReportRepNode.
-     * 
+     *
      * @param name report name
      * @param folder report's parent folder
      * @param isDelete delete flag
@@ -521,7 +521,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real SourceFileFolderRepNode.
-     * 
+     *
      * @param parentNode
      * @return
      */
@@ -635,7 +635,7 @@ public class UnitTestBuildHelper {
     }
 
     /**
-     * 
+     *
      * mock LocalRepositoryObjectCRUD for RepNodeUtils.getRepositoryObjectCRUD().
      */
     public static void mockLocalRepositoryObjectCRUD() {
@@ -654,7 +654,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create a real file connection witl file url
-     * 
+     *
      * @param fileUrl
      * @param delimitedFileconnection
      * @return
@@ -690,7 +690,7 @@ public class UnitTestBuildHelper {
     /**
      * init the file's related metadata table with columns: name, company, city,country, comment. and add all columns as
      * analyzed elements.
-     * 
+     *
      * @param context
      */
     public static MetadataColumn initColumns(MetadataTable metadataTable) {
@@ -726,7 +726,7 @@ public class UnitTestBuildHelper {
 
     /**
      * get a real database connection,the connection parameters load from a propery file.
-     * 
+     *
      * @return
      */
     public static Connection getRealOracleDatabase() {

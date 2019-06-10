@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -73,7 +73,7 @@ public class SchemaAnalysisDetailsPage extends AbstractFilterMetadataPage {
     /**
      * if the current analysis is schema overview, there are no catalogs, but only schemas. so, the number of schemas
      * here equals to the number of the indicators.
-     * 
+     *
      * @param tdCatalogs
      * @return
      */

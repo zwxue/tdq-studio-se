@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.Control;
 
 /**
  * DOC qwei class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  */
 public class BorderLayout extends AWTLayout {
@@ -115,7 +115,7 @@ public class BorderLayout extends AWTLayout {
 
     /**
      * Read the layout data of the children of a composite.
-     * 
+     *
      * @param composite the parent composite
      */
     private void readLayoutData(Composite composite) {

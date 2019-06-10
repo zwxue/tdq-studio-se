@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,9 +21,9 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
- * 
+ *
  * TDQ-11797: msjian Add Exasol Expression into RegularExpressionMatching.
- * 
+ *
  */
 public class AddExasolRegularExpressionMatchingTask extends AbstractWorksapceUpdateTask {
 
@@ -35,7 +35,7 @@ public class AddExasolRegularExpressionMatchingTask extends AbstractWorksapceUpd
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -44,7 +44,7 @@ public class AddExasolRegularExpressionMatchingTask extends AbstractWorksapceUpd
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {

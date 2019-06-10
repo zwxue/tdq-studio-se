@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
- * 
+ *
  * This class manages the software systems.
  */
 public final class SoftwareSystemManager {
@@ -58,9 +58,9 @@ public final class SoftwareSystemManager {
     }
 
     /**
-     * 
+     *
      * Find the TdSoftwareSystem instance from EMF model, if it does not exist, will NOT reload from database.
-     * 
+     *
      * @param dataProvider
      * @return
      * @deprecated
@@ -107,7 +107,7 @@ public final class SoftwareSystemManager {
 
     /**
      * DOC scorreia Comment method "saveSoftwareSystem".
-     * 
+     *
      * @param util
      * @param softwareSystem
      */
@@ -117,10 +117,10 @@ public final class SoftwareSystemManager {
     }
 
     /**
-     * 
+     *
      * remove the softWareSystem which have relation about dataprovider and any softWareSystem which don't contain any
      * one.
-     * 
+     *
      * @param dataProvider
      * @return
      * @deprecated
@@ -179,7 +179,7 @@ public final class SoftwareSystemManager {
 
     /**
      * Update the software systems given the database connection instance.<br>
-     * 
+     *
      * @param database connection (Talend type)
      * @return
      * @throws SQLException
@@ -206,7 +206,7 @@ public final class SoftwareSystemManager {
 
     /**
      * DOC zhao Comment method "isExistedInSoftwareSystem".
-     * 
+     *
      * @param databaseConnection
      * @return
      */
@@ -232,7 +232,7 @@ public final class SoftwareSystemManager {
 
     /**
      * DOC zhao Comment method "update".
-     * 
+     *
      * @param databaseProductName
      * @param databaseProductVersion
      */
@@ -257,9 +257,9 @@ public final class SoftwareSystemManager {
     }
 
     /**
-     * 
+     *
      * Get new database types from software system.
-     * 
+     *
      * @return the new datababse types (e.g. new type created via generic JDBC connection).
      */
     public List<String> getNewDBTypesFromSoftwareSystem(Set<String> existingTypes) {

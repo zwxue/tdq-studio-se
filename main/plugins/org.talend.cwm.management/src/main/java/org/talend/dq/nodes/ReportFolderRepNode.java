@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,7 +40,7 @@ public class ReportFolderRepNode extends DQFolderRepNode {
 
     /**
      * DOC klliu ReportFolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -52,7 +52,7 @@ public class ReportFolderRepNode extends DQFolderRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
@@ -79,7 +79,7 @@ public class ReportFolderRepNode extends DQFolderRepNode {
 
     /**
      * get all children under the folder.
-     * 
+     *
      * @param withDelete include deleted ones
      * @return
      */
@@ -125,7 +125,7 @@ public class ReportFolderRepNode extends DQFolderRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getDisplayText()
      */
     @Override
@@ -135,7 +135,7 @@ public class ReportFolderRepNode extends DQFolderRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.DQFolderRepNode#getChildrenForProject(boolean, org.talend.core.model.general.Project)
      */
     @Override
@@ -171,7 +171,7 @@ public class ReportFolderRepNode extends DQFolderRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.DQFolderRepNode#isIgnoreFolder(boolean, org.talend.core.model.general.Project,
      * org.talend.core.model.repository.Folder)
      */

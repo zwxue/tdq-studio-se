@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -230,7 +230,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * get Connection Combo Selected Node.
-     * 
+     *
      * @return RepositoryNode
      */
     public RepositoryNode getConnComboSelectNode() {
@@ -271,7 +271,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 this.updateAnalysisConnectionVersionInfo();
             } catch (DataprofilerCoreException e) {
                 MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                        DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), e.getMessage()); //$NON-NLS-1$ 
+                        DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), e.getMessage()); //$NON-NLS-1$
                 ExceptionHandler.process(e, Level.ERROR);
             }
         }
@@ -320,7 +320,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * MOD mzhao 2009-06-17 feature 5887.
-     * 
+     *
      * @param parentComp
      */
     public void createConnBindWidget(Composite parentComp) {
@@ -389,7 +389,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * create the version Text of the connection.
-     * 
+     *
      * @param parentComp
      */
     private void createConnVersionText(Composite parentComp) {
@@ -411,7 +411,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * get the database's version of the Analysis.
-     * 
+     *
      * @return
      */
     public String getConnectionVersion() {
@@ -433,7 +433,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * get the default connection's version of this analysis.
-     * 
+     *
      * @returnd efault connection's version
      */
     private String getConnectionVersionDefault() {
@@ -457,7 +457,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * init the version of the Connection accroding to the file name.
-     * 
+     *
      * @param connection
      * @return
      */
@@ -480,7 +480,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * 
+     *
      * This method will make connection elem become proxy, look out for use it.
      */
     public void reloadDataproviderAndFillConnCombo() {
@@ -532,7 +532,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC msjian Comment method "getConnectionsWithoutDeleted".
-     * 
+     *
      * @return
      */
     protected List<IRepositoryNode> getConnectionsWithoutDeleted() {
@@ -541,7 +541,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * find the Position by the connection.
-     * 
+     *
      * @param connsWithoutDeletion
      * @param connection
      * @return
@@ -559,7 +559,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * find the Position by the connCombo.
-     * 
+     *
      * @param connsWithoutDeletion
      * @param connCombo
      * @return
@@ -578,7 +578,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * add a connection node into the combobox.
-     * 
+     *
      * @param repNode
      * @param index
      */
@@ -593,7 +593,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * fill the combobox of connections
-     * 
+     *
      * @param connsWithoutDeletion
      */
     private void fillComb(List<IRepositoryNode> connsWithoutDeletion) {
@@ -606,7 +606,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * check if the connection repNode is supported.
-     * 
+     *
      * @param repNode
      * @return boolean true:support
      */
@@ -616,9 +616,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * ADD gdbu 2011-6-1 bug : 19833
-     * 
+     *
      * DOC gdbu Comment method "updateDQRuleDependency".
-     * 
+     *
      * @param dqRules
      */
     protected void updateDQRuleDependency(List<DQRule> dqRules) {
@@ -643,9 +643,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * ADD gdbu 2011-6-1 bug : 19833
-     * 
+     *
      * DOC gdbu Comment method "getDqRules". Get all DQRule from analysis.
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -663,7 +663,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC bZhou Comment method "getTreeViewer".
-     * 
+     *
      * @return
      */
     public AbstractColumnDropTree getTreeViewer() {
@@ -672,7 +672,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * create a label to indicate this connection is logical deleted.
-     * 
+     *
      * @param parentComp
      */
     private void createConnDeletedLabel(Composite parentComp) {
@@ -691,7 +691,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * Log on debug enable.
-     * 
+     *
      * @param logger
      * @param level
      * @param message
@@ -702,7 +702,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * log when analysis saved
-     * 
+     *
      * @param saved
      * @throws DataprofilerCoreException
      */
@@ -722,7 +722,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
      */
     @Override
@@ -731,11 +731,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param TDQAnalysisItem
      * @return whether it has been deleted
-     * 
+     *
      * delete the dependency between analysis and connection
      */
     protected boolean deleteConnectionDependency(TDQAnalysisItem anaItem) {
@@ -744,7 +744,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC xqliu Comment method "createAnalysisLimitComposite".
-     * 
+     *
      * @param pComp
      * @return
      */
@@ -791,7 +791,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC xqliu Comment method "saveNumberOfConnectionsPerAnalysis".
-     * 
+     *
      * @throws DataprofilerCoreException
      */
     protected void saveNumberOfConnectionsPerAnalysis() throws DataprofilerCoreException {
@@ -810,7 +810,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * set ScrolledForm.
-     * 
+     *
      * @param form
      */
     public void setForm(ScrolledForm form) {
@@ -819,7 +819,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * get ScrolledForm.
-     * 
+     *
      * @return
      */
     public ScrolledForm getForm() {
@@ -828,7 +828,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * get ChartComposite.
-     * 
+     *
      * @return
      */
     public Composite getChartComposite() {
@@ -837,7 +837,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * create Analysis Param Section.
-     * 
+     *
      * @param pForm
      * @param pComp
      */
@@ -851,7 +851,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * Extracted from the column and column set master page, to create the execution language selection section
-     * 
+     *
      * @param form1
      * @param anasisDataComp
      * @param analyzedColumns
@@ -913,7 +913,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC msjian Comment method "createDrillDownPart".
-     * 
+     *
      * @param anaParameters
      * @param comp2
      * @param executionLanguage
@@ -948,7 +948,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC zshen Comment method "refreshEnginSection".
-     * 
+     *
      * @param javaEnginSection
      * @param currentLanguage
      */
@@ -984,7 +984,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC talend Comment method "createDataPreviewSection".
-     * 
+     *
      * @param form
      * @param topComp
      */
@@ -1018,7 +1018,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC zshen Comment method "createRunSampleDataButton".
-     * 
+     *
      * @param buttonComposite
      */
     protected void createRunSampleDataButton(Composite buttonComposite) {
@@ -1032,7 +1032,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -1059,7 +1059,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * Get message why the status of checkbox can not be changed
-     * 
+     *
      * @return
      */
     protected String getNonJavaIndicatorMessage() {
@@ -1076,7 +1076,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * Judge current execute engine is sql mode
-     * 
+     *
      * @return
      */
     protected boolean currentModelIsSqlEngine() {
@@ -1085,7 +1085,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC msjian Comment method "createIndicatorSelectButton".
-     * 
+     *
      * @param buttonComposite
      */
     protected void createIndicatorSelectButton(Composite buttonComposite) {
@@ -1119,7 +1119,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * create DataTable Composite.
-     * 
+     *
      * @param dataparent
      */
     private void createDataTableComposite(Composite dataparent) {
@@ -1140,7 +1140,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC msjian Comment method "isDataTableCompVisible".
-     * 
+     *
      * @return
      */
     protected boolean isDataTableCompVisible() {
@@ -1149,7 +1149,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC talend Comment method "getSelectedColumns".
-     * 
+     *
      * @return
      */
     protected ModelElement[] getSelectedColumns() {
@@ -1182,7 +1182,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC zshen Comment method "getDataFilterStr".
-     * 
+     *
      * @return
      */
     protected String getDataFilterStr() {
@@ -1191,7 +1191,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC zshen Comment method "isShowRandomData".
-     * 
+     *
      * @return
      */
     protected boolean isShowRandomData() {
@@ -1216,7 +1216,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC msjian Comment method "createWarningComposite".
-     * 
+     *
      * @param message
      * @param isVisible
      */
@@ -1244,7 +1244,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * create "Refresh Button", and the row control input.
-     * 
+     *
      * @param buttonComposite
      */
     private void createRefreshDataButtonComp(Composite parent) {
@@ -1321,7 +1321,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * open the column selection dialog.
-     * 
+     *
      * @param dataManager
      */
     public void openColumnsSelectionDialog(DataManager dataManager) {
@@ -1357,7 +1357,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC msjian Comment method "setTreeViewInput".
-     * 
+     *
      * @param modelElements
      */
     protected void setTreeViewInput(Object[] modelElements) {
@@ -1366,7 +1366,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * check if the row loaded value is valid or not
-     * 
+     *
      * @return
      */
     protected boolean isValidateRowCount() {
@@ -1377,9 +1377,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "createRunButton".
-     * 
+     *
      * @param buttonComposite
      */
     public void createRunButton(Composite buttonComposite) {
@@ -1394,7 +1394,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt.events.MouseEvent)
              */
             @Override
@@ -1409,7 +1409,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC talend Comment method "createColumnSelectButton".
-     * 
+     *
      * @param buttonComposite
      */
     protected void createColumnSelectButton(Composite buttonComposite) {
@@ -1454,7 +1454,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC talend Comment method "createConnectionButton".
-     * 
+     *
      * @param dataPreviewTableCom
      */
     protected void createConnectionButton(final Composite dataPreviewTableCom, final Section dataPreviewSection) {
@@ -1476,7 +1476,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * create the datafilter section.
-     * 
+     *
      * @param form1
      * @param anasisDataComp
      * @param needFillBoth: if true, will fill both the section.
@@ -1504,7 +1504,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * create the datafilter section without fill both the section.
-     * 
+     *
      * @param form1
      * @param anasisDataComp
      */
@@ -1542,7 +1542,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#saveContext()
      */
     @Override
@@ -1557,7 +1557,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * 
+     *
      * when rename the related connection ,it will reload connection combo,also need to update TreeViewer,so that avoid
      * some old column RepositoryNode instance .if it is not dirty before updating,should keep the not dirty satus.
      */
@@ -1639,7 +1639,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC zshen Comment method "getExecCombo".
-     * 
+     *
      * @return the Combo for executeLanguage
      */
     public CCombo getExecCombo() {
@@ -1666,7 +1666,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC xqliu Comment method "changeExecuteLanguageToSql".
-     * 
+     *
      * @param enabled
      */
     public void changeExecuteLanguageToSql(boolean enabled) {
@@ -1690,9 +1690,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * 
+     *
      * Get the limit of preivew table
-     * 
+     *
      * @return
      */
     public int getPreviewLimit() {
@@ -1709,7 +1709,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
      */
     @Override
@@ -1719,7 +1719,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
      */
     @Override
@@ -1732,7 +1732,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
      */
     @Override
@@ -1743,7 +1743,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * get AnalysisRepNode From editorInput
-     * 
+     *
      * @param editorInput
      * @return
      */

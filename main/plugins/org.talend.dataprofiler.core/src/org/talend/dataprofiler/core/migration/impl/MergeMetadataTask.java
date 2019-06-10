@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -71,7 +71,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC init the replace strings for update ana file from 400 to 410: six strings need to be replaced.
-     * 
+     *
      * @return
      */
     private Map<String, String> initReplaceStringMapAna() {
@@ -111,7 +111,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC init the replace strings for update rule file from 400 to 410: only one string need to be replaced.
-     * 
+     *
      * @return
      */
     private Map<String, String> initReplaceStringMapRules() {
@@ -127,7 +127,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -136,7 +136,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC Use replace method to migrate from 400 to 410.
-     * 
+     *
      * @param result
      * @param migFolder
      * @param acceptFileExtentionNames
@@ -204,7 +204,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             for (File sample : fileList) {
                 boolean isDeleted = sample.delete();
                 log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete.")); //$NON-NLS-1$ //$NON-NLS-2$
-                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); 
+                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample);
                 log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
@@ -214,7 +214,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC Use ATL transformation rules to migrate from 400 to 410.
-     * 
+     *
      * @param migFolder
      * @param result
      * @param final String[] acceptFileExtentionNames
@@ -266,7 +266,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             for (File sample : fileList) {
                 boolean isDeleted = sample.delete();
                 log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete.")); //$NON-NLS-1$ //$NON-NLS-2$
-                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); 
+                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample);
                 log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
@@ -275,7 +275,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -284,7 +284,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -340,7 +340,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC bZhou Comment method "merge".
-     * 
+     *
      * @param rawFile
      * @param migFile TODO
      * @return

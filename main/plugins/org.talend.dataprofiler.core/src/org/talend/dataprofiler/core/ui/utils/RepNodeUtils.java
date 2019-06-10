@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -84,7 +84,7 @@ public final class RepNodeUtils {
 
     /**
      * close file node's editor.
-     * 
+     *
      * @param files
      * @param save
      */
@@ -129,7 +129,7 @@ public final class RepNodeUtils {
 
     /**
      * close ModelElement node's editor.
-     * 
+     *
      * @param nodes
      */
     public static void closeModelElementEditor(List<? extends IRepositoryNode> nodes, boolean save) {
@@ -165,9 +165,9 @@ public final class RepNodeUtils {
     }
 
     /**
-     * 
+     *
      * Get repostiroy object CRUD class according to project type.
-     * 
+     *
      * @return
      */
     public static IRepositoryObjectCRUDAction getRepositoryObjectCRUD() {
@@ -182,7 +182,7 @@ public final class RepNodeUtils {
      * when the report's user defined template(Jrxml file) changed its name, or be moved, the path info in the report's
      * anaMap: jrxml source should also be updated. This method is used to update the related reports when the jrxml
      * name or path is changed.
-     * 
+     *
      * @param oldPath : the whole path with whole name of the jrxml, e.g./TDQ_Libraries/JRXML
      * Template/columnset/column_set_basic_0.1.jrxml
      * @param newPath
@@ -204,7 +204,7 @@ public final class RepNodeUtils {
     /**
      * check if the anaMap comtains the Jrxml or not, by compare the jrxml's path with anaMap's jrxml source(when user
      * mode)
-     * 
+     *
      * @param path contain the file name like:/TDQ_Libraries/JRXMLTemplate/column/column_basic_0.1.jrxml
      * @param anaMap
      * @return true :if the anaMap contains the path.
@@ -225,7 +225,7 @@ public final class RepNodeUtils {
      * when the report's user defined template(Jrxml file) changed its name, or be moved, the path info in the report's
      * anaMap: jrxml source should also be updated. This method is used to update the related reports when the jrxml
      * name or path is changed.
-     * 
+     *
      * @param jrxmlFileNames : the whole path with whole name of the jrxml, e.g./TDQ_Libraries/JRXML
      * Template/columnset/column_set_basic_0.1.jrxml
      * @param jrxmlFileNamesAfterMove
@@ -273,7 +273,7 @@ public final class RepNodeUtils {
 
     /**
      * get the Relative path of Jrxml file.
-     * 
+     *
      * @param Report report
      * @param String path
      * @return String
@@ -285,7 +285,7 @@ public final class RepNodeUtils {
 
     /**
      * get the full jrxml name with path before move/rename its parent folder.
-     * 
+     *
      * @param oldPath: the path before rename
      * @param jrxmlFileRepNodes the related reports list with name
      * @return the full jrxml new names with path
@@ -308,7 +308,7 @@ public final class RepNodeUtils {
 
     /**
      * Used for replace only the renamed folder name, the path of the parent& the path of the sub folder should remain.
-     * 
+     *
      * @param oldPath: the path before rename
      * @param newPath: the new foler name
      * @param jrxmlFileRepNodes the related reports list with name
@@ -405,7 +405,7 @@ public final class RepNodeUtils {
 
     /**
      * check is All the Columns are Numberal type.
-     * 
+     *
      * @param nodes
      * @return
      */
@@ -427,7 +427,7 @@ public final class RepNodeUtils {
 
     /**
      * check is All the Columns are text type.
-     * 
+     *
      * @param nodes
      * @return
      */
@@ -462,7 +462,7 @@ public final class RepNodeUtils {
 
     /**
      * check whether the nodes can support pattern Frequency indicator for sql engine.
-     * 
+     *
      * @param nodes
      * @return
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,7 +31,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by yyin on 2014-9-15 Detailled comment
- * 
+ *
  */
 public class DelimitedFileIterator implements Iterator<Record> {
 
@@ -59,7 +59,7 @@ public class DelimitedFileIterator implements Iterator<Record> {
 
     /*
      * check if the file connection has next record, if not, close the file.
-     * 
+     *
      * @see java.util.Iterator#hasNext()
      */
     public boolean hasNext() {
@@ -85,7 +85,7 @@ public class DelimitedFileIterator implements Iterator<Record> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Iterator#next()
      */
     public Record next() {
@@ -101,7 +101,7 @@ public class DelimitedFileIterator implements Iterator<Record> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Iterator#remove()
      */
     public void remove() {

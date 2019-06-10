@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -67,8 +67,8 @@ public class MyFirstMain {
             { "normal", "rainy", "no", "1" }, { "normal", "rainy", "yes", "200000" }, { "normal", "sunny", "yes", "27" },
             { "subnormal", "sunny", "yes", "7" }, { "subnormal", null, "yes", "2" } };
 
-    
-    
+
+
     /**
      * the visual component and renderer for the graph.
      */
@@ -85,8 +85,8 @@ public class MyFirstMain {
     }
 
     public void run(final GraphBuilder graphbuilder) {
-        
-        
+
+
         Graph graph = graphbuilder.createMultiGraph(allData);
 
         PluggableRenderer pr = new PluggableRenderer();
@@ -178,7 +178,7 @@ public class MyFirstMain {
         pr.setEdgePaintFunction(new EdgePaintFunction() {
 
             public Paint getFillPaint(Edge e) {
-                return null;               
+                return null;
             }
 
             public Paint getDrawPaint(Edge e) {
@@ -257,10 +257,10 @@ public class MyFirstMain {
         frame.setVisible(true);
     }
 
-    
+
     /**
      * Getter for allData.
-     * 
+     *
      * @return the allData
      */
     public List<Object[]> getAllData() {
@@ -269,7 +269,7 @@ public class MyFirstMain {
 
     /**
      * Sets the allData.
-     * 
+     *
      * @param allData the allData to set
      */
     public void setAllData(List<Object[]> allData) {
@@ -278,7 +278,7 @@ public class MyFirstMain {
 
     /**
      * DOC scorreia Comment method "createListObjects".
-     * 
+     *
      * @return
      */
     public static List<Object[]> createListObjects() {
@@ -291,7 +291,7 @@ public class MyFirstMain {
 
     /**
      * DOC scorreia Comment method "main".
-     * 
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -299,7 +299,7 @@ public class MyFirstMain {
         myFirstMain.setAllData(createListObjects());
         myFirstMain.run(new GraphBuilder());
     }
-    
- 
+
+
 
 }

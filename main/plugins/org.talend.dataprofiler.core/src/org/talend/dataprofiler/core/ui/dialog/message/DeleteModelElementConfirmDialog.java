@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -62,7 +62,7 @@ public class DeleteModelElementConfirmDialog {
 
         /**
          * Getter for node.
-         * 
+         *
          * @return the node
          */
         public IRepositoryNode getNode() {
@@ -71,7 +71,7 @@ public class DeleteModelElementConfirmDialog {
 
         /**
          * Sets the node.
-         * 
+         *
          * @param node the node to set
          */
         public void setNode(IRepositoryNode node) {
@@ -84,7 +84,7 @@ public class DeleteModelElementConfirmDialog {
 
         /**
          * DOC yyin ImpactNode constructor comment.
-         * 
+         *
          * @param node
          */
         public ImpactNode(IRepositoryNode node) {
@@ -112,7 +112,7 @@ public class DeleteModelElementConfirmDialog {
 
         /**
          * Getter for nodeElement.
-         * 
+         *
          * @return the nodeElement
          */
         public ModelElement getNodeElement() {
@@ -121,7 +121,7 @@ public class DeleteModelElementConfirmDialog {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.lang.Object#hashCode()
          */
         @Override
@@ -134,7 +134,7 @@ public class DeleteModelElementConfirmDialog {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.lang.Object#equals(java.lang.Object)
          */
         @Override
@@ -240,7 +240,7 @@ public class DeleteModelElementConfirmDialog {
 
     /**
      * DOC bZhou Comment method "showDialog".
-     * 
+     *
      * @param parentShell
      * @param file
      * @param dependencyElements
@@ -278,9 +278,9 @@ public class DeleteModelElementConfirmDialog {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "showDialog".
-     * 
+     *
      * @param parentShell
      * @param repositoryNodes
      * @param dependencyElements
@@ -320,7 +320,7 @@ public class DeleteModelElementConfirmDialog {
 
     /**
      * DOC bzhou Comment method "showConfirmDialog".
-     * 
+     *
      * @param parentShell
      * @param obj
      * @param dependencyElements
@@ -352,7 +352,7 @@ public class DeleteModelElementConfirmDialog {
 
     /**
      * DOC rli Comment method "showDialog".
-     * 
+     *
      * @param parentShell
      * @param modelElements
      * @param dialogMessage
@@ -376,10 +376,10 @@ public class DeleteModelElementConfirmDialog {
     }
 
     /**
-     * 
+     *
      * MOD mzhao 2009-03-26, Impact existing analyses when copy remote structure from remote to local on comparison
      * editor.
-     * 
+     *
      * @param parentShell
      * @param modelElements
      * @param dialogMessage
@@ -431,7 +431,7 @@ public class DeleteModelElementConfirmDialog {
         } else {
             messageDialog = new MessageDialog(
                     null,
-                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourcesDelete"), null, DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.areYouDelele", modelElements[0].getName()) //$NON-NLS-1$ //$NON-NLS-2$ 
+                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourcesDelete"), null, DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.areYouDelele", modelElements[0].getName()) //$NON-NLS-1$ //$NON-NLS-2$
                     , MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
         }
         return messageDialog.open();
@@ -440,7 +440,7 @@ public class DeleteModelElementConfirmDialog {
     /**
      * show all nodes with its dependencies (in nodeWithDependsMap) in one dialog. if the dependency has its own
      * depends, also show them under this dependsency
-     * 
+     *
      * @param nodeWithDependsMap key is the repostiory node and value is the dependencies of this node.
      * @param dialogMessage the message shown in dialog
      * @param needCheckBox show the check box or not
@@ -485,7 +485,7 @@ public class DeleteModelElementConfirmDialog {
 
     /**
      * it the ModelElement is locked by others, add it into lockedByOthers.
-     * 
+     *
      * @param lockedByOthers
      * @param dependencies
      */
@@ -505,7 +505,7 @@ public class DeleteModelElementConfirmDialog {
 
     /**
      * if the ModelElement locked by others return true, else return false.
-     * 
+     *
      * @param me ModelElement
      * @return
      */
@@ -521,7 +521,7 @@ public class DeleteModelElementConfirmDialog {
     /**
      * The first level node is (connection, DQ rule, Pattern), the second level is analysis, Jrxml, the third is report
      * only for analysis , need to check if there are some reports depends on this analysis and list them if any.
-     * 
+     *
      * @param node
      * @param dependencies
      */

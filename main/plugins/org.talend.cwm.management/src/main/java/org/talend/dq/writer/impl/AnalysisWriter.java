@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -52,7 +52,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
- * 
+ *
  * This class saves the analysis.
  */
 public class AnalysisWriter extends AElementPersistance {
@@ -68,7 +68,7 @@ public class AnalysisWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -136,9 +136,9 @@ public class AnalysisWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#addResourceContent(orgomg.cwm.objectmodel.core.ModelElement)
-     * 
+     *
      * @deprecated
      */
     @Override
@@ -184,7 +184,7 @@ public class AnalysisWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#getFileExtension()
      */
     @Override
@@ -195,7 +195,7 @@ public class AnalysisWriter extends AElementPersistance {
     /**
      * Save analysis item and update the dependencies(optional). <B>To update dependencies of the analysis the
      * #careDependency must be set as TRUE.</B>
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean[])
      */
     @Override
@@ -236,7 +236,7 @@ public class AnalysisWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#removeDependencies(org.talend.core.model.properties.Item)
      */
     @Override

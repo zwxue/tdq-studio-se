@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
- * 
+ *
  * executes multicolumn comparison.
  */
 public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
@@ -66,7 +66,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)
      */
     @Override
@@ -94,7 +94,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "instantiateQuery".
-     * 
+     *
      * @param indicator
      */
     private boolean instantiateQuery(Indicator indicator) {
@@ -106,7 +106,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             EList<TdColumn> columnSetA = rowMatchingIndicator.getColumnSetA();
             EList<TdColumn> columnSetB = rowMatchingIndicator.getColumnSetB();
             if (columnSetA.size() != columnSetB.size()) {
-                traceError("Cannot compare two column sets with different size");//$NON-NLS-1$ 
+                traceError("Cannot compare two column sets with different size");//$NON-NLS-1$
                 return Boolean.FALSE;
                 // break;
             }
@@ -126,7 +126,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "createInstantiatedSqlExpression".
-     * 
+     *
      * @param sqlGenericExpression
      * @param columnSetA
      * @param columnSetB
@@ -183,7 +183,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "createWhereClause".
-     * 
+     *
      * @param tableNameB
      * @param columnSetB
      * @return
@@ -202,7 +202,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "conditionOnAllColumns".
-     * 
+     *
      * @param tableName
      * @param columnSet
      * @param isNull
@@ -224,7 +224,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * Method "createJoinClause".
-     * 
+     *
      * @param tableNameA already quoted table name
      * @param columnSetA
      * @param tableNameB already quoted table name
@@ -253,7 +253,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * Method "bothNull".
-     * 
+     *
      * @param colA a column name from table A
      * @param colB a column name from table B
      * @return colA IS NULL AND colB IS NULL
@@ -267,7 +267,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "getTableName".
-     * 
+     *
      * @param columnSetA
      * @return
      */
@@ -302,7 +302,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.AnalysisExecutor#runAnalysis(org.talend.dataquality.analysis.Analysis,
      * java.lang.String)
      */
@@ -371,7 +371,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * DOC scorreia Comment method "executeQuery".
-     * 
+     *
      * @param indicator
      * @param connection
      * @param query
@@ -423,7 +423,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
     /**
      * Method "getAnalyzedTable".
-     * 
+     *
      * @param indicator
      * @return the table name (within quotes)
      */

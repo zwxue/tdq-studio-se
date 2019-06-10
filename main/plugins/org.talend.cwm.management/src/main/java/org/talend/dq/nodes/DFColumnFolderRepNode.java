@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class DFColumnFolderRepNode extends DQRepositoryNode {
 
     /**
      * DOC qiongli DFColumnFolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -74,9 +74,9 @@ public class DFColumnFolderRepNode extends DQRepositoryNode {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "createTdcolumnsNode".
-     * 
+     *
      * @param tdcolumns
      * @param repsNodes
      */
@@ -98,7 +98,7 @@ public class DFColumnFolderRepNode extends DQRepositoryNode {
     }
 
     public String getNodeName() {
-        return Messages.getString("DFColumnFolderRepNode.Columns", this.getChildrenCount()); //$NON-NLS-1$ 
+        return Messages.getString("DFColumnFolderRepNode.Columns", this.getChildrenCount()); //$NON-NLS-1$
     }
 
     public int getChildrenCount() {
@@ -111,7 +111,7 @@ public class DFColumnFolderRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getLabel()
      */
     @Override
@@ -124,7 +124,7 @@ public class DFColumnFolderRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getDisplayText()
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -45,7 +45,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
 
     /**
      * RecyleBinRepNode constructor.
-     * 
+     *
      * @param label
      * @param inWhichProject
      */
@@ -57,7 +57,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
 
     /**
      * Getter for icon.
-     * 
+     *
      * @return the icon
      */
     @Override
@@ -67,7 +67,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
 
     /**
      * Sets the icon.
-     * 
+     *
      * @param icon the icon to set
      */
     @Override
@@ -77,7 +77,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
 
     /**
      * Getter for label.
-     * 
+     *
      * @return the label
      */
     @Override
@@ -90,7 +90,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
 
     /**
      * Sets the label.
-     * 
+     *
      * @param label the label to set
      */
     public void setLabel(String label) {
@@ -104,7 +104,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
@@ -129,7 +129,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren(boolean)
      */
     @Override
@@ -140,7 +140,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
 
     /**
      * If it is TDQ or metadata or context root folder
-     * 
+     *
      * @param folderItem
      * @return
      */
@@ -228,9 +228,9 @@ public class RecycleBinRepNode extends DQRepositoryNode {
     }
 
     /**
-     * 
+     *
      * filter the item in metadata folder, only display some available folders on DQ side.
-     * 
+     *
      * @param item
      * @param parentType
      * @return
@@ -297,9 +297,9 @@ public class RecycleBinRepNode extends DQRepositoryNode {
     }
 
     /**
-     * 
+     *
      * init the children for local/remote FolderItem.
-     * 
+     *
      * @param folderItem
      * @param itemType
      */

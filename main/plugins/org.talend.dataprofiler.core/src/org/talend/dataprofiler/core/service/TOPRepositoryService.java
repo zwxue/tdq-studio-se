@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -206,7 +206,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * ADDED yyin 20120503 TDQ-4959.
-     * 
+     *
      * @param node
      */
     public void refresh(Object refreshObject) {
@@ -305,7 +305,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * Added yyi 2011-08-04 TDQ-3186
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#getPaserRulesFromResources(java.lang.Object[])
      */
     public List<Map<String, String>> getPaserRulesFromResources(Object[] rules) {
@@ -320,9 +320,9 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     }
 
     /**
-     * 
+     *
      * Comment method "reloadDatabase".
-     * 
+     *
      * @param connectionItem
      * @deprecated instead of it by TDQCompareService.reloadDatabase
      */
@@ -401,7 +401,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#confirmUpdateAnalysis(org.talend.core.model.properties.ConnectionItem)
      */
     public boolean confirmUpdateAnalysis(ConnectionItem connectionItem) {
@@ -429,7 +429,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * Comment method "confimDelete".
-     * 
+     *
      * @param deleteObject which you want to delete
      * @return SWT.OK or SWT.Cancel
      */
@@ -448,7 +448,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * Comment method "getInputDialog".
-     * 
+     *
      * @param get input dialog
      * @return inputDialog
      */
@@ -496,10 +496,10 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * Comment method "changeElementName".
-     * 
+     *
      * @param item the item which will be changed
      * @param newName
-     * 
+     *
      */
     public void changeElementName(Item item, String newName) {
         Property property = item.getProperty();
@@ -508,7 +508,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#sourceFileOpening(org.talend.repository.model.RepositoryNode)
      */
     public boolean sourceFileOpening(RepositoryNode node) {
@@ -523,7 +523,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#checkUsernameBeforeSaveConnection(org.talend.core.model.properties.
      * ConnectionItem)
      */
@@ -534,7 +534,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#removeSoftWareSystem(org.talend.repository.model.IRepositoryNode)
      */
     @Deprecated
@@ -560,7 +560,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#refreshCurrentAnalysisEditor()
      */
     public void refreshCurrentAnalysisEditor(ConnectionItem connectionItem) {
@@ -570,7 +570,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#refreshCurrentAnalysisAndConnectionEditor()
      */
     @Deprecated
@@ -579,7 +579,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     } /*
        * (non-Javadoc)
-       * 
+       *
        * @see
        * org.talend.core.ITDQRepositoryService#createHiveConnection(org.talend.core.model.metadata.IMetadataConnection)
        */
@@ -622,7 +622,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#addSoftwareSystemUpdateListener()
      */
     public void addSoftwareSystemUpdateListener() {
@@ -633,7 +633,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#publishSoftwareSystemUpdateEvent()
      */
     public void publishSoftwareSystemUpdateEvent(DatabaseConnection databaseConnection) {
@@ -651,7 +651,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#updateAliasInSQLExplorer(java.sql.Connection, java.lang.String)
      */
     public void updateAliasInSQLExplorer(ConnectionItem connectionItem, String oldConnName) {
@@ -661,7 +661,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#getAllDataProviders()
      */
     public Collection<Connection> getAllDataProviders() {
@@ -674,7 +674,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#createFile(java.lang.String, org.eclipse.core.runtime.IPath,
      * java.lang.String, java.lang.String)
      */
@@ -689,7 +689,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#ChangePerspectiveAction(java.lang.String)
      */
     public void changePerspectiveAction(String perspectiveId) {
@@ -698,7 +698,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#createHive(org.talend.repository.model.RepositoryNode)
      */
     public ConnectionItem createHive(RepositoryNode currentNode) {
@@ -710,7 +710,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.core.ITDQRepositoryService#reloadTableList(org.talend.core.model.properties.DatabaseConnectionItem)
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ public class MigrationPlugin implements BundleActivator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
      */
     @Override
@@ -41,7 +41,7 @@ public class MigrationPlugin implements BundleActivator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
      */
     @Override
@@ -52,7 +52,7 @@ public class MigrationPlugin implements BundleActivator {
 
     /**
      * Returns the shared instance.
-     * 
+     *
      * @return the shared instance
      */
     public static MigrationPlugin getDefault() {
@@ -61,7 +61,7 @@ public class MigrationPlugin implements BundleActivator {
 
     /**
      * DOC bzhou Comment method "getProductVersion".
-     * 
+     *
      * @return
      */
     public ProductVersion getProductVersion() {

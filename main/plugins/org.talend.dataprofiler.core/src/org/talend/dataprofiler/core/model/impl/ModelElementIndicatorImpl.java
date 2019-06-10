@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -122,7 +122,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
 
     /**
      * DOC zshen Comment method "specialIndicatorEnumContains".
-     * 
+     *
      * @param indicatorEnum
      * @return
      */
@@ -169,7 +169,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
      * If the Indicator is a plain indicator, will remove the indicator value from field 'flatIndicatorEnumList' and
      * 'indicatorUnitMap', contains the parent and children of indicatorTypeMapping.getType();Else, will remove it from
      * specialIndicaortUnitList.
-     * 
+     *
      * @param indicatorUnit
      */
     public void removeIndicatorUnit(IndicatorUnit indicatorUnit) {
@@ -184,7 +184,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     /**
      * Remove the specialIndicatorUnit from specialIndicatorList, if there exist more than one InicatorIndicator which
      * has same IndicatorEnumn type, the type of IndicatorUnit will be not removed from flatIndicatorEnumList.
-     * 
+     *
      * @param indicatorUnit
      */
     private void removeSpecialIndicatorUnit(IndicatorUnit indicatorUnit) {
@@ -281,7 +281,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     /**
      * Fill the plain indicator value to the corresponding indicator's property, and fill the value to field
      * 'flatIndicatorEnumList' and 'plainIndicatorUnitMap'.
-     * 
+     *
      * @param indicatorEnum
      * @param indicator
      */
@@ -614,7 +614,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
 
     /**
      * create indicatorMappings according category indicatorEnum.
-     * 
+     *
      * @param categoryEnums
      * @return
      */
@@ -754,7 +754,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     /**
      * This method will get IndicatorUnit from indicatorUnitMap, if can't get exist object, it will be create a new
      * IndicatorUnit.
-     * 
+     *
      * @param indicatorEnum
      * @return
      */
@@ -769,7 +769,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     /**
      * This method will get IndicatorUnit from indicatorUnitMap, if can't get exist object, it will be create a new
      * IndicatorUnit.
-     * 
+     *
      * @param indicatorEnum
      * @return
      */
@@ -784,7 +784,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     /**
      * Create a new IndicatorUnit according to indicatorEnum and indicator, if the parameter indicator is null, will
      * create a new indicator .
-     * 
+     *
      * @param indicatorEnum
      * @param indicator
      * @return

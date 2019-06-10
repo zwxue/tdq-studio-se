@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -129,7 +129,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     /**
      * DOC klliu Comment method "createJoinConditionSection".
-     * 
+     *
      * @param comp
      */
     private void createParserRuleDefinitionSection(Composite comp) {
@@ -145,7 +145,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     /**
      * DOC klliu Comment method "createJoinConditionComp".
-     * 
+     *
      * @return
      */
     private Composite createParserRuleDefinitionComp() {
@@ -177,7 +177,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     /**
      * DOC klliu Comment method "createParserRuleViewColumns".
-     * 
+     *
      * @param parView
      */
     private void createParserRuleViewColumns(Composite ruleViewerComp) {
@@ -188,7 +188,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     /**
      * DOC klliu Comment method "createButtons".
-     * 
+     *
      * @param parent
      */
     private void createButtons(Composite parent, final ParserRuleTableViewer parserRuleTableViewer) {
@@ -315,7 +315,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
      */
     @Override
@@ -330,7 +330,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement()
      */
     @Override
@@ -340,7 +340,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentRepNode()
      */
     @Override
@@ -350,7 +350,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#init(org.eclipse.ui.forms.editor.FormEditor)
      */
     @Override
@@ -361,7 +361,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
 
     /**
      * get PatternRepNode From editorInput
-     * 
+     *
      * @param editorInput
      * @return
      */

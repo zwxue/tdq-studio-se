@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * 
+ *
  * DOC mzhao Abstract editor input for TDQ items.
  */
 public abstract class AbstractItemEditorInput implements IEditorInput {
@@ -40,7 +40,7 @@ public abstract class AbstractItemEditorInput implements IEditorInput {
 
     /**
      * note: ONLY used for MDM team to open matchrule editor, because they only can get item, didn't have IRepositoryNode.
-     * 
+     *
      * @param tdqItem
      */
     public AbstractItemEditorInput(Item tdqItem) {
@@ -49,7 +49,7 @@ public abstract class AbstractItemEditorInput implements IEditorInput {
 
     /**
      * note: for DQ team, use this AbstractItemEditorInput constructor.
-     * 
+     *
      * @param repNode
      */
     public AbstractItemEditorInput(IRepositoryNode repNode) {
@@ -84,7 +84,7 @@ public abstract class AbstractItemEditorInput implements IEditorInput {
     }
 
     public String getPath() {
-        return getItem() == null ? "/" : getItem().getState().getPath() + "/";//$NON-NLS-1$ //$NON-NLS-2$ 
+        return getItem() == null ? "/" : getItem().getState().getPath() + "/";//$NON-NLS-1$ //$NON-NLS-2$
     }
 
     @Override
@@ -130,7 +130,7 @@ public abstract class AbstractItemEditorInput implements IEditorInput {
 
     /**
      * get current RepNode.
-     * 
+     *
      * @return
      */
     public abstract IRepositoryNode getRepNode();
@@ -139,14 +139,14 @@ public abstract class AbstractItemEditorInput implements IEditorInput {
 
     /**
      * get the Model in the RepNode. for example: anaRepNode return its getAnalysis(), etc.
-     * 
+     *
      * @return
      */
     public abstract ModelElement getModel();
 
     /**
      * get the Uuid of the ModelElement which included in this IEditorInput.
-     * 
+     *
      * @return
      */
     public String getModelElementUuid() {

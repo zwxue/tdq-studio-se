@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -62,9 +62,9 @@ public enum FormEnum {
     }
 
     /**
-     * 
+     *
      * use {@link IndicatorUnit#getHelpHref()} instead of it
-     * 
+     *
      * @deprecated
      * @param indicatorUnit
      * @return
@@ -76,9 +76,9 @@ public enum FormEnum {
     }
 
     /**
-     * 
+     *
      * use {@link IndicatorUnit#getHelpHref()} instead of it
-     * 
+     *
      * @deprecated
      * @param indicatorUnit
      * @return
@@ -90,9 +90,9 @@ public enum FormEnum {
     }
 
     /**
-     * 
+     *
      * use {@link IndicatorUnit#getFirstFormHelpHref()} instead of it
-     * 
+     *
      * @param indicatorUnit
      * @return
      */
@@ -101,9 +101,9 @@ public enum FormEnum {
     }
 
     /**
-     * 
+     *
      * use {@link IndicatorUnit#getFirstFormHelpHref()} instead of it
-     * 
+     *
      * @param indicatorUnit
      * @return
      */
@@ -113,7 +113,7 @@ public enum FormEnum {
 
     /**
      * use {@link IndicatorUnit#getForms()} instead of it
-     * 
+     *
      * @deprecated
      * @param dataminingType
      * @param sqlType
@@ -125,7 +125,7 @@ public enum FormEnum {
 
     /**
      * DOC talend Comment method "getFormEnumArray".
-     * 
+     *
      * @param indicatorUnit
      * @param sqlType
      * @param dataminingType
@@ -257,7 +257,7 @@ public enum FormEnum {
 
     /**
      * DOC msjian Comment method "getFormsForFreqencyIndicatos".
-     * 
+     *
      * @param sqlType
      * @param dataminingType
      * @param indicatorType
@@ -310,9 +310,9 @@ public enum FormEnum {
     }
 
     /**
-     * 
+     *
      * use {@link TableIndicatorUnit#getForms()} instead of it
-     * 
+     *
      * @deprecated
      * @param indicatorUnit
      * @return
@@ -323,9 +323,9 @@ public enum FormEnum {
     }
 
     /**
-     * 
+     *
      * use {@link IndicatorUnit#isExsitingForm()} instead of it
-     * 
+     *
      * @deprecated
      * @param indicatorUnit
      * @return
@@ -336,9 +336,9 @@ public enum FormEnum {
     }
 
     /**
-     * 
+     *
      * use {@link IndicatorUnit#isExsitingForm()} instead of it
-     * 
+     *
      * @param indicatorUnit
      * @return
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ public class CreateAnalysisOnHDFSAction extends Action {
 
     /**
      * DOC yyin CreateAnalysisOnHDFSAction constructor comment.
-     * 
+     *
      * @param node
      */
     public CreateAnalysisOnHDFSAction(RepositoryNode node) {
@@ -52,7 +52,7 @@ public class CreateAnalysisOnHDFSAction extends Action {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -74,7 +74,7 @@ public class CreateAnalysisOnHDFSAction extends Action {
 
     /**
      * DOC yyin Comment method "openCreateHiveTableDialog".
-     * 
+     *
      * @return
      */
     private DBTableRepNode openCreateHiveTable() {
@@ -87,7 +87,7 @@ public class CreateAnalysisOnHDFSAction extends Action {
 
     /**
      * DOC yyin Comment method "findCreatedTable".
-     * 
+     *
      * @param hiveConnectionItem
      * @param createTableName
      * @return

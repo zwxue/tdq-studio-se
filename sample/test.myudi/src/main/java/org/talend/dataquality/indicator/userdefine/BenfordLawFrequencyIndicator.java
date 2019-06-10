@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,7 +20,7 @@ import org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl;
  * DOC yyin 201204 This Class provide the function to compute a group of data by Benford's Law and output the leading
  * digits with its distribution in this dataset. Then the user can use it to compare with the standard, to detect
  * possible cases of Fraud.
- * 
+ *
  * related SQL: SELECT cast(LEFT(<%=__COLUMN_NAMES__%>,1) as char), COUNT(*) c FROM <%=__TABLE_NAME__%> t
  * <%=__WHERE_CLAUSE__%> GROUP BY LEFT(<%=__COLUMN_NAMES__%>,1) order by LEFT(<%=__COLUMN_NAMES__%>,1)
  */
@@ -28,7 +28,7 @@ public class BenfordLawFrequencyIndicator extends UserDefIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.Indicator#finalizeComputation()
      */
     public boolean finalizeComputation() {
@@ -37,7 +37,7 @@ public class BenfordLawFrequencyIndicator extends UserDefIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.Indicator#handle(java.lang.Object)
      */
     public boolean handle(Object data) {
@@ -69,7 +69,7 @@ public class BenfordLawFrequencyIndicator extends UserDefIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.Indicator#reset()
      */
     public boolean reset() {

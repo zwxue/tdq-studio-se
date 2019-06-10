@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -105,7 +105,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * get Query For User define indicator.
-     * 
+     *
      * @param indicatorDefinition
      * @return
      */
@@ -131,7 +131,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         if (sql.indexOf(GenericSQLHandler.UDI_INDICATOR_VALUE) != -1) {
             Object key = entity.getKey();
             if (key == null) {
-                sql = sql.replace("= " + GenericSQLHandler.UDI_INDICATOR_VALUE, "IS NULL"); //$NON-NLS-1$ //$NON-NLS-2$                
+                sql = sql.replace("= " + GenericSQLHandler.UDI_INDICATOR_VALUE, "IS NULL"); //$NON-NLS-1$ //$NON-NLS-2$
             } else {
                 sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, "'" + key + "'"); //$NON-NLS-1$ //$NON-NLS-2$
             }
@@ -144,7 +144,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * get Claus With Date.
-     * 
+     *
      * @param dateGrain
      * @param clause
      * @return
@@ -185,7 +185,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC scorreia Comment method "createWhereClause".
-     * 
+     *
      * @param rangeRestriction
      * @return
      */
@@ -204,7 +204,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC scorreia Comment method "getQuarterCharacters".
-     * 
+     *
      * @param label
      * @return
      */
@@ -214,7 +214,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC scorreia Comment method "getYearCharacters".
-     * 
+     *
      * @param label
      * @return
      */
@@ -228,9 +228,9 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC scorreia Comment method "getMonthCharacters".
-     * 
+     *
      * @param dateGrain
-     * 
+     *
      * @param label
      * @return
      */
@@ -250,7 +250,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC scorreia Comment method "getWeekCharacters".
-     * 
+     *
      * @param label
      * @return
      */
@@ -260,7 +260,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC scorreia Comment method "getDayCharacters".
-     * 
+     *
      * @param label
      * @return
      */
@@ -270,7 +270,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * DOC scorreia Comment method "concatWhereClause".
-     * 
+     *
      * @param clause
      * @return
      */
@@ -292,7 +292,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     /**
      * Method "getInstantiatedClause".
-     * 
+     *
      * @return the where clause from the instantiated query
      */
     protected String getInstantiatedClause() {

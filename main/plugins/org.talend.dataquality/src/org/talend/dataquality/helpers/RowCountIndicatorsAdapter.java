@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,7 +39,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /**
      * Getter for instance.
-     * 
+     *
      * @return the instance
      */
     public static RowCountIndicatorsAdapter getInstance() {
@@ -51,7 +51,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /**
      * Getter for rowCountIndiList.
-     * 
+     *
      * @return the rowCountIndiList
      */
     public Set<RowCountIndicator> getRowCountIndiSet() {
@@ -71,7 +71,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /**
      * Sets the rowCountIndiList.
-     * 
+     *
      * @param rowCountIndiSet the rowCountIndiList to set
      */
     public void setRowCountIndiSet(Set<RowCountIndicator> rowCountIndiSet) {
@@ -80,7 +80,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getAnalyzedElement()
      */
     @Override
@@ -94,7 +94,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getIndicatorDefinition()
      */
     @Override
@@ -117,7 +117,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#getParameters()
      */
     @Override
@@ -131,7 +131,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#setInstantiatedExpression(orgomg.cwm.objectmodel.core.Expression)
      */
     @Override
@@ -151,7 +151,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#storeSqlResults(java.util.List)
      */
     @Override
@@ -170,7 +170,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#setComputed(boolean)
      */
     @Override
@@ -183,7 +183,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#handle(java.lang.Object)
      */
     @Override
@@ -201,7 +201,7 @@ public class RowCountIndicatorsAdapter extends RowCountIndicatorImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.impl.IndicatorImpl#reset()
      */
     @Override

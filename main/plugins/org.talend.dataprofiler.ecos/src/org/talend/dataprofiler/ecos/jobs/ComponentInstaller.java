@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ public class ComponentInstaller {
 
     /**
      * Unzip the component file to user folder.
-     * 
+     *
      * @param zipFile The component zip file
      * @param targetFolder The user folder
      * @return
@@ -61,7 +61,7 @@ public class ComponentInstaller {
 
     /**
      * Get the root folder that contains all the unzipped files
-     * 
+     *
      * @param zip The component zip file
      * @param targetFolder The user folder
      * @return

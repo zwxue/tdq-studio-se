@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -70,7 +70,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * Getter for dataEntity.
-     * 
+     *
      * @return the dataEntity
      */
     public ChartDataEntity getDataEntity() {
@@ -79,7 +79,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * Sets the dataEntity.
-     * 
+     *
      * @param dataEntity the dataEntity to set
      */
     public void setDataEntity(ChartDataEntity dataEntity) {
@@ -103,7 +103,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IEditorInput#exists()
      */
     public boolean exists() {
@@ -113,7 +113,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IEditorInput#getImageDescriptor()
      */
     public ImageDescriptor getImageDescriptor() {
@@ -123,7 +123,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IEditorInput#getName()
      */
     public String getName() {
@@ -133,7 +133,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IEditorInput#getPersistable()
      */
     public IPersistableElement getPersistable() {
@@ -143,7 +143,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IEditorInput#getToolTipText()
      */
     public String getToolTipText() {
@@ -152,7 +152,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
      */
     public Object getAdapter(Class adapter) {
@@ -194,9 +194,9 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     /**
-     * 
+     *
      * DataSet is used to be the input on the export wizard. unchecked is for the type of mapDB else will have a warning
-     * 
+     *
      * @param controller
      * @return
      */
@@ -234,7 +234,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * Get the MapDB which used to drill down data
-     * 
+     *
      * @return
      */
     public AbstractDB<Object> getMapDB() {
@@ -277,7 +277,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * Get the result of current indicator.
-     * 
+     *
      * @return if view values then return result of current indicator else return the size of the mapDB
      */
     public Long getItemSize(AbstractDB<?> mapDB) {
@@ -291,7 +291,7 @@ public class DrillDownEditorInput implements IEditorInput {
     /**
      * Create columnFilter for current columnSet. It will be used when we can drill down both current column and whole
      * of the row
-     * 
+     *
      * @return
      */
     public ColumnFilter getColumnFilter() {
@@ -305,7 +305,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * Get the result of current indicator.
-     * 
+     *
      * @return
      */
     private Long getCurrentIndicatorResultSize() {
@@ -320,7 +320,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * DOC talend Comment method "getColumnIndicatorResultsize".
-     * 
+     *
      * @return
      */
     private Long getColumnIndicatorResultsize() {
@@ -329,7 +329,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * DOC talend Comment method "isColumnSetIndicator".
-     * 
+     *
      * @return
      */
     private boolean isColumnSetIndicator() {
@@ -340,7 +340,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * DOC talend Comment method "getColumnSetIndicatorResultSize".
-     * 
+     *
      * @param itemsSize
      * @return
      */
@@ -394,8 +394,8 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @return get the data which will be displayed on the drill down editor.
      */
     public List<Object[]> filterAdaptDataList() {
@@ -443,9 +443,9 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "getDesignatedData".
-     * 
+     *
      * @return make column mapping with data
      */
     private List<Object[]> getDesignatedData(List<Object[]> dataList) {
@@ -491,9 +491,9 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     /**
-     * 
+     *
      * create column header for columnSet analysis.
-     * 
+     *
      * @param simpInd
      * @param columnElementList
      */
@@ -535,9 +535,9 @@ public class DrillDownEditorInput implements IEditorInput {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "filterAdaptColumnHeader".
-     * 
+     *
      * @returnget the name of column which will be displayed on the drill down editor.
      */
     public List<String> filterAdaptColumnHeader() {
@@ -575,10 +575,10 @@ public class DrillDownEditorInput implements IEditorInput {
     /**
      * Get index of column whiche will be used on the dirll down. Note that One indicator only belong one column so that
      * the array of retrun value just contain one element.
-     * 
+     *
      * And if we create new map for view values menu rather than used same map with view rows menu then method can be
      * removed
-     * 
+     *
      * @return
      */
     public Integer[] getColumnIndexArray() {
@@ -620,7 +620,7 @@ public class DrillDownEditorInput implements IEditorInput {
 
     /**
      * DOC talend Comment method "getColumnsByIndicator".
-     * 
+     *
      * @param analysisElement
      * @return
      */

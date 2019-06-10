@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -45,7 +45,7 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * created by zshen on Nov 19, 2013 Detailled comment
- * 
+ *
  */
 public class AnalysisRecordGroupingUtilsTest {
 
@@ -76,7 +76,7 @@ public class AnalysisRecordGroupingUtilsTest {
 
     /**
      * DOC zshen Comment method "judgeMatchMapResult".
-     * 
+     *
      * @param matchKeyMap
      */
     private void judgeMatchMapResult(Map<String, String> matchKeyMap) {
@@ -128,7 +128,7 @@ public class AnalysisRecordGroupingUtilsTest {
         createAlgorithmDefinition.setAlgorithmParameters(""); //$NON-NLS-1$
         createAlgorithmDefinition.setAlgorithmType("Concatenate"); //$NON-NLS-1$
         particularDefaultSurvivorshipDefinitions.add(createParticularDefaultSurvivorshipDefinitions(
-                "a2", createAlgorithmDefinition)); //$NON-NLS-1$ 
+                "a2", createAlgorithmDefinition)); //$NON-NLS-1$
 
         // init columnMap
         Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
@@ -203,7 +203,7 @@ public class AnalysisRecordGroupingUtilsTest {
 
     /**
      * Create DefaultsurvivShip
-     * 
+     *
      * @return
      */
     private DefaultSurvivorshipDefinition createDefaultsurvivShip(String dataType, AlgorithmDefinition algorDef) {
@@ -216,7 +216,7 @@ public class AnalysisRecordGroupingUtilsTest {
 
     /**
      * Create ParticularDefaultSurvivorshipDefinitions
-     * 
+     *
      * @return
      */
     private ParticularDefaultSurvivorshipDefinitions createParticularDefaultSurvivorshipDefinitions(String colName,
@@ -230,7 +230,7 @@ public class AnalysisRecordGroupingUtilsTest {
 
     /**
      * Create KeyDefinition
-     * 
+     *
      * @return
      */
     private SurvivorshipKeyDefinition createKeyDefinition(String name, AlgorithmDefinition algorDef) {

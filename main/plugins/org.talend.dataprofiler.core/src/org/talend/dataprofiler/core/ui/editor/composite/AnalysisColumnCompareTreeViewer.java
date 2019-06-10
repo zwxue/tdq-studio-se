@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -129,7 +129,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /**
      * AnalysisColumnCompareTreeViewer constructor used for FunctionalDependencyAnalysisDetailsPage.
-     * 
+     *
      * @param masterPage
      * @param topComp
      * @param columnSetA
@@ -167,7 +167,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /**
      * AnalysisColumnCompareTreeViewer constructor used for RedundancyAnalysisDetailsPage.
-     * 
+     *
      * @param masterPage
      * @param topComp
      * @param analysis
@@ -471,7 +471,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /**
      * DOC msjian Comment method "computeRefreshDataPreviewPart".
-     * 
+     *
      * @param isLeftPart
      * @param columnSet
      * @return
@@ -502,7 +502,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /**
      * DOC rli Comment method "moveElement".
-     * 
+     *
      * @param columnList
      * @param columnsElementViewer
      */
@@ -550,9 +550,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     }
 
     /**
-     * 
+     *
      * DOC xqliu Comment method "sortElement".
-     * 
+     *
      * @param columnList
      * @param columnsElementViewer
      * @param asc
@@ -563,9 +563,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     }
 
     /**
-     * 
+     *
      * DOC xqliu ColumnsComparisonMasterDetailsPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class CaseInsensitiveComparator implements Comparator<Object> {
@@ -672,7 +672,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
              */
             @Override
@@ -699,9 +699,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "showSelectedElements".
-     * 
+     *
      * @param newTree
      */
     private void showSelectedElements(TableViewer tableView) {
@@ -768,7 +768,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     }
 
     /**
-     * 
+     *
      * DOC mzhao Open column selection dialog for left column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetASelectionDialog() {
@@ -776,7 +776,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     }
 
     /**
-     * 
+     *
      * DOC mzhao Open column selection dialog for right column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetBSelectionDialog() {
@@ -849,7 +849,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
     }
 
     /**
-     * 
+     *
      * DOC mzhao feature 11387, 2010-03-08, AnalysisColumnCompareTreeViewer class global comment. Detailled comment
      */
     private void handleColumnReverseAction() {
@@ -899,7 +899,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TalendObserver)
@@ -911,7 +911,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TalendObserver)
@@ -925,7 +925,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
      */
     public void clearObserver() {
@@ -937,7 +937,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
      */
     public void notifyObservers() {
@@ -958,7 +958,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#initObserverable()
      */
     private void initObserverable() {
@@ -970,7 +970,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
      */
     public void update(Map<String, Integer> columnIndexMap) {
@@ -979,7 +979,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(int)
      */
     public void update(int EventType) {

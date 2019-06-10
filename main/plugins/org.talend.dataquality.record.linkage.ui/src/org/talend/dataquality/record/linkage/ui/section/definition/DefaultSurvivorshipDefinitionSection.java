@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -44,7 +44,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSection {
 
@@ -54,7 +54,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /**
      * DOC HHB SurvivorshipDefinitionTableSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -100,7 +100,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /**
      * Create table composite
-     * 
+     *
      * @param ruleComp
      * @return
      */
@@ -110,7 +110,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /**
      * Create sorter of table viewer
-     * 
+     *
      * @return
      */
     protected KeyDefinitionTableViewerSorter<? extends DefaultSurvivorshipDefinition> createTableViewerSorter() {
@@ -166,7 +166,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /**
      * Getter for defaultSurvivorshipKeys.
-     * 
+     *
      * @return the defaultSurvivorshipKeys
      */
     public List<DefaultSurvivorshipDefinition> getDefaultSurvivorshipKeys() {
@@ -177,7 +177,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -205,7 +205,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -231,7 +231,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /**
      * import the DefaultSurvivorshipFunctions, if overwrite, clear the DefaultSurvivorshipFunctions before import.
-     * 
+     *
      * @param matchRuleDef
      * @param overwrite
      */

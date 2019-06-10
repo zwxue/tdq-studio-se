@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ public class ObtainEcosComponentJob extends Job {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
      */
     @Override
@@ -63,7 +63,7 @@ public class ObtainEcosComponentJob extends Job {
             public List<IEcosComponent> call() throws Exception {
                 EcosystemService.getVersionList();
                 IEcosCategory ecosCategory = new EcosCategory(category);
-               
+
                 return ComponentSearcher.getAvailableComponentExtensions(version, ecosCategory);
             }
 
@@ -92,7 +92,7 @@ public class ObtainEcosComponentJob extends Job {
 
     /**
      * Getter for fAvailableComponents.
-     * 
+     *
      * @return the fAvailableComponents
      */
     public List<IEcosComponent> getFAvailableComponents() {

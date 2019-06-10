@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,9 +47,9 @@ import org.talend.model.bridge.ReponsitoryContextBridge;
 import org.talend.utils.io.FilesUtils;
 
 /**
- * 
+ *
  * this class PTODO qzhang fixed bug 3907.
- * 
+ *
  */
 public class FolderSelectionDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 
@@ -97,7 +97,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /**
      * qzhang FolderSelectionDialog constructor comment.
-     * 
+     *
      * @param parent
      * @param labelProvider
      * @param contentProvider
@@ -116,7 +116,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
              * java.lang.Object)
              */
@@ -156,7 +156,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -187,7 +187,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent
      * )
@@ -198,7 +198,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.dialogs.SelectionStatusDialog#okPressed()
      */
     @Override
@@ -209,7 +209,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /**
      * DOC xqliu Comment method "getFileName". ADD xqliu 2010-03-08 feature 10675
-     * 
+     *
      * @return
      */
     public String getFileName() {
@@ -218,7 +218,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /**
      * check File Name.
-     * 
+     *
      * @param String: file name
      */
     private Status checkFileName(final String name) {
@@ -238,7 +238,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /**
      * check the fileName exist in the folder (recursive).
-     * 
+     *
      * @param folder
      * @param fileName
      * @return
@@ -259,7 +259,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /**
      * get the final source file name (with the version).
-     * 
+     *
      * @param fileName source file name (without the version)
      * @return
      */
@@ -269,7 +269,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     /**
      * get all sql files which under parentFile (recursive).
-     * 
+     *
      * @param files
      * @param parentFile
      */

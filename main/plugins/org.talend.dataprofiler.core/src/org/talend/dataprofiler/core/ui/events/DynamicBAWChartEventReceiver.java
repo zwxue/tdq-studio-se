@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -77,7 +77,7 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
         eReceiver.setIndicatorType(type);
         eReceiver.setIndicatorName(oneIndicator.getName());
         indicators.add(new ColumnIndicatorUnit(type, oneIndicator, null));
-        
+
         if (IndicatorEnum.IQRIndicatorEnum.equals(type)) {
             this.IRQIndicator = oneIndicator;
             this.IRQIndicatorEvent = eReceiver;
@@ -123,7 +123,7 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
 
     /**
      * DOC zshen Comment method "copyIndicatorUnit".
-     * 
+     *
      * @param indicators2
      * @return
      */
@@ -179,7 +179,7 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver#clear()
      */
     @Override
@@ -194,7 +194,7 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
 
     /**
      * Sets the bAWparentComposite.
-     * 
+     *
      * @param bAWparentComposite the bAWparentComposite to set
      */
     public void setBAWparentComposite(Object bAWparentComposite) {

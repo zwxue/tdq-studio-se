@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,7 +29,7 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ILabelProvider#getImage(java.lang.Object)
      */
     public Image getImage(Object element) {
@@ -43,7 +43,7 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ILabelProvider#getText(java.lang.Object)
      */
     public String getText(Object element) {
@@ -52,7 +52,7 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */
     public void addListener(ILabelProviderListener listener) {
@@ -60,7 +60,7 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
      */
     public void dispose() {
@@ -68,7 +68,7 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
      */
     public boolean isLabelProperty(Object element, String property) {
@@ -77,7 +77,7 @@ public class AnalysisTypeLabelProvider implements ILabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
      */

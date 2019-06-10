@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -19,7 +19,7 @@ import org.talend.cwm.indicator.DataValidation;
 
 /**
  * Validation data type
- * 
+ *
  */
 public class DataValidationImpl implements DataValidation {
 
@@ -37,7 +37,7 @@ public class DataValidationImpl implements DataValidation {
 
     /**
      * DOC zshen DataValidationImpl constructor comment.
-     * 
+     *
      * @param checkKey
      */
     public DataValidationImpl() {
@@ -58,7 +58,7 @@ public class DataValidationImpl implements DataValidation {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.indicator.DataValidation#isValid(java.lang.Object)
      */
     @Override
@@ -68,7 +68,7 @@ public class DataValidationImpl implements DataValidation {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.indicator.DataValidation#isCheckKey()
      */
     @Override
@@ -78,7 +78,7 @@ public class DataValidationImpl implements DataValidation {
 
     /**
      * Sets the checkKey.
-     * 
+     *
      * @param checkKey the checkKey to set
      */
     @Override
@@ -88,7 +88,7 @@ public class DataValidationImpl implements DataValidation {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.indicator.IPropertyOrder#isWork()
      */
     @Override
@@ -99,7 +99,7 @@ public class DataValidationImpl implements DataValidation {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.indicator.IPropertyOrder#setWork(boolean)
      */
     @Override
@@ -110,7 +110,7 @@ public class DataValidationImpl implements DataValidation {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.indicator.IPropertyOrder#add(java.lang.Object[])
      */
     @Override
@@ -120,7 +120,7 @@ public class DataValidationImpl implements DataValidation {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.indicator.IPropertyOrder#getResult()
      */
     @Override
@@ -129,9 +129,9 @@ public class DataValidationImpl implements DataValidation {
     }
 
     /**
-     * 
+     *
      * Get the index of column which need to sort
-     * 
+     *
      * @return
      */
     public int getReorderIndex() {
@@ -139,9 +139,9 @@ public class DataValidationImpl implements DataValidation {
     }
 
     /**
-     * 
+     *
      * Setting properties array
-     * 
+     *
      * @param propertiesStr
      */
     public void setProperties(String[] propertiesStr) {
@@ -150,7 +150,7 @@ public class DataValidationImpl implements DataValidation {
 
     /**
      * Getter for sortPropertyName.
-     * 
+     *
      * @return the sortPropertyName
      */
     public String getSortPropertyName() {
@@ -159,7 +159,7 @@ public class DataValidationImpl implements DataValidation {
 
     /**
      * Getter for sortDirection.
-     * 
+     *
      * @return the sortDirection
      */
     public int getSortDirection() {
@@ -167,9 +167,9 @@ public class DataValidationImpl implements DataValidation {
     }
 
     /**
-     * 
+     *
      * Setting information of sort
-     * 
+     *
      * @param controller
      */
     public void synSortState(String sortPropertyName, int sortDirection) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,13 +30,13 @@ import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 
 /**
  * created by zshen on Aug 26, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
 
     /**
      * DOC zshen MatchRuleDefinitionTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param isAddColumn
@@ -56,7 +56,7 @@ public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
      * }
      * headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
      * headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */
@@ -107,7 +107,7 @@ public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableLabelProvider()
      */
     @Override

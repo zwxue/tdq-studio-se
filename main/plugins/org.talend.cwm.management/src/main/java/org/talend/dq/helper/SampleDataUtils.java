@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ public class SampleDataUtils {
 
     /**
      * Getter for instance.
-     * 
+     *
      * @return the instance
      */
     public static SampleDataUtils getInstance() {
@@ -58,7 +58,7 @@ public class SampleDataUtils {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.IAnalysisEditorService#getSampleData()
      */
     public SampleDataStatement getSampleDataStatement(final Analysis findAnalysis) {
@@ -107,7 +107,7 @@ public class SampleDataUtils {
 
     /**
      * DOC zshen Comment method "getPropertyNames".
-     * 
+     *
      * @return
      */
     private String[] getPropertyNames(final ModelElement[] columns) {
@@ -122,7 +122,7 @@ public class SampleDataUtils {
 
     /**
      * DOC zshen Comment method "getLimitNumber".
-     * 
+     *
      * @param findAnalysis
      * @return
      */
@@ -140,7 +140,7 @@ public class SampleDataUtils {
 
     /**
      * DOC zshen Comment method "isShowRandomData".
-     * 
+     *
      * @param findAnalysis
      * @return
      */
@@ -150,7 +150,7 @@ public class SampleDataUtils {
 
     /**
      * DOC zshen Comment method "getColumns".
-     * 
+     *
      * @param findAnalysis
      * @return
      */
@@ -169,7 +169,7 @@ public class SampleDataUtils {
 
     /**
      * DOC zshen Comment method "getDataFilter".
-     * 
+     *
      * @return
      */
     private String getDataFilter(final Analysis findAnalysis) {

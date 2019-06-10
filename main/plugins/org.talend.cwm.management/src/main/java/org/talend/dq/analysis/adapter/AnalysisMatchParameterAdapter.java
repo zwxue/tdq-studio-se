@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -57,7 +57,7 @@ public class AnalysisMatchParameterAdapter extends MatchParameterAdapter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.grouping.adapter.MatchParameterAdapter#getAllSurvivorshipFunctions()
      */
     @Override
@@ -87,7 +87,7 @@ public class AnalysisMatchParameterAdapter extends MatchParameterAdapter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.grouping.adapter.MatchParameterAdapter#getDefaultSurviorShipRules()
      */
     @Override
@@ -143,7 +143,7 @@ public class AnalysisMatchParameterAdapter extends MatchParameterAdapter {
 
     /**
      * Create a new surv function and put it into map given column index as the key.
-     * 
+     *
      * @param columnMap
      * @param survivorShipAlgorithmParams
      * @param defaultSurvRules
@@ -180,7 +180,7 @@ public class AnalysisMatchParameterAdapter extends MatchParameterAdapter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.grouping.adapter.MatchParameterAdapter#getSurvivorshipAlgosMap(java.util
      * .Map)
@@ -236,7 +236,7 @@ public class AnalysisMatchParameterAdapter extends MatchParameterAdapter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.grouping.adapter.MatchParameterAdapter#getCombinedRecordMatcher()
      */
     @Override

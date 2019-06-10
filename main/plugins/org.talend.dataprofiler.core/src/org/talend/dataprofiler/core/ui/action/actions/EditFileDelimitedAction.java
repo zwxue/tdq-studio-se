@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,9 +26,9 @@ import org.talend.repository.ui.wizards.metadata.connection.files.delimited.Deli
 
 /**
  * MOD bzhou 2011-4-1 bug:20051
- * 
+ *
  * DOC bzhou class global comment. Detailled comment
- * 
+ *
  */
 public class EditFileDelimitedAction extends Action {
 
@@ -44,7 +44,7 @@ public class EditFileDelimitedAction extends Action {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override

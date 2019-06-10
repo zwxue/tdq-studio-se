@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,7 +34,7 @@ import edu.uci.ics.jung.utils.UserData;
 
 /**
  * @author scorreia
- * 
+ *
  * Class to help building a graph from data.
  */
 public class GraphBuilder {
@@ -72,7 +72,7 @@ public class GraphBuilder {
     protected NumberEdgeValue edgeWeight;
 
     private long totalWeight;
-    
+
     boolean proportionalWidth = false;
 
     public void setProportionalWidth(boolean proportionalWidth) {
@@ -81,7 +81,7 @@ public class GraphBuilder {
 
     /**
      * Getter for totalWeight.
-     * 
+     *
      * @return the totalWeight
      */
     public long getTotalWeight() {
@@ -90,7 +90,7 @@ public class GraphBuilder {
 
     /**
      * Sets the totalWeight.
-     * 
+     *
      * @param totalWeight the totalWeight to set
      */
     public void setTotalWeight(long totalWeight) {
@@ -99,7 +99,7 @@ public class GraphBuilder {
 
     /**
      * Getter for edgeWeight.
-     * 
+     *
      * @return the edgeWeight
      */
     public NumberEdgeValue getEdgeWeight() {
@@ -108,7 +108,7 @@ public class GraphBuilder {
 
     /**
      * Getter for vertexWeight.
-     * 
+     *
      * @return the vertexWeight
      */
     public NumberVertexValue getVertexWeight() {
@@ -119,7 +119,7 @@ public class GraphBuilder {
 
     /**
      * Method "createMultiGraph".
-     * 
+     *
      * @param listOfRows a list of rows. Each row contains instance values. The last column gives the number of
      * instances of the row.
      * @return the graph
@@ -139,7 +139,7 @@ public class GraphBuilder {
 
     /**
      * create vertices from given list of rows.
-     * 
+     *
      * @param listOfRows list of rows
      * @return true
      */
@@ -159,7 +159,7 @@ public class GraphBuilder {
 
     /**
      * DOC scorreia Comment method "createVertices".
-     * 
+     *
      * @param key2Vertex
      * @param toEdge
      * @param row
@@ -209,7 +209,7 @@ public class GraphBuilder {
 
     /**
      * DOC scorreia Comment method "getIntegerValue".
-     * 
+     *
      * @param object
      * @return
      */
@@ -220,7 +220,7 @@ public class GraphBuilder {
 
     /**
      * DOC scorreia Comment method "newEdge".
-     * 
+     *
      * @param row
      * @param rowIdx
      * @param countColumnIndex
@@ -241,7 +241,7 @@ public class GraphBuilder {
 
     /**
      * DOC scorreia Comment method "updateEdge".
-     * 
+     *
      * @param edge
      * @param row
      * @param rowIdx
@@ -255,7 +255,7 @@ public class GraphBuilder {
 
     /**
      * DOC scorreia Comment method "newVertex".
-     * 
+     *
      * @param key2Vertex
      * @param columnIndex
      * @param value
@@ -274,16 +274,16 @@ public class GraphBuilder {
 
     /**
      * Getter for graph.
-     * 
+     *
      * @return the graph
      */
     public Graph getGraph() {
         return graph;
     }
-    
+
     /**
      * Method "computeEdgeWidth".
-     * 
+     *
      * @param weight the weight of an edge
      * @return the width to be used for the edge
      */

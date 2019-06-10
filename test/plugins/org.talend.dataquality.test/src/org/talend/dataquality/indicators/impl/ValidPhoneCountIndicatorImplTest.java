@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,11 +31,11 @@ public class ValidPhoneCountIndicatorImplTest {
 
     ValidPhoneCountIndicatorImpl validPhoneCountIndicatorImpl = null;
 
-    private Object data_invalid[] = { "+41446681800", "+086 18611281175", "086 18611281175", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
-            "08618611281175", "08618611281175", "123", "", null }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
+    private Object data_invalid[] = { "+41446681800", "+086 18611281175", "086 18611281175", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            "08618611281175", "08618611281175", "123", "", null }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     private Object data_valid[] = {
-            "86 18611281173", "8618611281175", "+86 18611281175", "+8618611281175", "18611281175", "01062153217" };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
+            "86 18611281173", "8618611281175", "+86 18611281175", "+8618611281175", "18611281175", "01062153217" };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
     @Before
     public void setUp() throws Exception {

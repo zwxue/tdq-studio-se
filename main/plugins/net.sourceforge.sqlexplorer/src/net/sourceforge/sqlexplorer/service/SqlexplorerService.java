@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -99,7 +99,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * created by xqliu on 2014-9-15 Detailled comment
- * 
+ *
  */
 public class SqlexplorerService implements ISqlexplorerService {
 
@@ -140,7 +140,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /**
      * open the sql editor and run it.
-     * 
+     *
      * @param alias
      * @param databaseConnection
      * @param lEditorName
@@ -193,7 +193,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /**
      * if the sqlexplorer driver is unRegisted,load the driver jar by lib manage system.
-     * 
+     *
      * @param sqlPlugin
      * @param connection
      * @param databaseConnection
@@ -317,9 +317,9 @@ public class SqlexplorerService implements ISqlexplorerService {
     }
 
     /**
-     * 
+     *
      * Load the driver by lib management system , which will configure the SQL Explorer driver classpath from xml.
-     * 
+     *
      * @param dbType
      * @param dbVersion
      * @param driverClassName
@@ -365,7 +365,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /**
      * TDDQ-8113 load hive drive by DynamicClassLoader,then set the attribute for Hive ManagedDriver.
-     * 
+     *
      * @param connection
      */
     private void loadManagedDriverForHive(DatabaseConnection connection) {
@@ -405,9 +405,9 @@ public class SqlexplorerService implements ISqlexplorerService {
     }
 
     /**
-     * 
+     *
      * find all jar pathes by jar names.
-     * 
+     *
      * @param root
      * @param jarNames
      * @return if return an empty Set,indicate that it find failed.
@@ -451,7 +451,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.service.ISqlexplorerService#findSqlExplorerTableNode(org.talend.core.model.metadata.
      * builder
@@ -618,7 +618,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /**
      * DOC xqliu Comment method "getNetezzaSchema".
-     * 
+     *
      * @param childNodes
      * @param username
      * @return
@@ -637,7 +637,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /**
      * DOC xqliu Comment method "isNetezza".
-     * 
+     *
      * @param url
      * @return
      */
@@ -655,7 +655,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#getDriver(java.lang.String, java.lang.String)
      */
     @Override
@@ -764,7 +764,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#getMyURLClassLoaderAssignableClasses(java.net.URL)
      */
     @Override
@@ -780,7 +780,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.service.ISqlexplorerService#updateConnetionAliasByName(org.talend.core.model.metadata.
      * builder.connection.Connection, java.lang.String)
@@ -811,7 +811,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.service.ISqlexplorerService#removeAliasInSQLExplorer(orgomg.cwm.foundation.
      * softwaredeployment
@@ -853,7 +853,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#aliasExist(java.lang.String)
      */
     @Override
@@ -866,7 +866,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#createExportCSVAction()
      */
     @Override
@@ -878,7 +878,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#setExportCSVActionTable(java.lang.Object,
      * java.lang.Object)
      */
@@ -893,7 +893,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#create(java.lang.String[], java.lang.Object, int,
      * java.lang.Object, int)
      */
@@ -906,7 +906,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#createMapDBSetDataSet(java.lang.String[],
      * java.lang.Object, int)
      */
@@ -917,7 +917,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#createMapDBDataSet(java.lang.String[], java.lang.Object,
      * int, java.lang.Object, java.lang.Long)
      */
@@ -930,7 +930,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#resetTalendDataSetIndex(java.lang.Object, int, int)
      */
     @Override
@@ -942,7 +942,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#createDataSet(java.lang.String[], java.lang.String[][])
      */
     @Override
@@ -952,7 +952,7 @@ public class SqlexplorerService implements ISqlexplorerService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ISqlexplorerService#isInstanceofTalendDataSetIndex(java.lang.Object)
      */
     @Override

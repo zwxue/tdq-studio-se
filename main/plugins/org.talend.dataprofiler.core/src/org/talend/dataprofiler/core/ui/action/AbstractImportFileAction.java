@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,9 +42,9 @@ import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z bzhou $
- * 
+ *
  */
 public abstract class AbstractImportFileAction extends Action implements ICheatSheetAction {
 
@@ -57,7 +57,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -107,7 +107,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
 
     /**
      * DOC bZhou Comment method "createItem".
-     * 
+     *
      * @param initFile
      * @param path
      * @return
@@ -143,7 +143,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * Add/Update Sql Expression in Mean/Median indicators for DB2 language.
- * 
+ *
  * ADDed by msjian 2012-8-31 for TDQ-5960
  */
 public class UpdateMeanMedianForDB2Task extends AbstractWorksapceUpdateTask {
@@ -38,7 +38,7 @@ public class UpdateMeanMedianForDB2Task extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -47,7 +47,7 @@ public class UpdateMeanMedianForDB2Task extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -86,7 +86,7 @@ public class UpdateMeanMedianForDB2Task extends AbstractWorksapceUpdateTask {
             medianDefinition.getSqlGenericExpression().addAll(remainExpLs);
             isMedianUpdated = IndicatorDefinitionFileHelper.save(medianDefinition);
         }
-        
+
         DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
 
         if (!isMeanAdded || !isMedianUpdated) {

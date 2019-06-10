@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -98,9 +98,9 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
     }
 
     /**
-     * 
+     *
      * if it has only catalog or only schema(like as:yes for mysql and oracle,no for MSSQL SEVER ).
-     * 
+     *
      * @param obj
      * @return
      */
@@ -187,7 +187,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel #getSavedReloadObject()
      */
     @Override

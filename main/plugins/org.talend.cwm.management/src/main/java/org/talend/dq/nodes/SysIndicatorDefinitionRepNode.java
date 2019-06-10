@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
 
     /**
      * IndicatorDefinitionRepNode constructor.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -85,7 +85,7 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
@@ -95,7 +95,7 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getDisplayText()
      */
     @Override

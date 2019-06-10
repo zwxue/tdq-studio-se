@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -78,7 +78,7 @@ public class MultiColAnalysisCreationTest {
 
     /**
      * Getter for columnSetMultiValueIndicator.
-     * 
+     *
      * @return the columnSetMultiValueIndicator
      */
     public ColumnSetMultiValueIndicator getColumnSetMultiValueIndicator() {
@@ -87,7 +87,7 @@ public class MultiColAnalysisCreationTest {
 
     /**
      * Sets the columnSetMultiValueIndicator.
-     * 
+     *
      * @param columnSetMultiValueIndicator the columnSetMultiValueIndicator to set
      */
     public void setColumnSetMultiValueIndicator(ColumnSetMultiValueIndicator columnSetMultiValueIndicator) {
@@ -107,7 +107,7 @@ public class MultiColAnalysisCreationTest {
 
     /**
      * DOC scorreia Comment method "run".
-     * 
+     *
      * @throws TalendException
      */
     @Ignore
@@ -176,7 +176,7 @@ public class MultiColAnalysisCreationTest {
 
     /**
      * DOC scorreia Comment method "getIndicators".
-     * 
+     *
      * @param column
      * @return
      */
@@ -198,7 +198,7 @@ public class MultiColAnalysisCreationTest {
 
     /**
      * DOC scorreia Comment method "getColumn".
-     * 
+     *
      * @param dataManager
      * @return
      * @throws Exception
@@ -253,7 +253,7 @@ public class MultiColAnalysisCreationTest {
 
     /**
      * DOC scorreia Comment method "getDataManager".
-     * 
+     *
      * @return
      */
     public Connection getDataManager() {

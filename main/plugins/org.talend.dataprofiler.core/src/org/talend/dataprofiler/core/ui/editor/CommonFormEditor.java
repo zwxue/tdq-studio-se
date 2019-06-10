@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -82,7 +82,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /**
      * Getter for lastRunContextGroupName.
-     * 
+     *
      * @return the lastRunContextGroupName
      */
     public String getLastRunContextGroupName() {
@@ -91,7 +91,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /**
      * Sets the lastRunContextGroupName.
-     * 
+     *
      * @param lastRunContextGroupName the lastRunContextGroupName to set
      */
     public void setLastRunContextGroupName(String lastRunContextGroupName) {
@@ -100,7 +100,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /**
      * Getter for contextManager.
-     * 
+     *
      * @return the contextManager
      */
     public IContextManager getContextManager() {
@@ -117,7 +117,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.forms.editor.FormEditor#createPages()
      */
     @Override
@@ -197,7 +197,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         try {
             updateDocumentProvider(input);
         } catch (CoreException e) {
-            log.error("Install the document provider is failture when created the editor of " + input.getName());//$NON-NLS-1$ 
+            log.error("Install the document provider is failture when created the editor of " + input.getName());//$NON-NLS-1$
         }
     }
 
@@ -207,7 +207,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /**
      * Provide a new DocumentProvider based on the given editor input.
-     * 
+     *
      * @param input the editor input.
      * @throws CoreException
      */
@@ -222,7 +222,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /**
      * Disposes of the connection with the document provider. Subclasses may extend.
-     * 
+     *
      * @since 3.0
      */
     protected void disposeDocumentProvider() {
@@ -293,7 +293,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.forms.editor.FormEditor#pageChange(int)
      */
     @Override
@@ -308,7 +308,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.forms.editor.FormEditor#isDirty()
      */
     @Override
@@ -323,7 +323,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /**
      * DOC bzhou Comment method "createToolbar".
-     * 
+     *
      * @param parent
      */
     protected void createToolbar(final Composite parent) {
@@ -351,7 +351,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /**
      * DOC bzhou Comment method "getToolBar".
-     * 
+     *
      * @return
      */
     public TdEditorToolBar getToolBar() {
@@ -360,7 +360,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /**
      * DOC yyi Comment method "LockEditor".
-     * 
+     *
      * @param lock
      */
     public void lockFormEditor(boolean lock) {
@@ -388,7 +388,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
     }
 
     /**
-     * 
+     *
      * refresh the opend editor.
      */
     public void refreshEditor() {
@@ -423,7 +423,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     /**
      * show the context view for the SupportContextEditor.
-     * 
+     *
      */
     protected void showContextView() {
         IViewPart ctxViewer = getSite().getPage().findView(AbstractContextView.CTX_ID_TDQ);

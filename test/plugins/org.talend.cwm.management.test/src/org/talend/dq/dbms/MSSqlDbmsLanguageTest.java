@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,13 +21,13 @@ import org.junit.Test;
  */
 public class MSSqlDbmsLanguageTest {
 
-    private String charsToReplace = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";//$NON-NLS-1$ 
+    private String charsToReplace = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";//$NON-NLS-1$
 
-    private String replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";//$NON-NLS-1$ 
+    private String replacementChars = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";//$NON-NLS-1$
 
-    String[][] valuesNresults = { { "abc", "aaa" }, { "a1e", "a9a" }, { "dkmné", "aaaaa" } };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
+    String[][] valuesNresults = { { "abc", "aaa" }, { "a1e", "a9a" }, { "dkmné", "aaaaa" } };//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 
-    private String columnName = "navarchar";//$NON-NLS-1$ 
+    private String columnName = "navarchar";//$NON-NLS-1$
 
     /**
      * Test method for
@@ -37,7 +37,7 @@ public class MSSqlDbmsLanguageTest {
     @Test
     public void testGetPatternFinderFunction() {
         MSSqlDbmsLanguage dbms = new MSSqlDbmsLanguage();
-        String value = "toto";//$NON-NLS-1$ 
+        String value = "toto";//$NON-NLS-1$
         System.out.println(dbms.getPatternFinderFunction(value, charsToReplace, replacementChars));
     }
 

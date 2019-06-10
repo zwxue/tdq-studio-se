@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,8 +26,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
  * A global service register provides the service registration and acquirement. <br/>
- * 
- * 
+ *
+ *
  */
 public class GlobalServiceRegister {
 
@@ -63,7 +63,7 @@ public class GlobalServiceRegister {
 
     /**
      * Gets the specific IService.
-     * 
+     *
      * @param klass the Service type you want to get
      * @return IService IService
      */
@@ -81,9 +81,9 @@ public class GlobalServiceRegister {
     }
 
     /**
-     * 
+     *
      * zshen adjust whether the service has been registered.
-     * 
+     *
      * @param klass
      * @return
      */
@@ -101,7 +101,7 @@ public class GlobalServiceRegister {
 
     /**
      * Gets the specific IService.overide klliu 2010-09-15 bug 15520.
-     * 
+     *
      * @param klass the Service type you want to get
      * @return IService IService
      */
@@ -119,9 +119,9 @@ public class GlobalServiceRegister {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Get svn repository service.
-     * 
+     *
      * @param klass
      * @return
      */
@@ -157,7 +157,7 @@ public class GlobalServiceRegister {
 
     /**
      * Gets the specific IService group.
-     * 
+     *
      * @param klass the Service type you want to get
      * @return List
      */
@@ -175,7 +175,7 @@ public class GlobalServiceRegister {
 
     /**
      * Finds the specific service from the list. overide klliu 2010-09-15 bug 15520
-     * 
+     *
      * @param klass the interface type want to find.
      * @return IService
      */
@@ -223,7 +223,7 @@ public class GlobalServiceRegister {
 
     /**
      * Finds the special service group from the list.
-     * 
+     *
      * @param klass the interface type want to find.
      * @return List
      */

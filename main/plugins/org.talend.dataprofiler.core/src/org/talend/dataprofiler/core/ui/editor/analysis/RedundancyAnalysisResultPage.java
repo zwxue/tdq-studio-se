@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -98,7 +98,7 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
 
     /**
      * DOC rli ColumnsComparisonAnalysisResultPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -365,9 +365,9 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
     }
 
     /**
-     * 
+     *
      * DOC hcheng Comment method "createMenu".
-     * 
+     *
      * @param resultTable
      * @param indicator
      * @return
@@ -506,7 +506,7 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
      * .ui.editor.analysis.AbstractAnalysisMetadataPage)
@@ -530,7 +530,7 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
@@ -545,7 +545,7 @@ public class RedundancyAnalysisResultPage extends AbstractAnalysisResultPageWith
 
     /**
      * The provider for displaying the pair of <Code>Column</Code>.
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     class ColumnPairsViewerProvider extends LabelProvider implements ITableLabelProvider, IStructuredContentProvider {

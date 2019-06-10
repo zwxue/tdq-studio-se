@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -63,7 +63,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * @author scorreia
- * 
+ *
  * Computes indicators on columns with java engine. It means that we call indicator.handle(object) method.
  */
 public class IndicatorEvaluator extends Evaluator<String> {
@@ -258,7 +258,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
 
     /**
      * DOC xqliu Comment method "buildColumnListMap". bug 13826
-     * 
+     *
      * @param columnlist
      * @return
      */
@@ -337,7 +337,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
     }
 
     /**
-     * 
+     *
      * @author zshen
      * @param columns
      * @param sqlStatement
@@ -372,10 +372,10 @@ public class IndicatorEvaluator extends Evaluator<String> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#storeIndicator(java.lang.Object,
      * org.talend.dataquality.indicators.Indicator)
-     * 
+     *
      * MOD scorreia 2009-04-24 overrided to solve bug 7093
      */
     @Override
@@ -393,10 +393,10 @@ public class IndicatorEvaluator extends Evaluator<String> {
     }
 
     /**
-     * 
+     *
      * check each UDI if has realted java expression(class) for Java Engine,remove it from elementToIndicators(no need
      * to compute),then populate the message
-     * 
+     *
      * @param analysis
      * @return
      */

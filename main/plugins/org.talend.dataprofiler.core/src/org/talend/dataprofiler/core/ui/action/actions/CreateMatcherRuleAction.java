@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,7 +31,7 @@ import org.talend.resource.ResourceManager;
 
 /**
  * created by zshen on Aug 19, 2013 Detailled comment
- * 
+ *
  */
 public class CreateMatcherRuleAction extends Action implements ICheatSheetAction {
 
@@ -56,7 +56,7 @@ public class CreateMatcherRuleAction extends Action implements ICheatSheetAction
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override

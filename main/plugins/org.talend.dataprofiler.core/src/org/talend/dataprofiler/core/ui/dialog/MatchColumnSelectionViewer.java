@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -25,7 +25,7 @@ public class MatchColumnSelectionViewer extends ColumnSelectionViewer {
 
     /**
      * DOC yyin MatchColumnSelectionViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -53,7 +53,7 @@ public class MatchColumnSelectionViewer extends ColumnSelectionViewer {
 
     /**
      * if the element is a column set (table, view, dftable)
-     * 
+     *
      * @param element
      * @return
      */

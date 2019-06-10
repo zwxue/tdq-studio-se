@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,7 +26,7 @@ import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  */
 public abstract class AbstractSelectionReceiver extends DropTargetEffect {
@@ -45,7 +45,7 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.swt.dnd.DropTargetAdapter#dragEnter(org.eclipse.swt.dnd.DropTargetEvent)
      */
     @Override
@@ -56,7 +56,7 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.swt.dnd.DropTargetAdapter#dropAccept(org.eclipse.swt.dnd.DropTargetEvent)
      */
     @Override
@@ -67,7 +67,7 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
 
     /**
      * DOC qzhang Comment method "execValidation".
-     * 
+     *
      * @param event
      * @param valid
      */
@@ -85,7 +85,7 @@ public abstract class AbstractSelectionReceiver extends DropTargetEffect {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.views.ISelectionReceiver#doDropValidation(org.eclipse.swt.dnd.DropTargetEvent,
      * org.eclipse.ui.navigator.CommonViewer)

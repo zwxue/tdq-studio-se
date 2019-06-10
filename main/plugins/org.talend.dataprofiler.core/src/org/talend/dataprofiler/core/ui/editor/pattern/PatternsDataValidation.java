@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ public class PatternsDataValidation extends DataValidationImpl {
 
     /**
      * DOC zshen PatternsDataValidation constructor comment.
-     * 
+     *
      * @param tableFilterResult
      */
     public PatternsDataValidation(List<Map<Integer, RegexpMatchingIndicator>> tableFilterResult,
@@ -44,7 +44,7 @@ public class PatternsDataValidation extends DataValidationImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.indicator.DataValidation#isValid(java.lang.Object)
      */
     @Override
@@ -82,7 +82,7 @@ public class PatternsDataValidation extends DataValidationImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.indicator.DataValidation#isCheckKey()
      */
     @Override
@@ -92,7 +92,7 @@ public class PatternsDataValidation extends DataValidationImpl {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.validation.DataValidationImpl#getReorderIndex()
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -42,7 +42,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author zshen
- * 
+ *
  */
 public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndicatorImpl> {
 
@@ -57,7 +57,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /**
      * Constructs an instance of <code>ElementTreeSelectionDialog</code>.
-     * 
+     *
      * @param parent The shell to parent from.
      * @param labelProvider the label provider to render the entries
      * @param contentProvider the content provider to evaluate the tree structure
@@ -70,7 +70,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.dialogs.SelectionDialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -81,7 +81,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /**
      * DOC msjian Comment method "setControl".
-     * 
+     *
      * @param jarPathText
      * @deprecated we should use setControls(Text jarPathText, Text classNameText) instead of this method
      */
@@ -91,9 +91,9 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
     }
 
     /**
-     * 
+     *
      * set jarPathText and classNameText
-     * 
+     *
      * @param jarPathText save path of the jar
      * @param classNameText save name of the class
      */
@@ -104,7 +104,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#checkJarDependency()
      */
 
@@ -115,7 +115,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#createOKButton(org.eclipse.swt.widgets.Composite
      * )
@@ -146,7 +146,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#getDescriptionMessage(java.lang.String)
      */
     @Override
@@ -156,7 +156,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#getFileHasBeenSelectedMessages(java.lang.Object)
      */
@@ -167,7 +167,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#initfValidator()
      */
     @Override
@@ -189,7 +189,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#getSuperClass()
      */
     @Override
@@ -200,7 +200,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#spliteJarFile()
      */
     @Override
@@ -216,7 +216,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#getSelectResult()
      */
     @Override
@@ -226,7 +226,7 @@ public class JavaUdiJarSelectDialog extends AbstractJarSelectDialog<UserDefIndic
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.common.ui.dialog.AbstractJarSelectDialog#selectClassName()
      */
     @Override

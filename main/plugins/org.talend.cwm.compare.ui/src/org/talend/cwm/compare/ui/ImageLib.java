@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,9 +22,9 @@ import org.eclipse.swt.graphics.Image;
 
 /**
  * Store and lazy load Imaged. <br/>
- * 
+ *
  * $Id: ImageLib.java,v 1.5 2007/04/05 05:33:07 pub Exp $
- * 
+ *
  */
 public class ImageLib {
 
@@ -40,7 +40,7 @@ public class ImageLib {
 
     /**
      * get <code>ImageDescriptor</code> with special imageName.
-     * 
+     *
      * @param imageName
      * @return
      */
@@ -58,7 +58,7 @@ public class ImageLib {
 
     /**
      * get <code>Image</code> with special imageName.
-     * 
+     *
      * @param imageName
      * @return
      */
@@ -90,7 +90,7 @@ public class ImageLib {
 
     /**
      * get current icons URL.
-     * 
+     *
      * @return
      */
     private static URL getIconLocation() {
@@ -105,7 +105,7 @@ public class ImageLib {
 
     /**
      * store the image with special name(the name with suffix,such as "sample.gif").
-     * 
+     *
      * @param iconName
      */
     public static void addImage(String iconName) {

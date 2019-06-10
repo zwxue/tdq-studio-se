@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -146,7 +146,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * UDIMasterPage constructor .
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -157,7 +157,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#initialize(org.eclipse.ui.forms
      * .editor.FormEditor)
@@ -178,7 +178,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#removeJavaType()
      */
     @Override
@@ -188,7 +188,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#isPatternTextEditable()
      */
     @Override
@@ -198,7 +198,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * init Temp Indicator Definition Parameters.
-     * 
+     *
      */
     private void initTempIndicatorDefinitionParameter() {
         if (getCurrentModelElement() != null) {
@@ -210,7 +210,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * clone Indicator Definition Parameters.
-     * 
+     *
      * @param indicatorDefParameter
      * @return
      */
@@ -225,7 +225,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#createIndicatorContent()
      */
     @Override
@@ -247,7 +247,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * create Definition Parameters Composite.
-     * 
+     *
      * @return
      */
     private Composite createDefinitionParametersComp() {
@@ -269,7 +269,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * create Buttons for Definition Parameters.
-     * 
+     *
      * @param comp
      */
     private void createDefinitionParametersButton(Composite comp) {
@@ -323,7 +323,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#createDefinitionComp()
      */
     @Override
@@ -390,7 +390,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * createJavaComboBox used for create/update java line.
-     * 
+     *
      * @param lineComp
      * @return
      */
@@ -406,7 +406,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * create JarPath Text used for create/update java line.
-     * 
+     *
      * @param detailComp
      * @return
      */
@@ -419,7 +419,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * update Line For Java Language.
-     * 
+     *
      * @param combo
      */
     private void updateLineForJava(final CCombo combo) {
@@ -475,7 +475,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * create Edit Button For Java Line .
-     * 
+     *
      * @param detailComp
      * @param jarPathText
      * @param classNameText
@@ -500,7 +500,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * create ClassName Text.
-     * 
+     *
      * @param detailComp
      * @param jarPathText
      * @return
@@ -522,7 +522,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#updateDatabaseLineForJava(org.eclipse
      * .swt.custom.CCombo, org.talend.cwm.relational.TdExpression)
@@ -556,7 +556,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * open Jar Select Dialog(TDQ-3199 fixed: Make it convenient to delete the jar which is used already).
-     * 
+     *
      * @param jarPathText
      * @param classNameText
      */
@@ -575,7 +575,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#disposeExpressionChild()
      */
     @Override
@@ -593,7 +593,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * create Java Title Composite.
-     * 
+     *
      */
     private void createJavaTitleComp() {
         // MOD klliu 2011-07-09 bug 22994: Headers are wrong for Java option in indicator editor.
@@ -624,7 +624,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * Class name of Java User Define Indicator must be validated
-     * 
+     *
      * @param classNameText
      * @param jarPathText
      */
@@ -637,7 +637,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#doDeleteOnlyForJava()
      */
     @Override
@@ -648,7 +648,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * create Definiation Parameter Columns.
-     * 
+     *
      */
     private void createDefiniationParameterColumns() {
 
@@ -687,7 +687,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * create Category composite.
-     * 
+     *
      * @return
      */
     private Composite createCategoryComp() {
@@ -771,7 +771,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * create Indicator Category Detail.
-     * 
+     *
      * @param composite
      */
     private void createIndicatorCategoryDetail(Composite composite) {
@@ -788,7 +788,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * attach Definiation Parameter Cell Editors.
-     * 
+     *
      * @param table
      * @param titles
      */
@@ -925,7 +925,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#handleSelectExpression(org.eclipse
      * .swt.custom.CCombo, org.talend.dataprofiler.core.ui.dialog.ExpressionEditDialog)
@@ -989,7 +989,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * save TaggedValues.
-     * 
+     *
      * @param javaUDICombo
      */
     private void saveTaggedValues(CCombo javaUDICombo) {
@@ -1042,7 +1042,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#isJavaExist(org.eclipse.swt
      * .custom.CCombo)
      */
@@ -1058,7 +1058,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#updateLineAndOtherCombos(org.eclipse
      * .swt.custom.CCombo, org.talend.cwm.relational.TdExpression, java.lang.String)
@@ -1095,7 +1095,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * save Definition Parameters
-     * 
+     *
      * @param IndicatorDefinition
      */
     private void saveDefinitionParameters() {
@@ -1108,7 +1108,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#checkBeforeSave()
      */
     @Override
@@ -1179,7 +1179,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * check Java Definition Before Save.
-     * 
+     *
      * @return boolean
      */
     private boolean checkJavaDefinitionBeforeSave() {
@@ -1205,7 +1205,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * check Contains Java Definition.
-     * 
+     *
      * @return boolean
      */
     private boolean checkContainsJavaDefinition() {
@@ -1220,7 +1220,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * check Is Have Sql expression.
-     * 
+     *
      * @return boolean
      */
     private boolean checkIsHaveSqlExpression() {
@@ -1233,7 +1233,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * check Is Have Java Comb.
-     * 
+     *
      * @return boolean
      */
     private boolean checkIsHaveJavaComb() {
@@ -1250,7 +1250,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     /**
      * check whether the ClassName Exist In Jars.
-     * 
+     *
      * @return boolean
      */
     private boolean isClassNameExistInJars() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -64,7 +64,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * DBTableFolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -82,7 +82,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * create the node of parent.
-     * 
+     *
      * @return
      */
     private RepositoryNode createParentNode() {
@@ -119,7 +119,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * Create TableFolderNodeRepositoryNode.
-     * 
+     *
      * @param metadataObject parent CatalogViewObject or SchemaViewObject
      */
     private void createRepositoryNodeTableFolderNode(IRepositoryViewObject metadataObject) {
@@ -197,7 +197,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * DOC klliu Comment method "createTableRepositoryNode".
-     * 
+     *
      * @param tables
      */
     private void createTableRepositoryNode(List<TdTable> tables, List<IRepositoryNode> node) {
@@ -221,7 +221,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getLabel()
      */
     @Override
@@ -247,7 +247,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * return the Catalog or Schema, or null.
-     * 
+     *
      * @return
      */
     public Package getPackage() {

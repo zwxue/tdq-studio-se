@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -55,7 +55,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * created by msjian on 2014-6-19 Detailled comment
- * 
+ *
  */
 public final class ContextViewHelper {
 
@@ -123,7 +123,7 @@ public final class ContextViewHelper {
     /**
      * Go through every analysis and reports, to find if it imported the current context, and update the context value
      * in it.TDQ-14492,yyin 20180518
-     * 
+     *
      * @param contextManager
      */
     public static void updateAllContextInAnalysisAndReport(RepositoryUpdateManager ruManager, ContextItem contextItem,
@@ -275,7 +275,7 @@ public final class ContextViewHelper {
 
     /**
      * check each parameter's repositoryContextId, if parameter's repositoryContextId == contextId,
-     * 
+     *
      * @param context
      * @param modifiedContext
      * @param contextId

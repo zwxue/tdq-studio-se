@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,7 +18,7 @@ import org.talend.repository.model.IRepositoryNode;
 /**
  * IRepository Object CRUD. this class is used when the node is move/rename... (two types project "remote" and "local"
  * should be considerred )
- * 
+ *
  */
 public interface IRepositoryObjectCRUDAction {
 
@@ -31,7 +31,7 @@ public interface IRepositoryObjectCRUDAction {
     /**
      * The UI selection will be vary when the project varies (e.g remote project will refresh the tree when get
      * selection on UI, but local project won't)
-     * 
+     *
      * @return
      */
     public ISelection getUISelection();
@@ -43,7 +43,7 @@ public interface IRepositoryObjectCRUDAction {
 
     /**
      * check whether the selected node is Available.
-     * 
+     *
      * @return
      */
     public Boolean isSelectionAvailable();

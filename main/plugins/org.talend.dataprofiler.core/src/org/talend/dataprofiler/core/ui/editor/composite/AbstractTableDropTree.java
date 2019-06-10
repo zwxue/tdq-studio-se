@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,7 +34,7 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#addElements(org.talend.dataprofiler.core
      * .model.ModelElementIndicator[])
@@ -47,7 +47,7 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#canDrop(org.talend.repository.model.
      * IRepositoryNode)
      */
@@ -59,7 +59,7 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#setElements(org.talend.dataprofiler.core
      * .model.ModelElementIndicator[])

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -63,7 +63,7 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
- * 
+ *
  * DOC mzhao UIPagination.MasterPaginationInfo class global comment. Detailled comment
  */
 public class ResultPaginationInfo extends IndicatorPaginationInfo {
@@ -87,7 +87,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     /**
      * create CollapseAll Link for column name.
-     * 
+     *
      * @param composite
      * @param label: column name
      */
@@ -113,7 +113,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     /**
      * create ExpandAll Link for column name.
-     * 
+     *
      * @param composite
      * @param label: column name
      */
@@ -144,7 +144,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     /**
      * get all indicator subsection under the column name.
-     * 
+     *
      * @param label: column name
      * @return
      */
@@ -240,7 +240,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     /**
      * DOC bZhou Comment method "createChart".
-     * 
+     *
      * @param comp
      * @param chartType
      * @param units
@@ -376,7 +376,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     /**
      * get the indicators from the data entities, which maybe sorted, and the order is changed.
-     * 
+     *
      * @param dataEntities
      * @return
      */

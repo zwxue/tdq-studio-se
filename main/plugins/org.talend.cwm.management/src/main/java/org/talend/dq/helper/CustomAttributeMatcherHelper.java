@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,7 +21,7 @@ import org.talend.resource.ResourceManager;
 
 /**
  * created by zshen on Nov 14, 2013 Detailled comment
- * 
+ *
  */
 
 public class CustomAttributeMatcherHelper {
@@ -32,7 +32,7 @@ public class CustomAttributeMatcherHelper {
 
     /**
      * DOC zshen Comment method "getClassURLList".
-     * 
+     *
      * @param classPathParameter
      * @return
      */
@@ -54,7 +54,7 @@ public class CustomAttributeMatcherHelper {
 
     /**
      * DOC zshen Comment method "getClassName".
-     * 
+     *
      * @param classPathParameter like "CustomMatcherTest.jar||MycustomMatch.jar||testCustomMatcher.myCustomMatcher" last
      * one is fully qualified name("testCustomMatcher" is package name and "myCustomMatcher" is class name).
      * @return the class name as the demo will return testCustomMatcher.myCustomMatcher

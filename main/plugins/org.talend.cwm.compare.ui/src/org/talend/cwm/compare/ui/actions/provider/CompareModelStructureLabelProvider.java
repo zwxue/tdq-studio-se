@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
     /**
      * Returns the platform icon for a given {@link IFile}. If not an {@link IFile}, delegates to the
      * {@link AdapterFactoryLabelProvider} to get the {@link Image}.
-     * 
+     *
      * @param object Object to get the {@link Image} for.
      * @return The platform icon for the given object.
      * @see AdapterFactoryLabelProvider#getImage(Object)
@@ -62,7 +62,7 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
     /**
      * Returns the name of the given {@link IFile}, delegates to {@link AdapterFactoryLabelProvider#getText(Object)} if
      * not an {@link IFile}. MOD mzhao 2009-03-10 adapt for upper panel customized displaying items.
-     * 
+     *
      * @param object Object we seek the name for.
      * @return The name of the given object.
      * @see AdapterFactoryLabelProvider#getText(Object)

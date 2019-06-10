@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -126,7 +126,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * DOC yyin DQRuleCheckedTreeSelectionDialog constructor comment.
-     * 
+     *
      * @param parent
      * @param labelProvider
      * @param contentProvider
@@ -249,7 +249,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
             /**
              * check every block keys and match keys, if any key .
-             * 
+             *
              * @param matchRuleDef
              * @return
              */
@@ -282,7 +282,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
             /**
              * check if the key's name equals the .
-             * 
+             *
              * @param needColumnWarning
              * @param bkd
              * @return
@@ -299,7 +299,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
             /**
              * check if the match key or survivor key has .if the user has choose "overwrite",no need to judge then.
              * Judged according to the selected rule type(vsr or tswoosh)
-             * 
+             *
              * @param matchRuleDef
              * @return
              */
@@ -341,7 +341,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
             /**
              * DOC yyin Comment method "isEmptyRule".
-             * 
+             *
              * @param matchRuleDef
              * @return
              */
@@ -690,7 +690,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * DOC sizhaoliu Comment method "getMatchRulesFromNodes".
-     * 
+     *
      * @param nodes
      * @param retrieveDisplayValue get the display value when this parameter is set to true, otherwise, get the
      * component value.
@@ -710,7 +710,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * Get particular rules from nodes
-     * 
+     *
      * @param nodes
      * @param retrieveDisplayValue get the display value when this parameter is set to true, otherwise, get the
      * component value.
@@ -730,7 +730,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * check if the column name equals with the key's name(or key's column name)--Case INSensitive
-     * 
+     *
      * @param matchKey
      * @param lookupColumnName
      * @return
@@ -912,7 +912,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * DOC zshen Comment method "getParticularDataType".
-     * 
+     *
      * @param pdsd
      * @return
      */
@@ -924,7 +924,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * Check validity of function
-     * 
+     *
      * @param functionType the type of function
      * @param matchedColumnName the name of column
      * @param dataType the data type of column
@@ -942,7 +942,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * DOC xqliu Comment method "getSurvivorshipFunctionAlgorithm".
-     * 
+     *
      * @param matchKey
      * @param matchRuleDefinition
      * @return
@@ -971,7 +971,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * Getter for columnName2Type.
-     * 
+     *
      * @return the columnName2Type
      */
     public Map<String, String> getColumnName2Type() {
@@ -983,7 +983,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * Sets the columnName2Type.
-     * 
+     *
      * @param columnName2Type the columnName2Type to set
      */
     public void setColumnName2Type(Map<String, String> columnName2Type) {
@@ -1007,7 +1007,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /**
      * Sets the currentAnaBlockKeys.
-     * 
+     *
      * @param currentAnaBlockKeys the currentAnaBlockKeys to set
      */
     public void setCurrentAnaBlockKeys(List<String> currentAnaBlockKeys) {
@@ -1016,7 +1016,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     /*
      * DOC sizhaoliu Comment method "setMatchRuleDefinitionInput".
-     * 
+     *
      * @param mrDef
      */
     public void setMatchRuleDefinitionInput(MatchRuleDefinition matchRuleDefinitionInput) {

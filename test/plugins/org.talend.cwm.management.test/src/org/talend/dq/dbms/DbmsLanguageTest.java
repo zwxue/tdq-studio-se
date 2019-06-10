@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -140,7 +140,7 @@ public class DbmsLanguageTest {
 
     /**
      * get a default MySQL DbmsLanguage for test
-     * 
+     *
      * @return
      */
     private DbmsLanguage getMysqlDbmsLanguage() {
@@ -150,7 +150,7 @@ public class DbmsLanguageTest {
 
     /**
      * create a default pattern for test
-     * 
+     *
      * @return
      */
     private Pattern createPattern() {
@@ -171,7 +171,7 @@ public class DbmsLanguageTest {
 
     /**
      * create a default expression for test
-     * 
+     *
      * @return
      */
     private TdExpression createExpression(String language) {
@@ -183,7 +183,7 @@ public class DbmsLanguageTest {
 
     /**
      * create a default column name list for test
-     * 
+     *
      * @return
      */
     private List<String> createColumns() {
@@ -485,7 +485,7 @@ public class DbmsLanguageTest {
      * Test method for
      * {@link org.talend.dq.dbms.DbmsLanguage#getPatternFinderFunction(java.lang.String, org.eclipse.emf.common.util.EList)}
      * .
-     * 
+     *
      * case 1 : netezza case
      */
     @Test
@@ -532,7 +532,7 @@ public class DbmsLanguageTest {
      * Test method for
      * {@link org.talend.dq.dbms.DbmsLanguage#getPatternFinderFunction(java.lang.String, org.eclipse.emf.common.util.EList)}
      * .
-     * 
+     *
      * case 2 : default case
      */
     @Test
@@ -571,7 +571,7 @@ public class DbmsLanguageTest {
      * Test method for
      * {@link org.talend.dq.dbms.DbmsLanguage#getPatternFinderFunction(java.lang.String, org.eclipse.emf.common.util.EList)}
      * .
-     * 
+     *
      * case 3 : no default and no netezza
      */
     @Test
@@ -769,7 +769,7 @@ public class DbmsLanguageTest {
 
     /**
      * DOC qiongli Comment method "getHiveDbmsLanguage".
-     * 
+     *
      * @return
      */
     private DbmsLanguage getHiveDbmsLanguage() {
@@ -1419,7 +1419,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 1 :database type is mysql
      */
     @Test
@@ -1436,7 +1436,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 2 : database type is oracle
      */
     @Test
@@ -1454,7 +1454,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 3 : database type is postgresql
      */
     @Test
@@ -1472,7 +1472,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 4 : database type is Hive
      */
     @Test
@@ -1490,7 +1490,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 5 : database type is Vertical
      */
     @Test
@@ -1509,7 +1509,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 6 : database type is sql
      */
     @Test
@@ -1538,7 +1538,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 1 :database type is mysql
      */
     @Test
@@ -1556,7 +1556,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 2 : database type is oracle
      */
     @Test
@@ -1575,7 +1575,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 3 : database type is postgresql
      */
     @Test
@@ -1593,7 +1593,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 4 : database type is Hive
      */
     @Test
@@ -1612,7 +1612,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 5 : database type is Vertical
      */
     @Test
@@ -1631,7 +1631,7 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
-     * 
+     *
      * case 6 : database type is sql
      */
     @Test
@@ -2316,7 +2316,7 @@ public class DbmsLanguageTest {
 
     /**
      * DOC qiongli Comment method "getVerticaDbmsLanguage".
-     * 
+     *
      * @return
      */
     private DbmsLanguage getVerticaDbmsLanguage() {
@@ -2325,7 +2325,7 @@ public class DbmsLanguageTest {
 
     /**
      * DOC qiongli Comment method "getTeradataDbmsLanguage".
-     * 
+     *
      * @return
      */
     private DbmsLanguage getTeradataDbmsLanguage() {
@@ -2334,7 +2334,7 @@ public class DbmsLanguageTest {
 
     /**
      * DOC qiongli Comment method "getOracleDbmsLanguage".
-     * 
+     *
      * @return
      */
     private DbmsLanguage getOracleDbmsLanguage() {
@@ -2343,7 +2343,7 @@ public class DbmsLanguageTest {
 
     /**
      * DOC qiongli Comment method "getMsSqlDbmsLanguage".
-     * 
+     *
      * @return
      */
     private DbmsLanguage getMsSqlDbmsLanguage() {
@@ -2352,7 +2352,7 @@ public class DbmsLanguageTest {
 
     /**
      * DOC qiongli Comment method "getDB2DbmsLanguage".
-     * 
+     *
      * @return
      */
     private DbmsLanguage getDB2DbmsLanguage() {
@@ -2361,7 +2361,7 @@ public class DbmsLanguageTest {
 
     /**
      * DOC qiongli Comment method "getInformixDbmsLanguage".
-     * 
+     *
      * @return
      */
     private DbmsLanguage getInformixDbmsLanguage() {
@@ -2370,7 +2370,7 @@ public class DbmsLanguageTest {
 
     /**
      * DOC qiongli Comment method "getPostgresqlDbmsLanguage".
-     * 
+     *
      * @return
      */
     private DbmsLanguage getPostgresqlDbmsLanguage() {
@@ -2379,7 +2379,7 @@ public class DbmsLanguageTest {
 
     /**
      * DOC qiongli Comment method "getSybaseDbmsLanguage".
-     * 
+     *
      * @return
      */
     private DbmsLanguage getSybaseDbmsLanguage() {
@@ -2416,9 +2416,9 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
-     * 
+     *
      * case 1:vertica database expression
      */
     @Test
@@ -2432,9 +2432,9 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
-     * 
+     *
      * case 2:Hive database expression
      */
     @Test
@@ -2448,9 +2448,9 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
-     * 
+     *
      * case 3:PostgreSQL database expression
      */
     @Test
@@ -2464,9 +2464,9 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
-     * 
+     *
      * case 4:Oracle database expression
      */
     @Test
@@ -2480,9 +2480,9 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
-     * 
+     *
      * case 8:Mssql database expression
      */
     @Test
@@ -2498,9 +2498,9 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
-     * 
+     *
      * case 6:Netezza database expression
      */
     @Test
@@ -2518,9 +2518,9 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
-     * 
+     *
      * case 7:Other database expression
      */
     @Test
@@ -2537,9 +2537,9 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#getFunctionReturnValue()}.
-     * 
+     *
      * case 1:RegularfunctionReturnValue is null
      */
     @Test
@@ -2550,14 +2550,14 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
-     * 
+     *
      * case 1:The body of expression is null
      */
     @Test
     public void testSetFunctionReturnValueCase1() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         dbmsLanguage.setFunctionReturnValue(dbmsLanguage.extractRegularExpressionFunctionReturnValue(createExpression, "***")); //$NON-NLS-1$
         String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
@@ -2565,14 +2565,14 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
-     * 
+     *
      * case 2:Can not find the keyword for "when" in the body of expression.
      */
     @Test
     public void testSetFunctionReturnValueCase2() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
@@ -2582,14 +2582,14 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
-     * 
+     *
      * case 3:Can not find the keyword for ")" in the body of expression.
      */
     @Test
     public void testSetFunctionReturnValueCase3() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** WHEN RegularFunctionName(***returnValue THEN ******"); //$NON-NLS-1$
@@ -2599,14 +2599,14 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
-     * 
+     *
      * case 4:Can not find the keyword for "THEN" in the body of expression.
      */
     @Test
     public void testSetFunctionReturnValueCase4() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue **)****"); //$NON-NLS-1$
@@ -2616,14 +2616,14 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
-     * 
+     *
      * case 5:normal case
      */
     @Test
     public void testSetFunctionReturnValueCase5() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$ 
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, "1.0"); //$NON-NLS-1$
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
@@ -2633,14 +2633,14 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * 
+     *
      * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
-     * 
+     *
      * case 6: dbmsLanguage is sql
      */
     @Test
     public void testSetFunctionReturnValueCase6() {
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("sql", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$ 
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("sql", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // default Database
         createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$

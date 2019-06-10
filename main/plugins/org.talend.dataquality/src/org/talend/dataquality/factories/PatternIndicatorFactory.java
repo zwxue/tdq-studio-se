@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,7 +22,7 @@ import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
 
 /**
  * @author scorreia
- * 
+ *
  * This factory helps to create PatternMatching indicators.
  */
 public final class PatternIndicatorFactory {
@@ -32,7 +32,7 @@ public final class PatternIndicatorFactory {
 
     /**
      * Method "createRegexpMatchingIndicator".
-     * 
+     *
      * @param pattern the pattern from which the RegexpMatchingIndicator is created
      * @return the new RegexpMatchingIndicator with the same name as the pattern
      */
@@ -49,7 +49,7 @@ public final class PatternIndicatorFactory {
 
     /**
      * Method "createSqlPatternMatchingIndicator".
-     * 
+     *
      * @param pattern the pattern from which the SqlPatternMatchingIndicator is created
      * @return the new SqlPatternMatchingIndicator with the same name as the pattern
      */

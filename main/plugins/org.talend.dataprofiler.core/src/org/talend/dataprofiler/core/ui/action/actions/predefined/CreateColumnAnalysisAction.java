@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getPredefinedColumnIndicator()
      */
     @Override
@@ -41,7 +41,7 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getPredefinedDialog()
      */
     @Override
@@ -51,7 +51,7 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#isAllowed()
      */
     @Override
@@ -65,7 +65,7 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#preDo()
      */
     @Override
@@ -75,7 +75,7 @@ public class CreateColumnAnalysisAction extends AbstractPredefinedAnalysisAction
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction#getCategoryLabel()
      */
     @Override

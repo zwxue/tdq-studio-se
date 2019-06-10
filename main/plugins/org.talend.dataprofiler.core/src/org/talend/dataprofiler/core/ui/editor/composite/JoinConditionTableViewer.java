@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -102,7 +102,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "updateColumnSetPackage".
-     * 
+     *
      * @param column
      * @return
      */
@@ -121,7 +121,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "createTable".
-     * 
+     *
      * @param parent
      */
     private Table createTable(Composite parent) {
@@ -184,7 +184,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "createMenus".
-     * 
+     *
      * @param table
      * @return
      */
@@ -220,7 +220,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "showSelectedElements".
-     * 
+     *
      * @param table
      * @param ab
      */
@@ -247,7 +247,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "addJoinElement".
-     * 
+     *
      * @return
      */
     public JoinElement addJoinElement() {
@@ -261,7 +261,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "getSelection".
-     * 
+     *
      * @return
      */
     public ISelection getSelection() {
@@ -270,7 +270,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu Comment method "removeJoinElement".
-     * 
+     *
      * @param join
      */
     public void removeJoinElement(JoinElement join) {
@@ -394,7 +394,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private final class JoinElementContentProvider implements IStructuredContentProvider {
@@ -418,7 +418,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu IndicatorDefinitionMaterPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class JoinElementLabelProvider extends LabelProvider implements ITableLabelProvider {
@@ -486,7 +486,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     /**
      * DOC xqliu JoinConditionTableViewer class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class JoinElementColumnDialog extends Dialog {
@@ -503,7 +503,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
         /**
          * DOC xqliu JoinElementColumnDialog constructor comment.
-         * 
+         *
          * @param parentShell
          */
         protected JoinElementColumnDialog(Shell parentShell) {

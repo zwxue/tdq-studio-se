@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -71,9 +71,9 @@ import org.talend.resource.ResourceManager;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
- * 
+ *
  */
 public class RenameSqlFileAction extends Action {
 
@@ -95,7 +95,7 @@ public class RenameSqlFileAction extends Action {
 
     /**
      * DOC qzhang AddSqlFileAction constructor comment.
-     * 
+     *
      * @param folder
      */
     public RenameSqlFileAction(IFile folder) {
@@ -106,7 +106,7 @@ public class RenameSqlFileAction extends Action {
 
     /**
      * DOC klliu RenameSqlFileAction constructor comment.
-     * 
+     *
      * @param node
      */
     public RenameSqlFileAction(RepositoryNode node) {
@@ -207,15 +207,15 @@ public class RenameSqlFileAction extends Action {
 
     /**
      * DOC qzhang RenameSqlFileAction class global comment. Detailled comment <br/>
-     * 
+     *
      * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
-     * 
+     *
      */
     class RenameDialog extends TitleAreaDialog {
 
         /**
          * DOC qzhang RenameDialog constructor comment.
-         * 
+         *
          * @param parentShell
          */
         protected RenameDialog(Shell parentShell) {
@@ -225,7 +225,7 @@ public class RenameSqlFileAction extends Action {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets .Shell)
          */
         @Override
@@ -239,7 +239,7 @@ public class RenameSqlFileAction extends Action {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt .widgets.Composite)
          */
         @Override
@@ -261,7 +261,7 @@ public class RenameSqlFileAction extends Action {
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see org.eclipse.swt.events.ModifyListener#modifyText(org.eclipse .swt.events.ModifyEvent)
                  */
                 public void modifyText(ModifyEvent e) {
@@ -305,7 +305,7 @@ public class RenameSqlFileAction extends Action {
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org .eclipse.swt.events.SelectionEvent)
                  */
                 @Override
@@ -338,7 +338,7 @@ public class RenameSqlFileAction extends Action {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.dialogs.Dialog#okPressed()
          */
         @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -67,7 +67,7 @@ public class ColumnsMapSelectionDialog extends ColumnsSelectionDialog {
 
     /**
      * DOC xqliu ColumnsMapSelectionDialog constructor comment.
-     * 
+     *
      * @param metadataFormPage
      * @param parent
      * @param title
@@ -106,7 +106,7 @@ public class ColumnsMapSelectionDialog extends ColumnsSelectionDialog {
 
     /**
      * DOC xqliu Comment method "buildUserMap".
-     * 
+     *
      * @param allCheckedElements
      */
     private void buildUserMap(List<IRepositoryNode> allCheckedElements) {
@@ -152,7 +152,7 @@ public class ColumnsMapSelectionDialog extends ColumnsSelectionDialog {
 
         /**
          * DOC xqliu Comment method "init".
-         * 
+         *
          * @param map
          */
         public void init(Map<ColumnSet, List<TdColumn>> map) {

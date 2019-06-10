@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,7 +24,7 @@ import routines.system.IPersistableComparableLookupRow;
 
 /**
  * created by zhao on Oct 16, 2013 Detailled comment
- * 
+ *
  */
 public class BlockKey implements IPersistableComparableLookupRow<BlockKey> {
 
@@ -116,7 +116,7 @@ public class BlockKey implements IPersistableComparableLookupRow<BlockKey> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#writeKeysData(java.io.ObjectOutputStream)
      */
     public void writeKeysData(ObjectOutputStream out) {
@@ -132,7 +132,7 @@ public class BlockKey implements IPersistableComparableLookupRow<BlockKey> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#readKeysData(java.io.ObjectInputStream)
      */
     public void readKeysData(ObjectInputStream in) {
@@ -152,7 +152,7 @@ public class BlockKey implements IPersistableComparableLookupRow<BlockKey> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#writeValuesData(java.io.DataOutputStream, java.io.ObjectOutputStream)
      */
     public void writeValuesData(DataOutputStream dataOut, ObjectOutputStream objectOut) {
@@ -161,7 +161,7 @@ public class BlockKey implements IPersistableComparableLookupRow<BlockKey> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#readValuesData(java.io.DataInputStream, java.io.ObjectInputStream)
      */
     public void readValuesData(DataInputStream dataIn, ObjectInputStream objectIn) {
@@ -170,7 +170,7 @@ public class BlockKey implements IPersistableComparableLookupRow<BlockKey> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#copyDataTo(java.lang.Object)
      */
     public void copyDataTo(BlockKey other) {
@@ -180,7 +180,7 @@ public class BlockKey implements IPersistableComparableLookupRow<BlockKey> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see routines.system.IPersistableLookupRow#copyKeysDataTo(java.lang.Object)
      */
     public void copyKeysDataTo(BlockKey other) {
@@ -189,7 +189,7 @@ public class BlockKey implements IPersistableComparableLookupRow<BlockKey> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
     public int compareTo(BlockKey other) {

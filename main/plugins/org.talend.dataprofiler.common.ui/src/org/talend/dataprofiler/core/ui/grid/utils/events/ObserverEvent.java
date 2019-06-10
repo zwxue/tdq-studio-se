@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ public class ObserverEvent {
     public static final String COLUMN_HEADER_RESIZE = "columnHeaderResize"; //$NON-NLS-1$
 
     public static final String COLUMN_HEADER_MOVE = "columnHeaderMove"; //$NON-NLS-1$
-    
+
     public static final String COLUMN_HIGH_LIGHT = "columnHighlight"; //$NON-NLS-1$
 
     public static final String VERTICAL_SRCOLL_VISABLE = "VSrcollVisable"; //$NON-NLS-1$
@@ -43,7 +43,7 @@ public class ObserverEvent {
 
     /**
      * Get the value by special key.
-     * 
+     *
      * @return the dataMap
      */
     public Object getData(String key) {
@@ -55,7 +55,7 @@ public class ObserverEvent {
 
     /**
      * Set new value by special key.
-     * 
+     *
      * @param dataMap the dataMap to set
      */
     public void putData(String key, Object value) {
@@ -67,7 +67,7 @@ public class ObserverEvent {
 
     /**
      * Getter for eventType.
-     * 
+     *
      * @return the eventType
      */
     public ObserverEventEnum getEventType() {

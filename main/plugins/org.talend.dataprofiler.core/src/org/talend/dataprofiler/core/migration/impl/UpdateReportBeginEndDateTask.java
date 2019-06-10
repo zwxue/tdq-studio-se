@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -44,7 +44,7 @@ public class UpdateReportBeginEndDateTask extends AbstractWorksapceUpdateTask {
             if (me instanceof TdReport) {
             	TdReport tdReport = (TdReport) me;
             	boolean isChanged = false;
-            	
+
             	// dateFrom
             	String oldDateFromStr = tdReport.getDateFrom();
             	if (oldDateFromStr!= null ) {
@@ -52,12 +52,12 @@ public class UpdateReportBeginEndDateTask extends AbstractWorksapceUpdateTask {
             			if (oldDateFromStr.length() > 10) {
             				// like: 2004-06-12T00:00:00.000+0800 --> 06/12/2004
             				Date oldDateFromDate = new SimpleDateFormat("yyyy-MM-dd").parse(oldDateFromStr);
-            				tdReport.setDateFrom(new SimpleDateFormat("MM/dd/yyyy").format(oldDateFromDate));     
+            				tdReport.setDateFrom(new SimpleDateFormat("MM/dd/yyyy").format(oldDateFromDate));
             				isChanged = true;
             		    }
             		}
             	}
-            	
+
             	// dateTo
             	String oldDateToStr = tdReport.getDateTo();
             	if (oldDateToStr!= null ) {
@@ -65,12 +65,12 @@ public class UpdateReportBeginEndDateTask extends AbstractWorksapceUpdateTask {
             			if (oldDateToStr.length() > 10) {
             				// like: 2004-06-12T00:00:00.000+0800 --> 06/12/2004
             				Date oldDateToDate = new SimpleDateFormat("yyyy-MM-dd").parse(oldDateToStr);
-            				tdReport.setDateTo(new SimpleDateFormat("MM/dd/yyyy").format(oldDateToDate));     
+            				tdReport.setDateTo(new SimpleDateFormat("MM/dd/yyyy").format(oldDateToDate));
             				isChanged = true;
             		    }
             		}
             	}
-            	
+
             	if (isChanged) {
             		ElementWriterFactory.getInstance().createReportWriter().save(me);
             	}

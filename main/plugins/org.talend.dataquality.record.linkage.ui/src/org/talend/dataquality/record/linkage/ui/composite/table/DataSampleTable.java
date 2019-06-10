@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -177,7 +177,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * create the nattable every time when the user select some columns
-     * 
+     *
      * @param columns
      * @param listOfData
      */
@@ -200,7 +200,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * DOC talend Comment method "handleEmptyRow".
-     * 
+     *
      * @param columns
      * @param results
      */
@@ -213,7 +213,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * DOC talend Comment method "handleGID".
-     * 
+     *
      * @param parentContainer
      * @param results
      */
@@ -233,7 +233,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * DOC talend Comment method "isContainGID".
-     * 
+     *
      * @param results
      * @return
      */
@@ -243,7 +243,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * before create the table control, need to init the property name and name to label map
-     * 
+     *
      * @param proNames
      */
     private void initTableProperty(ModelElement[] columns) {
@@ -279,7 +279,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * DOC talend Comment method "createFixedColumns".
-     * 
+     *
      * @return
      */
     protected Collection<? extends String> createFixedColumns(int columnSize) {
@@ -309,7 +309,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * store the GID's group size.
-     * 
+     *
      * @param listOfData
      */
     private void initGIDMap(List<Object[]> listOfData) {
@@ -454,9 +454,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
             }
 
             /**
-             * 
+             *
              * Find the column name which be moved on the ui
-             * 
+             *
              * @param spacing
              * @return
              */
@@ -546,9 +546,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * when the data is empty, the column can not response the click event, so we need to add an empty row to it.
-     * 
+     *
      * @param length
-     * 
+     *
      * @return
      */
     private Object[] getEmptyRow(int length) {
@@ -576,7 +576,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * update Marked Keys
-     * 
+     *
      * @param columnName
      * @param color
      * @param keyName
@@ -600,7 +600,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * remove Marked Key".
-     * 
+     *
      * @param columnName
      * @param keyName
      */
@@ -616,7 +616,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
     /**
      * When the column is the user selected one, return its name; when the column is the default additional one, return
      * null
-     * 
+     *
      * @param position
      * @return
      */
@@ -636,7 +636,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * create the NatTable according to the property, and list of data to display
-     * 
+     *
      * @param parent
      * @param data
      * @return
@@ -808,7 +808,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
         /**
          * first: if the row of the cell is a master row, return its group size second: if the row of the cell is not a
          * master one, return the previous one
-         * 
+         *
          * @param cell
          * @return
          */
@@ -841,7 +841,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
         /**
          * check if the group size of the two group is equal or not.
-         * 
+         *
          * @param previousGID2
          * @param currentGID
          * @return
@@ -922,7 +922,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
         /**
          * get Current Column Name.
-         * 
+         *
          * @param columnPosition
          * @return
          */
@@ -944,7 +944,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * check if the current column is marked as block/match keys.
-     * 
+     *
      * @param additionalColumnPosition
      * @return
      */
@@ -965,7 +965,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * DOC sizhaoliu Comment method "setMinGroupSize".
-     * 
+     *
      * @param valueOf
      */
     public void setMinGroupSize(int size) {
@@ -987,7 +987,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
         /**
          * Getter for control.
-         * 
+         *
          * @return the control
          */
         public Control getControl() {
@@ -996,7 +996,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
         /**
          * Sets the control.
-         * 
+         *
          * @param control the control to set
          */
         public void setControl(Control control) {
@@ -1005,7 +1005,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
         /**
          * Getter for width.
-         * 
+         *
          * @return the width
          */
         public Integer getWidth() {
@@ -1014,7 +1014,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
         /**
          * Sets the width.
-         * 
+         *
          * @param width the width to set
          */
         public void setWidth(Integer width) {
@@ -1032,9 +1032,9 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
     }
 
     /**
-     * 
+     *
      * Redraw the table by special columns and reload the data if needed
-     * 
+     *
      * @param columns New input columns
      * @param withData where need to reload data with same time
      */
@@ -1061,7 +1061,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * DOC talend Comment method "getPreviewData".
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -1075,7 +1075,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * DOC talend Comment method "createPreviewData".
-     * 
+     *
      * @param columns
      * @throws SQLException
      */
@@ -1085,7 +1085,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * DOC talend Comment method "createNatTable".
-     * 
+     *
      * @param listOfData
      * @param dataTableComp
      */
@@ -1112,7 +1112,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Getter for isSameTable.
-     * 
+     *
      * @return the isSameTable
      */
     public boolean isSameTable() {
@@ -1121,7 +1121,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * DOC talend Comment method "initTablePanelLayoutPanel".
-     * 
+     *
      * @param dataPreviewSection
      * @param layoutDataFillBoth
      * @param tControl
@@ -1145,7 +1145,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Sets the limitNumber.
-     * 
+     *
      * @param limitNumber the limitNumber to set
      */
     public void setLimitNumber(int limitNumber) {
@@ -1154,7 +1154,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Getter for limitNumber.
-     * 
+     *
      * @return the limitNumber
      */
     public int getLimitNumber() {
@@ -1163,7 +1163,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.TDQObserver#update(java.lang.Object)
      */
     @Override
@@ -1173,7 +1173,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TDQObserver)
@@ -1186,7 +1186,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TDQObserver)
@@ -1201,7 +1201,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
      */
     @Override
@@ -1214,7 +1214,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
      */
     @Override
@@ -1235,7 +1235,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Getter for isShowRandomData.
-     * 
+     *
      * @return the isShowRandomData
      */
     public Boolean isShowRandomData() {
@@ -1244,7 +1244,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Sets the isShowRandomData.
-     * 
+     *
      * @param isShowRandomData the isShowRandomData to set
      */
     public void setShowRandomData(Boolean isShowRandomData) {
@@ -1283,7 +1283,7 @@ public class DataSampleTable implements TDQObserver<ModelElement[]>, Observerabl
 
     /**
      * Getter for propertyNames.
-     * 
+     *
      * @return the propertyNames
      */
     public String[] getPropertyNames() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -44,9 +44,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
- * 
+ *
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ WorkspaceResourceHelper.class })
@@ -56,7 +56,7 @@ public class TOPRepositoryServiceTest {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
@@ -67,7 +67,7 @@ public class TOPRepositoryServiceTest {
 
     /**
      * DOC qiongli Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     // @After

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -58,7 +58,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#getFileExtension()
      */
     @Override
@@ -106,7 +106,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
 
     /**
      * when the udi name is changed, it will be losted in the indicator selection dialog. so need to reload(TDQ-14249)
-     * 
+     *
      * @param oldName
      * @param item
      */
@@ -131,7 +131,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
     // @Override
@@ -206,7 +206,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.writer.AElementPersistance#removeDependencies(org.talend.core.model.properties.Item)
      */
     @Override

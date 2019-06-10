@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -73,7 +73,7 @@ public class ComparisonTableViewerDNDDecorate {
 
     /**
      * Install a drag&drop function for target table viewer.
-     * 
+     *
      * @param targetViewer the target table viewer for installing drag&drop, it's input value must a <code>List</code>
      * type.
      * @param installDragListener decide to whether install a drag listener for targetViewer: if true, will install the

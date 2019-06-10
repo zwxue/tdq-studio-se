@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -94,7 +94,7 @@ public class HideSeriesChartComposite {
 
     /**
      * DOC bzhou Comment method "createChart".
-     * 
+     *
      * @return
      */
     private Object createChart() {
@@ -119,7 +119,7 @@ public class HideSeriesChartComposite {
 
     /**
      * DOC yyin Comment method "createGanttChart".
-     * 
+     *
      * @return
      */
     private Object createGanttChart() {
@@ -165,7 +165,7 @@ public class HideSeriesChartComposite {
 
     /**
      * DOC yyin Comment method "createBubbleChart".
-     * 
+     *
      * @return
      */
     private Object createBubbleChart() {
@@ -224,7 +224,7 @@ public class HideSeriesChartComposite {
 
     /**
      * DOC yyin Comment method "setLayoutData".
-     * 
+     *
      * @param gd
      */
     public void setLayoutData(GridData gd) {

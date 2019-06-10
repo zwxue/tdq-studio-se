@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -86,7 +86,7 @@ import org.talend.dataprofiler.service.utils.ValueAggregator;
 
 /**
  * created by yyin on 2014-11-28 Detailled comment
- * 
+ *
  */
 public class TOPChartService implements ITOPChartService {
 
@@ -258,7 +258,7 @@ public class TOPChartService implements ITOPChartService {
 
             /**
              * DOC yyin Comment method "findCurrentMenu".
-             * 
+             *
              * @param firstKey
              * @param secondKey
              * @return
@@ -349,7 +349,7 @@ public class TOPChartService implements ITOPChartService {
 
             /**
              * Find current action
-             * 
+             *
              * @param firstKey
              * @param secondKey
              * @return
@@ -515,7 +515,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createDuplicateRecordPieChart(java.lang.String,
      * java.lang.Object)
      */
@@ -526,7 +526,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createDefaultCategoryDataset()
      */
     @Override
@@ -536,7 +536,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createDefaultCategoryDataset(java.util.List)
      */
     @Override
@@ -564,7 +564,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createConceptsChart(java.lang.String,java.lang.Object)
      */
     @Override
@@ -598,7 +598,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#addValueToCategoryDataset(double, java.lang.String,
      * java.lang.String)
      */
@@ -660,7 +660,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createPieDataset(java.util.Map)
      */
     @Override
@@ -678,7 +678,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createDefaultBoxAndWhiskerCategoryDataset(java.lang.Double,
      * java.lang.Double, java.lang.Double, java.lang.Double, java.lang.Double, java.lang.Double)
      */
@@ -704,7 +704,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createXYDataset(java.util.Map)
      */
     @Override
@@ -724,7 +724,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#setValue(java.lang.Object, java.lang.Comparable,
      * java.lang.Comparable)
      */
@@ -735,7 +735,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#clearDataset(java.lang.Object)
      */
     @Override
@@ -746,7 +746,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#clearDefaultBoxAndWhiskerCategoryDataset(java.lang.Object)
      */
     @Override
@@ -759,7 +759,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createTaskSeriesCollection()
      */
     @Override
@@ -769,7 +769,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createTaskSeries()
      */
     @Override
@@ -779,7 +779,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#addTaskToTaskSeries(java.lang.String, java.util.Date[])
      */
     @Override
@@ -789,7 +789,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#addSeriesToCollection(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -800,7 +800,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createGanttChart(java.lang.String, java.lang.Object)
      */
     @Override
@@ -810,7 +810,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#addSeriesToDefaultXYZDataset(java.lang.Object, double[][])
      */
     @Override
@@ -820,7 +820,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createBubbleChart(java.lang.String, java.lang.Object)
      */
     @Override
@@ -830,7 +830,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createDefaultXYZDataset()
      */
     @Override
@@ -916,7 +916,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#addSpecifiedListenersForCorrelationChart(boolean, boolean,
      * java.lang.Object, java.util.List)
      */
@@ -997,7 +997,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#getSeriesCount(java.lang.Object)
      */
     @Override
@@ -1008,7 +1008,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#getSeriesRowCount(java.lang.Object)
      */
     @Override
@@ -1020,7 +1020,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createSelectionAdapterForButton()
      */
     @Override
@@ -1052,7 +1052,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#getSeriesKeyOfBubbleChart(java.lang.Object, int)
      */
     @Override
@@ -1064,7 +1064,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#getSeriestKeyOfGanttChart(java.lang.Object, int)
      */
     @Override
@@ -1076,7 +1076,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#createChartCompositeForCorrelationAna(java.lang.Object,
      * java.lang.Object, int)
      */
@@ -1102,7 +1102,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#getCustomerDataset(java.lang.Object)
      */
     @Override
@@ -1118,7 +1118,7 @@ public class TOPChartService implements ITOPChartService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.service.ITOPChartService#getChartFromChartComposite(java.lang.Object)
      */
     @Override

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ public final class ModelElementFileFactory {
 
     /**
      * DOC bZhou Comment method "getModelElement".
-     * 
+     *
      * @param file
      * @return
      */
@@ -73,7 +73,7 @@ public final class ModelElementFileFactory {
 
     /**
      * DOC zshen Comment method "getModelElement".
-     * 
+     *
      * @param file
      * @return
      */
@@ -89,7 +89,7 @@ public final class ModelElementFileFactory {
 
     /**
      * DOC bZhou Comment method "getResourceFileMap".
-     * 
+     *
      * @param file
      * @return
      */
@@ -118,7 +118,7 @@ public final class ModelElementFileFactory {
 
     /**
      * DOC bZhou Comment method "getResourceFileMap".
-     * 
+     *
      * @param element
      * @return
      */
@@ -140,7 +140,7 @@ public final class ModelElementFileFactory {
 
     /**
      * DOC bZhou Comment method "getModelElements".
-     * 
+     *
      * @param files
      * @return
      */
@@ -158,7 +158,7 @@ public final class ModelElementFileFactory {
 
     /**
      * DOC bZhou Comment method "getALLElements".
-     * 
+     *
      * @param withSystem
      * @return
      */

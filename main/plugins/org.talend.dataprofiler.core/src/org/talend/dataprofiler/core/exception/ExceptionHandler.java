@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,9 +20,9 @@ import org.talend.commons.ui.gmf.util.DisplayUtils;
 
 /**
  * Implementation of exception handling strategy.<br/>
- * 
+ *
  * $Id: ExceptionHandler.java 3351 2007-05-04 12:14:00 +0000 (星期五, 04 五月 2007) plegall $
- * 
+ *
  */
 public final class ExceptionHandler {
 
@@ -36,7 +36,7 @@ public final class ExceptionHandler {
 
     /**
      * Log message relative to ex param. Log level depends on exception type.
-     * 
+     *
      * @param ex - exception to log
      */
     public static void process(Throwable ex) {

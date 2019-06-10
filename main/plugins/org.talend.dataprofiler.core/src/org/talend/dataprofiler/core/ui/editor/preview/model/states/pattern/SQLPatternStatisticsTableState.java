@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,13 +20,13 @@ import org.talend.dq.analysis.explore.SQLPatternExplorer;
 
 /**
  * created by yyin on 2014-12-3 Detailled comment
- * 
+ *
  */
 public class SQLPatternStatisticsTableState extends PatternStatisticsTableState {
 
     /**
      * DOC yyin SQLPatternStatisticsTableState constructor comment.
-     * 
+     *
      * @param units
      */
     public SQLPatternStatisticsTableState(List<IndicatorUnit> units) {

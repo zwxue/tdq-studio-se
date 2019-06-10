@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 
 /**
- * 
+ *
  * DOC mzhao Migration task for text indicators refinement. Text indicator category has children more than before (3.2).<br>
  * In 4.1, indicator leaves of text stats which created on 3.2 must not be treated as a whole category. Must store them
  * separetely.

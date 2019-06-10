@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
- * 
+ *
  * DOC mzhao class global comment. Compare two selected element in local structure.
  */
 public class SelectedLocalComparison implements IComparisonLevel {
@@ -175,7 +175,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
 
     /**
      * DOC mzhao Interface that do instanceof converter to provider common object to client.
-     * 
+     *
      * FIXME the class should be made static.
      */
     private class ModelElementAdapter {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,13 +22,13 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComposite<DefaultSurvivorshipDefinition> {
 
     /**
      * DOC HHB SurvivorshipTableComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -54,7 +54,7 @@ public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComp
 
     /**
      * DOC HHB Comment method "setInput".
-     * 
+     *
      * @param defaultSurvivorshipDefinitions
      */
     public void setInput(EList<DefaultSurvivorshipDefinition> inputs) {
@@ -63,7 +63,7 @@ public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComp
 
     /**
      * DOC HHB Comment method "removeKeyDefinition".
-     * 
+     *
      * @param next
      * @param matchRuleDef
      */
@@ -73,7 +73,7 @@ public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComp
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override

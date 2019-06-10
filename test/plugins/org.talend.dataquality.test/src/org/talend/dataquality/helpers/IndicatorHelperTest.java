@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,13 +34,13 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by talend on Sep 12, 2012 Detailled comment
- * 
+ *
  */
 public class IndicatorHelperTest {
 
     /**
      * DOC talend Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -151,7 +151,7 @@ public class IndicatorHelperTest {
     }
 
     /**
-     * 
+     *
      * Test method for get pattern name based on indicator.
      */
     @Test
@@ -170,7 +170,7 @@ public class IndicatorHelperTest {
     }
 
     /**
-     * 
+     *
      * Test method for get pattern based on indicator.
      */
     @Test

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,7 +23,7 @@ import org.talend.dq.nodes.indicator.IIndicatorNode;
 
 /**
  * created by talend on Dec 30, 2014 Detailled comment
- * 
+ *
  */
 public class PatternNode extends AbstractNode {
 
@@ -31,7 +31,7 @@ public class PatternNode extends AbstractNode {
 
     /**
      * DOC talend PatternNode constructor comment.
-     * 
+     *
      * @param label
      */
     public PatternNode(String label, Pattern pattern) {
@@ -41,7 +41,7 @@ public class PatternNode extends AbstractNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.indicator.IIndicatorNode#getChildren()
      */
     public IIndicatorNode[] getChildren() {
@@ -50,7 +50,7 @@ public class PatternNode extends AbstractNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.indicator.IIndicatorNode#isIndicatorEnumNode()
      */
     public boolean isIndicatorEnumNode() {
@@ -59,7 +59,7 @@ public class PatternNode extends AbstractNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.indicator.AbstractIndicatorNode#hasChildren()
      */
     @Override
@@ -69,7 +69,7 @@ public class PatternNode extends AbstractNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.indicator.IIndicatorNode#getImageName()
      */
     public String getImageName() {
@@ -78,7 +78,7 @@ public class PatternNode extends AbstractNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.indicator.AbstractNode#getIndicatorInstance()
      */
     @Override
@@ -95,7 +95,7 @@ public class PatternNode extends AbstractNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.indicator.IIndicatorNode#createNewIndicatorInstance()
      */
     @Override

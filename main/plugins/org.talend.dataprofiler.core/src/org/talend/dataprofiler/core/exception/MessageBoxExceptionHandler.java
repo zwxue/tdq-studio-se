@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,9 +21,9 @@ import org.talend.i18n.Messages;
 
 /**
  * Exception handling via message box.<br/>
- * 
+ *
  * $Id: MessageBoxExceptionHandler.java 3889 2007-06-17 18:14:27 +0000 (星期日, 17 六月 2007) mhelleboid $
- * 
+ *
  */
 public final class MessageBoxExceptionHandler {
 
@@ -37,7 +37,7 @@ public final class MessageBoxExceptionHandler {
 
     /**
      * Log the exeption then open a message box showing a generic message and exception message.
-     * 
+     *
      * @param ex - exception to log
      */
     public static void process(Throwable ex) {
@@ -97,7 +97,7 @@ public final class MessageBoxExceptionHandler {
 
     /**
      * Open a message box showing a specical message.
-     * 
+     *
      * @param ex - exception to show
      */
     protected static void showMessage(Exception ex, Shell shell, Priority priority, String msg) {
@@ -121,7 +121,7 @@ public final class MessageBoxExceptionHandler {
 
     /**
      * Open a message box showing a generic message and exception message.
-     * 
+     *
      * @param ex - exception to show
      */
     protected static void showMessage(Throwable ex, Shell shell) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,7 +23,7 @@ public class ParticularSurvivorshipRulesTableLabelProvider extends MatchRulesTab
 
     /**
      * Constructor of ParticularSurvivorshipRulesTableLabelProvider class.
-     * 
+     *
      * @param inputColumnNames
      */
     public ParticularSurvivorshipRulesTableLabelProvider(List<String> inputColumnNames) {
@@ -32,7 +32,7 @@ public class ParticularSurvivorshipRulesTableLabelProvider extends MatchRulesTab
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.dialog.provider.MatchRulesTableLabelProvider#getColumnText(java.lang.Object,
      * int)
      */

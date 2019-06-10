@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,7 +29,7 @@ import org.talend.repository.model.RepositoryNode;
 
 /**
  * this select data page only can select numerical data for analysis: Discrete Data Analysis Summary Statistics Analysis
- * 
+ *
  */
 public class NumericalDPSelectionPage extends ColumnAnalysisDOSelectionPage {
 
@@ -42,7 +42,7 @@ public class NumericalDPSelectionPage extends ColumnAnalysisDOSelectionPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnAnalysisDOSelectionPage#addListeners()
      */
     @Override

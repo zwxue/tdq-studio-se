@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,13 +22,13 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * The parent for: DBTableRepNode,DFTableRepNode,DBViewRepNode,and other table/view level node in the future. Which can
  * provide a easy way to judge them , and handle them together.
- * 
+ *
  */
 public class ColumnSetRepNode extends DQRepositoryNode {
 
     /**
      * DOC talend ColumnSetRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -41,7 +41,7 @@ public class ColumnSetRepNode extends DQRepositoryNode {
 
     /**
      * get all columns of the current column set.
-     * 
+     *
      * @return
      */
     public List<IRepositoryNode> getAllColumns() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -47,7 +47,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * created by zshen on Aug 26, 2013 Detailled comment
- * 
+ *
  */
 abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatchAnaysisTableSection {
 
@@ -66,7 +66,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
     /**
      * DOC zshen AbstractMatchKeyWithChartTableSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -80,7 +80,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
     /**
      * DOC zshen Comment method "createHideGroupComposite".
-     * 
+     *
      * @param chartComposite
      */
     protected void createHideGroupComposite(Composite chartComposite) {
@@ -132,7 +132,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
         /**
          * Getter for taskRunTime.
-         * 
+         *
          * @return the taskRunTime
          */
         public Long getTaskRunTime() {
@@ -148,7 +148,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see java.util.TimerTask#run()
          */
         @Override
@@ -194,7 +194,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                 blockKeyIndicator, matchResultConsumer);
         if (!execute.isOk()) {
             rc.setMessage(DefaultMessagesImpl.getString(
-                    "RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$ 
+                    "RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$
             return rc;
         } else {
             if (execute.getObject().getFullMatchResult() == null) {
@@ -220,7 +220,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
     /**
      * DOC zhao Comment method "initRecordMatchIndicator".
-     * 
+     *
      * @param columnMap
      * @return
      */
@@ -230,7 +230,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.talend.dataquality.record.linkage.grouping. MatchGroupResultConsumer#handle(java.lang.Object)
              */
             @Override

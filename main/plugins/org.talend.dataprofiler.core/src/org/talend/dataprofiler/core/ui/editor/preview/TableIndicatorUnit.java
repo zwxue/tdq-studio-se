@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ public class TableIndicatorUnit extends IndicatorUnit {
 
     /**
      * Getter for parentTable.
-     * 
+     *
      * @return the parentTable
      */
     public TableIndicator getParentTable() {
@@ -41,7 +41,7 @@ public class TableIndicatorUnit extends IndicatorUnit {
 
     /**
      * Getter for value.
-     * 
+     *
      * @return the value
      */
     @Override
@@ -51,7 +51,7 @@ public class TableIndicatorUnit extends IndicatorUnit {
 
     /**
      * Getter for children.
-     * 
+     *
      * @return the children
      */
     @Override
@@ -61,7 +61,7 @@ public class TableIndicatorUnit extends IndicatorUnit {
 
     /**
      * Sets the children.
-     * 
+     *
      * @param children the children to set
      */
     public void setChildren(TableIndicatorUnit[] children) {
@@ -75,7 +75,7 @@ public class TableIndicatorUnit extends IndicatorUnit {
 
     /**
      * DOC xqliu Comment method "geIndicatorCount".
-     * 
+     *
      * @return
      */
     public long geIndicatorCount() {
@@ -88,7 +88,7 @@ public class TableIndicatorUnit extends IndicatorUnit {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getForms()
      */
     @Override

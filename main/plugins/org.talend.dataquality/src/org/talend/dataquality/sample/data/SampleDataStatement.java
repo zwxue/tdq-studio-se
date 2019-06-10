@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,7 +36,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Wrapper#unwrap(java.lang.Class)
      */
     @Override
@@ -47,7 +47,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Wrapper#isWrapperFor(java.lang.Class)
      */
     @Override
@@ -58,7 +58,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#executeQuery(java.lang.String)
      */
     @Override
@@ -69,7 +69,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#executeUpdate(java.lang.String)
      */
     @Override
@@ -80,7 +80,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#close()
      */
     @Override
@@ -91,7 +91,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getMaxFieldSize()
      */
     @Override
@@ -102,7 +102,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#setMaxFieldSize(int)
      */
     @Override
@@ -113,7 +113,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getMaxRows()
      */
     @Override
@@ -124,7 +124,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#setMaxRows(int)
      */
     @Override
@@ -135,7 +135,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#setEscapeProcessing(boolean)
      */
     @Override
@@ -146,7 +146,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getQueryTimeout()
      */
     @Override
@@ -157,7 +157,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#setQueryTimeout(int)
      */
     @Override
@@ -168,7 +168,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#cancel()
      */
     @Override
@@ -179,7 +179,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getWarnings()
      */
     @Override
@@ -190,7 +190,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#clearWarnings()
      */
     @Override
@@ -201,7 +201,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#setCursorName(java.lang.String)
      */
     @Override
@@ -212,7 +212,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#execute(java.lang.String)
      */
     @Override
@@ -223,7 +223,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getResultSet()
      */
     @Override
@@ -233,7 +233,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getUpdateCount()
      */
     @Override
@@ -244,7 +244,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getMoreResults()
      */
     @Override
@@ -255,7 +255,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#setFetchDirection(int)
      */
     @Override
@@ -266,7 +266,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getFetchDirection()
      */
     @Override
@@ -277,7 +277,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#setFetchSize(int)
      */
     @Override
@@ -288,7 +288,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getFetchSize()
      */
     @Override
@@ -299,7 +299,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getResultSetConcurrency()
      */
     @Override
@@ -310,7 +310,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getResultSetType()
      */
     @Override
@@ -321,7 +321,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#addBatch(java.lang.String)
      */
     @Override
@@ -332,7 +332,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#clearBatch()
      */
     @Override
@@ -343,7 +343,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#executeBatch()
      */
     @Override
@@ -354,7 +354,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getConnection()
      */
     @Override
@@ -365,7 +365,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getMoreResults(int)
      */
     @Override
@@ -376,7 +376,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getGeneratedKeys()
      */
     @Override
@@ -387,7 +387,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#executeUpdate(java.lang.String, int)
      */
     @Override
@@ -398,7 +398,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#executeUpdate(java.lang.String, int[])
      */
     @Override
@@ -409,7 +409,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#executeUpdate(java.lang.String, java.lang.String[])
      */
     @Override
@@ -420,7 +420,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#execute(java.lang.String, int)
      */
     @Override
@@ -431,7 +431,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#execute(java.lang.String, int[])
      */
     @Override
@@ -442,7 +442,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#execute(java.lang.String, java.lang.String[])
      */
     @Override
@@ -453,7 +453,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#getResultSetHoldability()
      */
     @Override
@@ -464,7 +464,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#isClosed()
      */
     @Override
@@ -475,7 +475,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#setPoolable(boolean)
      */
     @Override
@@ -486,7 +486,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#isPoolable()
      */
     @Override
@@ -497,7 +497,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#closeOnCompletion()
      */
     @Override
@@ -508,7 +508,7 @@ public class SampleDataStatement implements Statement {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.sql.Statement#isCloseOnCompletion()
      */
     @Override

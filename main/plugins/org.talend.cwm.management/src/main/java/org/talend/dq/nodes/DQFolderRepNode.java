@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,7 +38,7 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
 
     /**
      * DOC talend DQFolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -50,7 +50,7 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren(boolean)
      */
     @Override
@@ -77,7 +77,7 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
 
     /**
      * if the reference project folder node has the same name ignore the case.
-     * 
+     *
      * @param project
      * @param viewObject
      */
@@ -97,7 +97,7 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
 
     /**
      * check whether the Folder will be ignored.(means not show in the dq view)
-     * 
+     *
      * @param withDeleted
      * @param project
      * @param folder
@@ -118,7 +118,7 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
 
     /**
      * DOC msjian Comment method "getChildrenForProject".
-     * 
+     *
      * @param withDeleted
      * @param project
      * @throws PersistenceException
@@ -128,7 +128,7 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
 
     /**
      * DOC msjian Comment method "getTdqViewObjects".
-     * 
+     *
      * @param project
      * @param folderNode
      * @return
@@ -139,7 +139,7 @@ public abstract class DQFolderRepNode extends DQRepositoryNode {
         return ProxyRepositoryFactory.getInstance().getTdqRepositoryViewObjects(project, getContentType(),
                 RepositoryNodeHelper.getPath(folderNode).toString());
     }
-    
+
     protected IImage getIconWithState(Object obj) {
         // Not work need to chech more TODO
         // IRepositoryView repositoryView = RepositoryManagerHelper.getRepositoryView();

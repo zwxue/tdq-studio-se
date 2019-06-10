@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,9 +26,9 @@ import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
- * 
+ *
  */
 public class HiveDbmsLanguage extends DbmsLanguage {
 
@@ -43,7 +43,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC qiongli HiveDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      */
     public HiveDbmsLanguage(String dbmsType) {
@@ -52,7 +52,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /**
      * DOC qiongli HiveDbmsLanguage constructor comment.
-     * 
+     *
      * @param dbmsType
      * @param dbVersion
      */
@@ -62,7 +62,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#charLength(java.lang.String)
      */
     @Override
@@ -72,7 +72,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
      */
     @Override
@@ -82,7 +82,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
      */
     @Override
@@ -92,7 +92,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
      */
     @Override
@@ -102,7 +102,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(orgomg.cwm.objectmodel.core.Expression)
      */
     @Override
@@ -112,7 +112,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#isPkIndexSupported()
      */
     @Override
@@ -122,7 +122,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#supportCatalogSelection()
      */
     @Override
@@ -132,7 +132,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
      */
     @Override
@@ -143,7 +143,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getQueryColumnsWithPrefix(org.talend.cwm.relational.TdColumn[])
      */
     @Override
@@ -153,7 +153,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dq.dbms.DbmsLanguage#castColumn4ColumnAnalysisSqlExecutor(org.talend.dataquality.indicators.Indicator,
      * org.talend.cwm.relational.TdColumn, java.lang.String)
@@ -171,7 +171,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#castColumnNameToChar(java.lang.String)
      */
     @Override
@@ -182,7 +182,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
      */
     @Override
@@ -193,7 +193,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dq.dbms.DbmsLanguage#getQueryColumnSetWithPrefixFromContext(org.talend.core.model.metadata.builder
      * .connection.DatabaseConnection, java.lang.String, java.lang.String, java.lang.String)
@@ -212,7 +212,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
      * DatabaseConnection)
      */
@@ -223,7 +223,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#getPatternFinderFunction(java.lang.String, java.lang.String,
      * java.lang.String)
      */

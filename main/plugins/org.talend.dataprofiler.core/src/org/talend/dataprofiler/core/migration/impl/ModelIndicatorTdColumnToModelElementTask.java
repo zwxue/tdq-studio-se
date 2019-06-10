@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ import org.eclipse.core.runtime.Path;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 
 /**
- * 
+ *
  * DOC mzhao feature 17869, migration tasks for indicator model change (return value of getAnalyzedElement) from
  * TdColumn to ModelElement.
  */
@@ -76,7 +76,7 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
     }
 
     /**
-     * 
+     *
      * DOC mzhao migrate each.
      */
     private void migrate(File migFolder) {
@@ -116,16 +116,16 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
             for (File sample : fileList) {
                 boolean isDeleted = sample.delete();
                 log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete.")); //$NON-NLS-1$ //$NON-NLS-2$
-                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); 
+                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample);
                 log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }
 
     /**
-     * 
+     *
      * DOC mzhao string replacement method.
-     * 
+     *
      * @param srcFile
      * @return
      */
@@ -138,7 +138,7 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
         while (fileReader.ready()) {
             String line = fileReader.readLine();
             if (StringUtils.contains(line, TO_BE_RPLACED_STRING_PREFIX) && !StringUtils.contains(line, REPLACED_STRING)) {
-                line = StringUtils.replace(line, TO_BE_RPLACED_STRING_PREFIX, TO_BE_RPLACED_STRING_PREFIX + REPLACED_STRING); 
+                line = StringUtils.replace(line, TO_BE_RPLACED_STRING_PREFIX, TO_BE_RPLACED_STRING_PREFIX + REPLACED_STRING);
                 log.debug(line);
             }
             fileWriter.append(line);

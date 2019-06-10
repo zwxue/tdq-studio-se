@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -34,15 +34,15 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
 
     private static Logger log = Logger.getLogger(UpdateMDMConnectionXSDPathTask.class);
 
-    private static final String MIGRATION_FILE_EXT = ".mig";//$NON-NLS-1$ 
+    private static final String MIGRATION_FILE_EXT = ".mig";//$NON-NLS-1$
 
-    private static final String XED = "<xsdElementDeclaration href=\"";//$NON-NLS-1$ 
+    private static final String XED = "<xsdElementDeclaration href=\"";//$NON-NLS-1$
 
-    private static final String XSD = ".xsd/";//$NON-NLS-1$ 
+    private static final String XSD = ".xsd/";//$NON-NLS-1$
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IWorkspaceMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -51,7 +51,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
 
     /**
      * DOC xqliu Comment method "migrateFilePath".
-     * 
+     *
      * @param aString
      * @return
      */
@@ -69,7 +69,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -79,7 +79,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -88,7 +88,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
         boolean rename = true;
 
         File rawFileMetadata = new File(ResourceManager.getMDMConnectionFolder().getRawLocationURI());
-        final String[] metadataFileExtentionNames = { ".prv" };//$NON-NLS-1$ 
+        final String[] metadataFileExtentionNames = { ".prv" };//$NON-NLS-1$
 
         return doUpdate(result, rename, rawFileMetadata, metadataFileExtentionNames);
     }
@@ -151,7 +151,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
                     log.info(isDeleted ? DefaultMessagesImpl.getString(
                             "UpdateMDMConnectionXSDPathTask_MigInfo5", sample.getAbsolutePath()) : DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo6", sample.getAbsolutePath())); //$NON-NLS-1$ //$NON-NLS-2$
                     String fullPath = sample.getAbsolutePath() + MIGRATION_FILE_EXT;
-                    boolean isrenamed = new File(fullPath).renameTo(sample); 
+                    boolean isrenamed = new File(fullPath).renameTo(sample);
                     log.info(isrenamed ? DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo7", fullPath) //$NON-NLS-1$
                             : DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo8", fullPath)); //$NON-NLS-1$
                 }

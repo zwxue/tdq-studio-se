@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,9 +31,9 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ *
  */
 public abstract class IndicatorUnit {
 
@@ -51,7 +51,7 @@ public abstract class IndicatorUnit {
 
     /**
      * Getter for parameters.
-     * 
+     *
      * @return the parameters
      */
     public IndicatorParameters getParameters() {
@@ -60,7 +60,7 @@ public abstract class IndicatorUnit {
 
     /**
      * Getter for type.
-     * 
+     *
      * @return the type
      */
     public IndicatorEnum getType() {
@@ -69,7 +69,7 @@ public abstract class IndicatorUnit {
 
     /**
      * Getter for indicator.
-     * 
+     *
      * @return the indicator
      */
     public Indicator getIndicator() {
@@ -78,7 +78,7 @@ public abstract class IndicatorUnit {
 
     /**
      * Getter for value.
-     * 
+     *
      * @return the value
      */
     public Object getValue() {
@@ -87,7 +87,7 @@ public abstract class IndicatorUnit {
 
     /**
      * Getter for indicatorName.
-     * 
+     *
      * @return the indicatorName
      */
     public String getIndicatorName() {
@@ -111,7 +111,7 @@ public abstract class IndicatorUnit {
 
     /**
      * Getter for children.
-     * 
+     *
      * @return the children
      */
     public IndicatorUnit[] getChildren() {
@@ -120,7 +120,7 @@ public abstract class IndicatorUnit {
 
     /**
      * Sets the children.
-     * 
+     *
      * @param children the children to set
      */
     public void setChildren(IndicatorUnit[] children) {
@@ -132,9 +132,9 @@ public abstract class IndicatorUnit {
     }
 
     /**
-     * 
+     *
      * find out Help href of current indicator
-     * 
+     *
      * @return
      */
     public String[] getHelpHref() {
@@ -162,16 +162,16 @@ public abstract class IndicatorUnit {
     }
 
     /**
-     * 
+     *
      * find out current indicator is belong to which FormEnum
-     * 
+     *
      * @return
      */
     public abstract FormEnum[] getForms();
 
     /**
      * get the analysis execution langugae.
-     * 
+     *
      * @return
      */
     protected String getExecutionLanguage() {

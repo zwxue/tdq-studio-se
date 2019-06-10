@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 
 /**
  * DOC tguiu class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: AbstractForm.java 12311 2008-03-14 09:40:39Z ggu $
  */
 public abstract class AbstractForm extends Composite {
@@ -65,7 +65,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * DOC ocarbone AbstractForm constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -76,9 +76,9 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * DOC tguiu AbstractDelimitedFileStepForm class global comment. Detailled comment <br/>
-     * 
+     *
      * $Id: AbstractForm.java 12311 2008-03-14 09:40:39Z ggu $
-     * 
+     *
      */
     public static interface ICheckListener extends EventListener {
 
@@ -124,7 +124,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * init the UI and the values.
-     * 
+     *
      * @param String
      */
     protected abstract void initialize();
@@ -137,7 +137,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * adds controls to parent composite DOC ocarbone Comment method "addFields".
-     * 
+     *
      * @param form
      */
     protected abstract void addFields();
@@ -149,7 +149,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * Getter for readOnly. DOC ocarbone Comment method.
-     * 
+     *
      * @return the readOnly
      */
     protected boolean isReadOnly() {
@@ -159,7 +159,7 @@ public abstract class AbstractForm extends Composite {
     /**
      * Sets readOnly, adapt the Form to Read Only Mode or edition and execute checkFieldsValue. DOC ocarbone Comment
      * method setReadOnly.
-     * 
+     *
      * @param readOnly the readOnly to set
      */
     public void setReadOnly(boolean readOnly) {
@@ -179,7 +179,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * Sets the listener.
-     * 
+     *
      * @param listener the listener to set
      */
     public void setListener(ICheckListener listener) {
@@ -188,7 +188,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * update Status of the Wizard OR of the label Status.
-     * 
+     *
      * @param String
      */
     protected void updateStatus(final int status, final String statusLabelText) {
@@ -210,7 +210,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * Getter for statusOnError.
-     * 
+     *
      * @return the statusOnError
      */
     public boolean isStatusOnError() {
@@ -219,7 +219,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * Getter for statusOnValid.
-     * 
+     *
      * @return the statusOnValid
      */
     public boolean isStatusOnValid() {
@@ -236,7 +236,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * Getter for isInWizard.
-     * 
+     *
      * @return the isInWizard
      */
     protected boolean isInWizard() {
@@ -245,7 +245,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * Sets the isInWizard.
-     * 
+     *
      * @param isInWizard the isInWizard to set
      */
     protected void setInWizard(boolean isInWizard) {
@@ -254,7 +254,7 @@ public abstract class AbstractForm extends Composite {
 
     /**
      * Add key listener on each control within the wizard page.
-     * 
+     *
      * yzhang Comment method "configKeyListener".
      */
     private void addAllKeyListener(Control control, final IRefreshable refresh) {
@@ -265,7 +265,7 @@ public abstract class AbstractForm extends Composite {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
              */
             @Override

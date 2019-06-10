@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -80,7 +80,7 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
@@ -98,12 +98,12 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
 
     /**
      * DOC bZhou Comment method "initCheateSheetRun".
-     * 
+     *
      * It's a hook to initialized the cheat sheet run action.
-     * 
+     *
      * @param manager
      * @param params
-     * 
+     *
      */
     protected void initCheateSheetRun(String[] params, ICheatSheetManager manager) {
         // do nothing
@@ -111,9 +111,9 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
 
     /**
      * DOC bZhou Comment method "initDialogBeforeOpen".
-     * 
+     *
      * It's a hook to initialized the dialog before open it.
-     * 
+     *
      * @param dialog
      */
     protected void initDialogBeforeOpen(WizardDialog dialog) {
@@ -122,9 +122,9 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
 
     /**
      * DOC bZhou Comment method "getExistingNames".
-     * 
+     *
      * This method is to return the existing names in current repository.
-     * 
+     *
      * @return
      */
     protected String[] getExistingNames() {
@@ -160,7 +160,7 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
 
     /**
      * Getter for connectionItem.
-     * 
+     *
      * @return the connectionItem
      */
     public ConnectionItem getConnectionItem() {
@@ -169,27 +169,27 @@ public abstract class AbstractMetadataCreationAction extends Action implements I
 
     /**
      * DOC bZhou Comment method "createWizard".
-     * 
+     *
      * Create the wizard for each element.
-     * 
+     *
      * @return
      */
     protected abstract IWizard createWizard();
 
     /**
      * DOC bZhou Comment method "getActionLabel".
-     * 
+     *
      * Get the label displayed on the menu.
-     * 
+     *
      * @return
      */
     protected abstract String getActionLabel();
 
     /**
      * DOC bZhou Comment method "getActionImage".
-     * 
+     *
      * Get the image displayed on the menu.
-     * 
+     *
      * @return
      */
     protected abstract ImageDescriptor getActionImage();

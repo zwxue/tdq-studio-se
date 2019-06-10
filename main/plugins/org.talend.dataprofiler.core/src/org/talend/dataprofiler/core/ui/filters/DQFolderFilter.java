@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,9 +24,9 @@ import org.talend.commons.utils.io.FilesUtils;
  */
 public class DQFolderFilter extends ViewerFilter {
 
-    private static final String XSD_FOLDER_NAME = ".xsd";//$NON-NLS-1$ 
+    private static final String XSD_FOLDER_NAME = ".xsd";//$NON-NLS-1$
 
-    private static final String REPORTS_FOLDER_NAME = "Reports";//$NON-NLS-1$ 
+    private static final String REPORTS_FOLDER_NAME = "Reports";//$NON-NLS-1$
 
     private boolean isShowFile;
 
@@ -40,7 +40,7 @@ public class DQFolderFilter extends ViewerFilter {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
      * java.lang.Object)
      */

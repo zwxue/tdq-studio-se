@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -55,7 +55,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * get Complete Column Schema.
-     * 
+     *
      * @return
      */
     public static MetadataColumn[] getCompleteColumnSchema(Map<MetadataColumn, String> columnMap) {
@@ -94,7 +94,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * getCompleteColumnSchema: when refresh match chart by click refresh button
-     * 
+     *
      * @return
      */
     public static MetadataColumn[] getCompleteColumnSchemaWithoutBlockKey(Map<MetadataColumn, String> columnMap) {
@@ -130,7 +130,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * get the key map of the match table's columns(<column, index>)
-     * 
+     *
      * @param column
      * @param algoType
      * @param algoParameter
@@ -151,7 +151,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * get the key map of the match table's columns(<column, index>)
-     * 
+     *
      * @param column
      * @param algoType
      * @param algoParameter
@@ -174,9 +174,9 @@ public class AnalysisRecordGroupingUtils {
     }
 
     /**
-     * 
+     *
      * Create match key map plus an additional "match key name" .
-     * 
+     *
      * @param column
      * @param algoType
      * @param algoParameter
@@ -215,7 +215,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * Get blocking key map
-     * 
+     *
      * @return
      */
     public static Map<String, String> getBlockingKeyMap(String column, String preAlgo, String preAlgValue,
@@ -235,7 +235,7 @@ public class AnalysisRecordGroupingUtils {
      * join the string array to a single string, use escapeCharacter to escape the separator. MUST call
      * {@link #split(String, String, String)} to split the joined string. (if the string end with escapeCharacter, there
      * will join to the next column!!!)
-     * 
+     *
      * @param array
      * @param separator recommend to use |
      * @param escapeCharacter recommend to use \
@@ -257,7 +257,7 @@ public class AnalysisRecordGroupingUtils {
      * split the string into a string array, use escapeCharacter to escape the separator. the string MUST be generated
      * by {@link #join(String[], String, String)}.(if the string end with escapeCharacter, there will join to the next
      * column!!!)
-     * 
+     *
      * @param string
      * @param separator recommend to use |
      * @param escapeCharacter recommend to use \
@@ -279,7 +279,7 @@ public class AnalysisRecordGroupingUtils {
     /**
      * By default for analysis, the applied blocking key will be the key from key generation definition. This will be
      * refined when there is a need to define the applied blocking key manually by user later.
-     * 
+     *
      * @param recordMatchingIndicator
      */
     public static void createAppliedBlockKeyByGenKey(RecordMatchingIndicator recordMatchingIndicator) {
@@ -297,7 +297,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * mzhao Get block key schema given the record matching indicator.
-     * 
+     *
      * @param recordMatchingIndicator
      * @return
      */
@@ -331,7 +331,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * DOC zhao Comment method "getCustomizedBlockKeyParameter".
-     * 
+     *
      * @param appliedKeyDefinition
      * @param column
      * @return
@@ -351,7 +351,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * DOC zhao Comment method "setRuleMatcher".
-     * 
+     *
      * @param columnMap
      * @param recordMatchingIndicator
      * @param analysisMatchRecordGrouping
@@ -421,7 +421,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * DOC yyin Comment method "initialMatchGrouping".
-     * 
+     *
      * @param columnMap
      * @param recordMatchingIndicator
      * @param analysisMatchRecordGrouping
@@ -468,12 +468,12 @@ public class AnalysisRecordGroupingUtils {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "createSurvivorShipAlgorithmParams".
      * Same with
      * {@link SurvivorshipUtils#createSurvivorShipAlgorithmParams(AnalysisMatchRecordGrouping, List, List, Map, Map)} so
      * that any modify need to synchronization them with same time
-     * 
+     *
      * @param analysisMatchRecordGrouping
      * @param recordMatchingIndicator
      * @param columnMap
@@ -488,7 +488,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * Create a new surv function and put it into map given column index as the key.
-     * 
+     *
      * @param columnMap
      * @param survivorShipAlgorithmParams
      * @param defaultSurvRules

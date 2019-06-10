@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -76,7 +76,7 @@ public class ChartDataEntity {
 
     /**
      * Getter for labelNull.
-     * 
+     *
      * @return true if the given label represents a null value
      */
     public boolean isLabelNull() {
@@ -85,7 +85,7 @@ public class ChartDataEntity {
 
     /**
      * Sets the labelNull.
-     * 
+     *
      * @param labelNull set to true if the label represents the null value
      */
     public void setLabelNull(boolean labelNull) {
@@ -147,7 +147,7 @@ public class ChartDataEntity {
 
     /**
      * Getter for isPercent.
-     * 
+     *
      * @return the isPercent
      */
     public boolean isPercent() {
@@ -156,7 +156,7 @@ public class ChartDataEntity {
 
     /**
      * check the inString is a validate value.
-     * 
+     *
      * @param inString
      * @return
      */
@@ -200,7 +200,7 @@ public class ChartDataEntity {
 
     /**
      * DOC Zqin Comment method "isOutOfRange".
-     * 
+     *
      * @return
      */
     public boolean isOutOfRange(String inputValue) {
@@ -238,7 +238,7 @@ public class ChartDataEntity {
 
     /**
      * Get threshold by the input string.
-     * 
+     *
      * @param inString
      * @return
      */
@@ -318,7 +318,7 @@ public class ChartDataEntity {
 
     /**
      * DOC Zqin Comment method "getRangeAsString".
-     * 
+     *
      * @return retrun the message when indicator value out the defined range.
      */
     public String getRangeAsString() {

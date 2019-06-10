@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -63,7 +63,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
- * 
+ *
  * This class contains the singleton instance for the default indicator' definitions.
  */
 public final class DefinitionHandler {
@@ -234,9 +234,9 @@ public final class DefinitionHandler {
     }
 
     /**
-     * 
+     *
      * DOC mzhao feature 13676 split system indicators.
-     * 
+     *
      * @return
      */
     public IndicatorsDefinitions loadDefinitionsFromFile() {
@@ -260,9 +260,9 @@ public final class DefinitionHandler {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Get definition category files from file.
-     * 
+     *
      * @return
      */
     private Resource getDefCategoryResourceFromFile() {
@@ -340,7 +340,7 @@ public final class DefinitionHandler {
 
     /**
      * Method "getIndicatorsDefinitions".
-     * 
+     *
      * @return the singleton analysis categories (or throws an exception if a problem occured)
      */
     public List<IndicatorDefinition> getIndicatorsDefinitions() {
@@ -358,7 +358,7 @@ public final class DefinitionHandler {
 
     /**
      * resolve the IndicatorDefinition if it is proxy.
-     * 
+     *
      * @param definitions
      * @return
      */
@@ -376,7 +376,7 @@ public final class DefinitionHandler {
     }
 
     /**
-     * 
+     *
      * reload all the indicators' Definitions.
      */
     public void reloadIndicatorsDefinitions() {
@@ -385,7 +385,7 @@ public final class DefinitionHandler {
 
     /**
      * DOC bZhou Comment method "copyDefinitionsIntoFolder".
-     * 
+     *
      * @param ifolder
      * @return
      */
@@ -396,7 +396,7 @@ public final class DefinitionHandler {
 
     /**
      * DOC bZhou Comment method "copyDefinitionsIntoFolder".
-     * 
+     *
      * @param destinationUri
      * @return
      */
@@ -421,7 +421,7 @@ public final class DefinitionHandler {
 
     /**
      * Method "setDefaultIndicatorDefinition" sets the indicator's default definition.
-     * 
+     *
      * @param indicator the indicator
      * @return true when set, false when not set.
      */
@@ -430,9 +430,9 @@ public final class DefinitionHandler {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Get indicator definition by label.
-     * 
+     *
      * @param label
      * @return
      */
@@ -461,7 +461,7 @@ public final class DefinitionHandler {
 
     /**
      * get UDI Indicator Definitions.
-     * 
+     *
      * @return
      */
     public List<IndicatorDefinition> getUserDefinedIndicatorDefinitions() {
@@ -498,7 +498,7 @@ public final class DefinitionHandler {
 
     /**
      * DOC scorreia Comment method "getGenericSQL".
-     * 
+     *
      * @param dbmsName
      * @param regexpFunction
      * @return
@@ -510,7 +510,7 @@ public final class DefinitionHandler {
 
     /**
      * DOC scorreia Comment method "replaceBodyWith".
-     * 
+     *
      * @param expression
      * @param regexpFunction
      * @return
@@ -522,7 +522,7 @@ public final class DefinitionHandler {
 
     /**
      * Note: scorreia. All indicator definitions defined in .Talend.definition file must be implemented here.
-     * 
+     *
      * WARNING: The label of the indicator definition in .Talend.definition must be exactly the same as the strings used
      * here.
      */
@@ -532,7 +532,7 @@ public final class DefinitionHandler {
 
     /**
      * Method "getDQRuleIndicatorCategory".
-     * 
+     *
      * @return the category of the DQ Rule indicators
      */
     public IndicatorCategory getDQRuleIndicatorCategory() {
@@ -541,7 +541,7 @@ public final class DefinitionHandler {
 
     /**
      * Method "getDQRuleDefaultIndicatorDefinition".
-     * 
+     *
      * @return the default indicator definition of the DQ rule.
      */
     public IndicatorDefinition getDQRuleDefaultIndicatorDefinition() {
@@ -553,9 +553,9 @@ public final class DefinitionHandler {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Get indicator definition by definition id (xmi id).
-     * 
+     *
      * @param definitionId
      * @return
      */
@@ -676,7 +676,7 @@ public final class DefinitionHandler {
 
     /**
      * reload.
-     * 
+     *
      * @deprecated see {{@link #reloadIndicatorsDefinitions()}
      */
     @Deprecated
@@ -686,7 +686,7 @@ public final class DefinitionHandler {
 
     /**
      * DOC judge the database can run Regular Expression Matching Indicator or not.
-     * 
+     *
      * @param dbmsLanguage
      * @return
      */
@@ -712,7 +712,7 @@ public final class DefinitionHandler {
     }
 
     /**
-     * 
+     *
      * Update aggregates for some indicators(Simple Statistic Indicator/Text Statistic Indicator...).make the path/name
      * of indicator definition in agregate right and is not a proxy).
      */

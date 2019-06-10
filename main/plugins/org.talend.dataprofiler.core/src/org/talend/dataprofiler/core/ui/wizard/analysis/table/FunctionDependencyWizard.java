@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,13 +26,13 @@ import org.talend.repository.model.IRepositoryNode;
 /**
  * DOC jet this is wizard for create new Function Dependency Analysis.
  * <p>
- * 
+ *
  */
 public class FunctionDependencyWizard extends AbstractAnalysisWizard implements INewWizard {
 
     /**
      * DOC jet FunctionDependencyWizard constructor comment.
-     * 
+     *
      * @param parameter
      */
     public FunctionDependencyWizard(AnalysisParameter parameter) {
@@ -41,7 +41,7 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
      * org.eclipse.jface.viewers.IStructuredSelection)
      */
@@ -57,7 +57,7 @@ public class FunctionDependencyWizard extends AbstractAnalysisWizard implements 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
      * )

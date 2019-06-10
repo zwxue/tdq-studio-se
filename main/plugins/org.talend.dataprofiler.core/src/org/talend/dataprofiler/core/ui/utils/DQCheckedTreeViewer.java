@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ public class DQCheckedTreeViewer extends ContainerCheckedTreeViewer {
     private WizardPage wizardPage = null;
     /**
      * DOC bZhou DQCheckedTreeViewer constructor comment.
-     * 
+     *
      * @param parent
      */
     public DQCheckedTreeViewer(Composite parent) {
@@ -41,7 +41,7 @@ public class DQCheckedTreeViewer extends ContainerCheckedTreeViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.dialogs.ContainerCheckedTreeViewer#doCheckStateChanged(java.lang.Object)
      */
     @Override
@@ -52,7 +52,7 @@ public class DQCheckedTreeViewer extends ContainerCheckedTreeViewer {
 
     /**
      * DOC zshen Comment method "updateWizardStatus".
-     * 
+     *
      * If nothing be checked then the status of wizard don't should can get into complete status
      */
     public void updateWizardStatus() {
@@ -62,7 +62,7 @@ public class DQCheckedTreeViewer extends ContainerCheckedTreeViewer {
 
     /**
      * Sets the wizardPage.
-     * 
+     *
      * @param wizardPage the wizardPage to set
      */
     public void setWizardPage(WizardPage wizardPage) {
@@ -71,7 +71,7 @@ public class DQCheckedTreeViewer extends ContainerCheckedTreeViewer {
 
     /**
      * Getter for wizardPage.
-     * 
+     *
      * @return the wizardPage
      */
     public WizardPage getWizardPage() {

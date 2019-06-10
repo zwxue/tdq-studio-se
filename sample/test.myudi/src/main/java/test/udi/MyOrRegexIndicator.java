@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -22,12 +22,12 @@ import org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl;
 
 /**
  * @author sizhaoliu
- * 
+ *
  * Java implementation of a user defined indicator who returns matching and unmatching count of defined regex
  * pattern(s).
- * 
+ *
  * This example also shows how to retrieve parameters from user interface of the indicator.
- * 
+ *
  * User can setup one or more "pattern"s in the indicator page or the analyze page. When there are several patterns, the
  * data is matched if it matches with all the patterns.
  */

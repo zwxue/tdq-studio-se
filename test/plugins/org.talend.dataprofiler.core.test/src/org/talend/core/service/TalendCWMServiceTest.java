@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -45,7 +45,7 @@ import org.talend.repository.ProjectManager;
 
 /**
  * created by talend on Oct 9, 2012 Detailled comment
- * 
+ *
  */
 
 public class TalendCWMServiceTest {
@@ -58,7 +58,7 @@ public class TalendCWMServiceTest {
 
     /**
      * DOC talend Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -68,7 +68,7 @@ public class TalendCWMServiceTest {
 
     /**
      * DOC zshen Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After
@@ -139,7 +139,7 @@ public class TalendCWMServiceTest {
      * Test method for
      * {@link org.talend.core.service.TalendCWMService#getReadableName(orgomg.cwm.foundation.softwaredeployment.DataManager, java.lang.String)}
      * .
-     * 
+     *
      * @throws PersistenceException
      */
     @Test
@@ -201,7 +201,7 @@ public class TalendCWMServiceTest {
      * Test method for
      * {@link org.talend.core.service.TalendCWMService#getReadableName(orgomg.cwm.foundation.softwaredeployment.DataManager, java.lang.String)}
      * .
-     * 
+     *
      * @throws PersistenceException
      */
     @Test

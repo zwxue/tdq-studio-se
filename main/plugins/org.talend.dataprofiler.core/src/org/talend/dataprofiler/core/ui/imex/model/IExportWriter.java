@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ public interface IExportWriter {
 
     /**
      * DOC bZhou Comment method "computeInput".
-     * 
+     *
      * @param path
      * @return
      */
@@ -35,28 +35,28 @@ public interface IExportWriter {
 
     /**
      * DOC bZhou Comment method "setBasePath".
-     * 
+     *
      * @param basePath
      */
     public void setBasePath(IPath path);
 
     /**
      * DOC bZhou Comment method "getBasePath".
-     * 
+     *
      * @return
      */
     public IPath getBasePath();
 
     /**
      * DOC bZhou Comment method "check".
-     * 
+     *
      * @return
      */
     public List<String> check();
 
     /**
      * DOC bZhou Comment method "mapping".
-     * 
+     *
      * @param record
      * @return
      */
@@ -64,7 +64,7 @@ public interface IExportWriter {
 
     /**
      * DOC bZhou Comment method "write".
-     * 
+     *
      * @param recored
      * @throws IOException
      * @throws CoreException
@@ -73,7 +73,7 @@ public interface IExportWriter {
 
     /**
      * DOC bZhou Comment method "write".
-     * 
+     *
      * @param records
      * @param monitor
      */
@@ -81,7 +81,7 @@ public interface IExportWriter {
 
     /**
      * DOC bZhou Comment method "finish".
-     * 
+     *
      * @param records
      * @throws IOException
      * @throws CoreException

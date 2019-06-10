@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,9 +31,9 @@ import org.talend.repository.model.RepositoryNode;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
- * 
+ *
  */
 public class ImportPatternsAction extends Action {
 
@@ -47,7 +47,7 @@ public class ImportPatternsAction extends Action {
 
     /**
      * DOC qzhang ImportPatternsAction constructor comment.
-     * 
+     *
      * @deprecated
      */
     public ImportPatternsAction(IFolder folder, ExpressionType type) {
@@ -59,7 +59,7 @@ public class ImportPatternsAction extends Action {
 
     /**
      * DOC xqliu ImportPatternsAction constructor comment.
-     * 
+     *
      * @param node
      * @param type
      */
@@ -73,7 +73,7 @@ public class ImportPatternsAction extends Action {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override

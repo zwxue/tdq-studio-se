@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -32,7 +32,7 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 
 /**
  * created by xqliu on Jul 25, 2013 Detailled comment
- * 
+ *
  */
 public class TdqContextView extends AbstractContextView {
 
@@ -45,7 +45,7 @@ public class TdqContextView extends AbstractContextView {
 
     /**
      * Getter for currentItem.
-     * 
+     *
      * @return the currentItem
      */
     public TDQItem getCurrentItem() {
@@ -54,7 +54,7 @@ public class TdqContextView extends AbstractContextView {
 
     /**
      * Set the currentItem.
-     * 
+     *
      * @param currentItem
      */
     public void setCurrentItem(TDQItem currentItem) {
@@ -63,7 +63,7 @@ public class TdqContextView extends AbstractContextView {
 
     /**
      * Getter for currentPage.
-     * 
+     *
      * @return the currentPage
      */
     public AbstractMetadataFormPage getCurrentPage() {
@@ -72,7 +72,7 @@ public class TdqContextView extends AbstractContextView {
 
     /**
      * Set the currentPage.
-     * 
+     *
      * @param currentPage
      */
     public void setCurrentPage(AbstractMetadataFormPage currentPage) {
@@ -81,7 +81,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.core.ui.context.view.AbstractContextView#createContextComposite(org.eclipse.swt.widgets.Composite)
      */
@@ -92,7 +92,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.view.AbstractContextView#swithToContextView()
      */
     @Override
@@ -102,7 +102,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.core.ui.context.view.AbstractContextView#handleDropContext(org.talend.core.model.properties.ContextItem
      * , java.util.Set, org.eclipse.ui.IEditorInput)
@@ -140,7 +140,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.view.AbstractContextView#getContextManager()
      */
     @Override
@@ -150,7 +150,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.view.AbstractContextView#setEditorDirty(org.eclipse.ui.part.EditorPart)
      */
     @Override
@@ -160,7 +160,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.view.AbstractContextView#getPart()
      */
     @Override
@@ -175,7 +175,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.view.AbstractContextView#setCompositeReadonly(org.eclipse.ui.IEditorInput)
      */
     @Override
@@ -195,7 +195,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.view.AbstractContextView#updateContextView()
      */
     @Override
@@ -208,7 +208,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.view.AbstractContextView#updateContextView(boolean, boolean, boolean)
      */
     @Override
@@ -221,7 +221,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.view.AbstractContextView#updateContextView(boolean, boolean)
      */
     @Override
@@ -234,7 +234,7 @@ public class TdqContextView extends AbstractContextView {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.view.AbstractContextView#updateContextView(boolean)
      */
     @Override

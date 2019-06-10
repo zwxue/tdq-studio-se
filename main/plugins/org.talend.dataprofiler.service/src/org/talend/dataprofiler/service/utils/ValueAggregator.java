@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,7 +26,7 @@ import org.talend.utils.collections.MultipleKey;
 
 /**
  * created by yyin on 2014-12-17 Detailled comment
- * 
+ *
  */
 
 public class ValueAggregator extends DoubleValueAggregate<MultipleKey> {
@@ -36,7 +36,7 @@ public class ValueAggregator extends DoubleValueAggregate<MultipleKey> {
     /**
      * Method "getLabels". Must not be called before the {@link #addSeriesToXYZDataset(Object, String,ITOPChartService)}
      * method.
-     * 
+     *
      * @param seriesKey
      * @return the label for each item of the dataset
      */
@@ -54,7 +54,7 @@ public class ValueAggregator extends DoubleValueAggregate<MultipleKey> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.utils.collections.DoubleValueAggregate#addValue(java.lang.Object, java.lang.Double[]) Need to
      * compute average.
      */
@@ -88,7 +88,7 @@ public class ValueAggregator extends DoubleValueAggregate<MultipleKey> {
 
     /**
      * Method "addSeriesToXYZDataset" adds a new series of data to the given dataset.
-     * 
+     *
      * @param dataset a dataset
      * @param keyOfDataset the series key of the data series
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -36,17 +36,17 @@ import org.talend.dataprofiler.rcp.i18n.Messages;
 
 /**
  * Displays a window for view selection. <br/>
- * 
+ *
  * $Id: ShowViewAction.java,v 1.1 2007/03/07 05:08:59 pub Exp $
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class ShowViewAction extends Action {
-    
+
     private IEclipseContext activeContext;
 
     private Params params;
-    
+
     /**
      * Constructs a new ShowViewAction.
      */
@@ -56,7 +56,7 @@ public class ShowViewAction extends Action {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -87,8 +87,8 @@ public class ShowViewAction extends Action {
             }
         }
     }
-    
-    
+
+
     private Params getParams() {
         if (params == null) {
             try {

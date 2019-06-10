@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -138,7 +138,7 @@ public class SubelementCompareAction extends Action {
 
     /**
      * get the first Schema under the Catalog.
-     * 
+     *
      * @param catalog
      * @return
      */
@@ -156,7 +156,7 @@ public class SubelementCompareAction extends Action {
 
     /**
      * DOC klliu Comment method "openComparisonEditor".
-     * 
+     *
      * @param folderNode
      */
     public void openComparisonEditor(IFolderNode folderNode) {
@@ -167,7 +167,7 @@ public class SubelementCompareAction extends Action {
 
     /**
      * DOC zshen Comment method "openComparisonEditor".
-     * 
+     *
      * @param repositoryfolderNode
      */
     public void openComparisonEditor(IRepositoryNode repositoryfolderNode) {
@@ -205,7 +205,7 @@ public class SubelementCompareAction extends Action {
 
     /**
      * DOC klliu Comment method "findMatchedModelElement". don't understand this method!!!
-     * 
+     *
      * @param parent
      * @param similarElement
      * @return

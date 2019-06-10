@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -44,7 +44,7 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
- * 
+ *
  * DOC mzhao UIPagination class global comment. Detailled comment
  */
 public abstract class IndicatorPaginationInfo extends PaginationInfo {
@@ -99,7 +99,7 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
 
     /**
      * get the indicators from the units, filter the range and IQR type, For the chart
-     * 
+     *
      * @param units
      * @return
      */
@@ -116,7 +116,7 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
 
     /**
      * get the indicator for the table, which will show alls, different from the chart
-     * 
+     *
      * @param units
      * @param filterNull
      * @return
@@ -147,7 +147,7 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
 
     /**
      * DOC yyin Comment method "createMenuForAllDataEntity".
-     * 
+     *
      * @param shell
      * @param dataExplorer
      * @param analysis
@@ -178,7 +178,7 @@ public abstract class IndicatorPaginationInfo extends PaginationInfo {
 
     /**
      * Getter for allExpandableCompositeList.
-     * 
+     *
      * @return the allExpandableCompositeList
      */
     public List<ExpandableComposite> getAllExpandableCompositeList() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,7 +23,7 @@ import org.talend.dataquality.rules.RulesPackage;
 
 /**
  * created by zhao on Aug 23, 2013 Detailled comment
- * 
+ *
  */
 public class RecordMatchingIndicatorImplTest {
 
@@ -45,7 +45,7 @@ public class RecordMatchingIndicatorImplTest {
 
     /**
      * DOC zhao Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -30,7 +30,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * created by yyin on 2014-12-4 Detailled comment
- * 
+ *
  */
 public class WhereRuleStatisticsStateUtil {
 
@@ -40,7 +40,7 @@ public class WhereRuleStatisticsStateUtil {
 
     /**
      * DOC yyin Comment method "getSizeOfDQRule".
-     * 
+     *
      * @return
      */
     public static int getSizeOfDQRulePerChart() {
@@ -88,7 +88,7 @@ public class WhereRuleStatisticsStateUtil {
 
     /**
      * DOC xqliu Comment method "removeRowCountUnit".
-     * 
+     *
      * @param units1
      * @return
      */
@@ -104,7 +104,7 @@ public class WhereRuleStatisticsStateUtil {
 
     /**
      * DOC xqliu Comment method "getRownCountUnit".
-     * 
+     *
      * @param units1
      * @return
      */
@@ -119,7 +119,7 @@ public class WhereRuleStatisticsStateUtil {
 
     /**
      * DOC xqliu Comment method "getUnitToolTip". ADD xqliu 2010-03-10 feature 10834
-     * 
+     *
      * @param unit
      * @return
      */
@@ -139,7 +139,7 @@ public class WhereRuleStatisticsStateUtil {
 
     /**
      * DOC yyin Comment method "createRuleDataEntity".
-     * 
+     *
      * @param unit
      * @param columnKey
      * @param value
@@ -161,7 +161,7 @@ public class WhereRuleStatisticsStateUtil {
 
     /**
      * get the MatchValue
-     * 
+     *
      * @param value
      * @return
      */

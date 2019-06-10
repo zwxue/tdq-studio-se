@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -52,7 +52,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleAnlaysisUtils {
 
@@ -68,7 +68,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * DOC zshen Comment method "createDefaultRow".
-     * 
+     *
      * @param columnName
      * @return
      */
@@ -106,7 +106,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * DOC yyin Comment method "ruleMatcherConvert".
-     * 
+     *
      * @param blockKeyDef
      * @param columnMap
      * @return
@@ -133,7 +133,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * Get recording matching indicator from analysis
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -149,7 +149,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * Get recording matching indicator and Blocking Indicator from analysis
-     * 
+     *
      * @param analysis
      * @return the index 0 will be RecordMatchingIndicator and index 1 will be BlockKeyIndicator
      */
@@ -176,7 +176,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * check if the column name equals to these additional special columns
-     * 
+     *
      * @param columnName
      * @return
      */
@@ -193,9 +193,9 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * refresh data Table.
-     * 
+     *
      * @param analysis
-     * 
+     *
      * @param matchResultConsumer
      */
     public static void refreshDataTable(ModelElement analysis, List<Object[]> resultData) {
@@ -212,7 +212,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * sorting the result data by GID,master
-     * 
+     *
      * @param allColumns
      * @param resultData
      * @return
@@ -259,7 +259,7 @@ public class MatchRuleAnlaysisUtils {
     }
 
     /**
-     * 
+     *
      * @param group ID one
      * @param group ID two.
      * @return true if they are the same group considering the two merged groups (groupID contains two more UUID).

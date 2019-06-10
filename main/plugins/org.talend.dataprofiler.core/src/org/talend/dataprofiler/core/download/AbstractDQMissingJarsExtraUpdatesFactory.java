@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -186,14 +186,14 @@ public abstract class AbstractDQMissingJarsExtraUpdatesFactory extends AbstractE
 
     /**
      * Get the name of plugin which will contain in the download action
-     * 
+     *
      * @return
      */
     abstract protected Object getContainPluginNames();
 
     /**
      * DOC yyin Comment method "getDownloadName".
-     * 
+     *
      * @return
      */
     abstract protected String getDownloadName();

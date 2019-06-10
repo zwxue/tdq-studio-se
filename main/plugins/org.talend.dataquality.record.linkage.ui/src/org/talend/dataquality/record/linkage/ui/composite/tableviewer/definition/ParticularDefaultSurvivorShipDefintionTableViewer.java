@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -33,7 +33,7 @@ public class ParticularDefaultSurvivorShipDefintionTableViewer extends Particula
 
     /**
      * The constructor of ParticularDefaultSurvivorShipDefintionTableViewer.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -43,7 +43,7 @@ public class ParticularDefaultSurvivorShipDefintionTableViewer extends Particula
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.ParticularDefaultSurvivorShipTableViewer#getCellEditor
      * (java
@@ -71,7 +71,7 @@ public class ParticularDefaultSurvivorShipDefintionTableViewer extends Particula
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.ParticularDefaultSurvivorShipTableViewer#
      * addEditingSupportForColumn(org.eclipse.jface.viewers.TableViewerColumn, java.lang.String)
      */
@@ -82,7 +82,7 @@ public class ParticularDefaultSurvivorShipDefintionTableViewer extends Particula
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.ParticularDefaultSurvivorShipTableViewer#
      * getTableCellModifier
@@ -95,7 +95,7 @@ public class ParticularDefaultSurvivorShipDefintionTableViewer extends Particula
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.ParticularDefaultSurvivorShipTableViewer#
      * createNewKeyDefinition

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -31,7 +31,7 @@ public abstract class AMigrationTask implements IMigrationTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getId()
      */
     @Override
@@ -41,7 +41,7 @@ public abstract class AMigrationTask implements IMigrationTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getName()
      */
     @Override
@@ -51,7 +51,7 @@ public abstract class AMigrationTask implements IMigrationTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#setId(java.lang.String)
      */
     @Override
@@ -61,7 +61,7 @@ public abstract class AMigrationTask implements IMigrationTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#setName(java.lang.String)
      */
     @Override
@@ -71,7 +71,7 @@ public abstract class AMigrationTask implements IMigrationTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#execute()
      */
     @Override
@@ -89,7 +89,7 @@ public abstract class AMigrationTask implements IMigrationTask {
 
     /**
      * DOC bZhou Comment method "createDate".
-     * 
+     *
      * @param year
      * @param month
      * @param day
@@ -103,9 +103,9 @@ public abstract class AMigrationTask implements IMigrationTask {
 
     /**
      * DOC bZhou Comment method "doExecute".
-     * 
+     *
      * @return TODO
-     * 
+     *
      * @throws Exception TODO
      * @throws SQLException
      */

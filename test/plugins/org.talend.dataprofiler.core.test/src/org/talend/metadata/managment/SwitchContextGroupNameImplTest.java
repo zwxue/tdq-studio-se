@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -63,7 +63,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * created by talend on Oct 30, 2012 Detailled comment
- * 
+ *
  */
 public class SwitchContextGroupNameImplTest {
 
@@ -107,7 +107,7 @@ public class SwitchContextGroupNameImplTest {
 
     /**
      * DOC talend Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -173,7 +173,7 @@ public class SwitchContextGroupNameImplTest {
 
     /**
      * DOC talend Comment method "createSchema".
-     * 
+     *
      * @param schemaOld2
      */
     private void createCatalogSchema(String schemaOld2) {
@@ -370,7 +370,7 @@ public class SwitchContextGroupNameImplTest {
 
     /**
      * DOC talend Comment method "createCatalog".
-     * 
+     *
      * @param catalogName
      */
     private void createCatalog(String catalogName) {

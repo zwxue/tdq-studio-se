@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,14 +26,14 @@ import org.eclipse.swt.widgets.Control;
 import org.talend.cwm.compare.ui.views.CompareModelContentMergeViewer;
 
 /**
- * 
+ *
  * DOC mzhao class global comment. Detailled comment
  */
 public class ModelElementCompareEditorInput extends CompareEditorInput {
 
     /**
      * DOC talend2 ModelElementCompareEditorInput constructor comment.
-     * 
+     *
      * @param configuration
      */
     public ModelElementCompareEditorInput(CompareConfiguration configuration) {
@@ -77,7 +77,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
     /**
      * This constructor takes a {@link ModelInputSnapshot} as input.
-     * 
+     *
      * @param snapshot The {@link ModelInputSnapshot} loaded from an emfdiff.
      */
     // public ModelElementCompareEditorInput(ComparisonResourceSnapshot snapshot, CompareConfiguration comConf, Object
@@ -107,7 +107,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see CompareEditorInput#createContents(Composite)
      */
     @Override
@@ -137,7 +137,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
     /**
      * DOC klliu Comment method "repaintingTreePart".
-     * 
+     *
      * @param diffTab
      */
     // private void repaintingTreePart(ModelContentMergeDiffTab diffTab) {
@@ -156,7 +156,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see CompareEditorInput#createOutlineContents(Composite, int)
      */
     @Override
@@ -176,7 +176,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @see CompareEditorInput#prepareInput(IProgressMonitor)
      */
     @Override
@@ -189,7 +189,7 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.eclipse.compare.CompareEditorInput#removePropertyChangeListener(org.eclipse.jface.util.IPropertyChangeListener
      * ) this method with responsibility for remove temp file so be aware about calling

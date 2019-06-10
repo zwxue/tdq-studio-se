@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,7 +26,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
  * @author yyi
- * 
+ *
  * This class helps to update the splited indicator files.
  */
 public final class IndicatorDefinitionFileHelper {
@@ -38,7 +38,7 @@ public final class IndicatorDefinitionFileHelper {
 
     /**
      * Get system indiactor by name.
-     * 
+     *
      * @param name
      * @return IndicatorDefinition with the same name, null if the indiactor not find
      */
@@ -48,7 +48,7 @@ public final class IndicatorDefinitionFileHelper {
 
     /**
      * Add a sql expression for indicator.
-     * 
+     *
      * @param definition
      * @param language
      * @param body
@@ -65,7 +65,7 @@ public final class IndicatorDefinitionFileHelper {
 
     /**
      * Add a sql expression for indicator.
-     * 
+     *
      * @param definition the definition of indicator
      * @param language the type of database
      * @param body the body of expression
@@ -86,7 +86,7 @@ public final class IndicatorDefinitionFileHelper {
 
     /**
      * keep the modify date
-     * 
+     *
      * @param definition
      * @param language
      * @param body
@@ -100,7 +100,7 @@ public final class IndicatorDefinitionFileHelper {
 
     /**
      * Add a sql expression for indicator.
-     * 
+     *
      * @param definition
      * @param name
      * @param language
@@ -122,7 +122,7 @@ public final class IndicatorDefinitionFileHelper {
 
     /**
      * remove a sql expression for indicator.
-     * 
+     *
      * @param definition
      * @param language
      * @param body
@@ -159,7 +159,7 @@ public final class IndicatorDefinitionFileHelper {
 
     /**
      * remove a sql expression by name.
-     * 
+     *
      * @param definition
      * @param name
      * @return
@@ -183,7 +183,7 @@ public final class IndicatorDefinitionFileHelper {
 
     /**
      * Save an indicator.
-     * 
+     *
      * @param definition
      * @return true if indicator saved.
      */
@@ -192,9 +192,9 @@ public final class IndicatorDefinitionFileHelper {
     }
 
     /**
-     * 
+     *
      * judge if exist a sq expression with specify language.
-     * 
+     *
      * @param definition
      * @param language
      * @return
@@ -225,7 +225,7 @@ public final class IndicatorDefinitionFileHelper {
 
     /**
      * Added yyin TDQ-6099 20121227
-     * 
+     *
      * @param definition
      * @param newLanguage
      * @param newCharactersToReplace
@@ -249,7 +249,7 @@ public final class IndicatorDefinitionFileHelper {
     /**
      * find the IndicatorDefinition by the uuid in current project, if the IndicatorDefinition exist and don't include
      * any sql and java template and the AggregatedDefinitions is not empty then return true, else return false.
-     * 
+     *
      * @param uuid the IndicatorDefinition's uuid
      * @return
      */
@@ -269,7 +269,7 @@ public final class IndicatorDefinitionFileHelper {
      * these indicators don't include any sql and java template and the AggregatedDefinitions is empty also, and don't
      * show them in the DQRepositoryView and import/export wizard.<br>
      * Technical indicators are not need to be displayed on UI.
-     * 
+     *
      * @param uuid
      * @return
      */
@@ -297,9 +297,9 @@ public final class IndicatorDefinitionFileHelper {
     }
 
     /**
-     * 
+     *
      * update sql expression by language.
-     * 
+     *
      * @param definition
      * @param language
      * @param newBody

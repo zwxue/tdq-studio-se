@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,7 +18,7 @@ import com.sun.management.OperatingSystemMXBean;
 
 /**
  * created by talend on Oct 14, 2014 Detailled comment
- * 
+ *
  */
 public class MapDBContent {
 
@@ -47,7 +47,7 @@ public class MapDBContent {
 
     /**
      * Waitting How long to close MapDB connect after execute analysis
-     * 
+     *
      * @return The value which be set by vm parameter ,defaule it is 5 minute if no parameter be set
      */
     public static long getDelayTime() {
@@ -62,7 +62,7 @@ public class MapDBContent {
 
     /**
      * Judge the MapDB should ued mmapFileEnable or not Default it is true
-     * 
+     *
      * @return
      */
     public static boolean isMmapFileEnable() {
@@ -77,7 +77,7 @@ public class MapDBContent {
 
     /**
      * Judge the MapDB should ued valuesOutsideNodesEnable or not Default it is false
-     * 
+     *
      * @return
      */
     public static boolean isValuesOutsideNodesEnable() {
@@ -91,9 +91,9 @@ public class MapDBContent {
     }
 
     /**
-     * 
+     *
      * How many cache size can be used by MapDB
-     * 
+     *
      * @return If the value has been set by vm parameter(cacheSize) the return it else return defaule value(1024)
      */
     public static Integer getCacheSize() {
@@ -107,9 +107,9 @@ public class MapDBContent {
     }
 
     /**
-     * 
+     *
      * Get the size of free memory which can be used by mapDB
-     * 
+     *
      * @return Actual value if the parameter(freeMemoryLimitSize) is an double value esle return null.
      */
     public static Double getFreeMemorySize() {

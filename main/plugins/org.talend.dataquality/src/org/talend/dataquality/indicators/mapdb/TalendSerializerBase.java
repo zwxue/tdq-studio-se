@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -26,12 +26,12 @@ import org.talend.dataquality.indicators.mapdb.helper.IObjectConvertArray;
 
 /**
  * created by talend on Aug 6, 2014 Detailled comment
- * 
+ *
  */
 public class TalendSerializerBase extends SerializerBase implements Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 8375426567087046212L;
 
@@ -47,7 +47,7 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mapdb.SerializerBase#serialize(java.io.DataOutput, java.lang.Object)
      */
     @Override
@@ -70,7 +70,7 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mapdb.SerializerBase#serialize(java.io.DataOutput, java.lang.Object,
      * org.mapdb.SerializerBase.FastArrayList)
      */
@@ -86,7 +86,7 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mapdb.SerializerBase#serializeUnknownObject(java.io.DataOutput, java.lang.Object,
      * org.mapdb.SerializerBase.FastArrayList)
      */
@@ -118,7 +118,7 @@ public class TalendSerializerBase extends SerializerBase implements Serializable
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.mapdb.SerializerBase#deserializeUnknownHeader(java.io.DataInput, int,
      * org.mapdb.SerializerBase.FastArrayList)
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -78,7 +78,7 @@ public final class IndicatorEvaluationMain {
 
     /**
      * DOC scorreia Comment method "main".
-     * 
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -218,7 +218,7 @@ public final class IndicatorEvaluationMain {
 
     /**
      * DOC scorreia Comment method "printIndicators".
-     * 
+     *
      * @param indicators
      */
     private static void printIndicators(List<Indicator> indicators) {
@@ -233,7 +233,7 @@ public final class IndicatorEvaluationMain {
 
     /**
      * DOC scorreia Comment method "sqlSelectColumns".
-     * 
+     *
      * @param database
      * @param tableName
      * @param columns

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -74,7 +74,7 @@ public class DuplicateAction extends org.talend.core.repository.ui.actions.Dupli
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.ui.actions.AContextualAction#doRun()
      */
     @Override
@@ -163,9 +163,9 @@ public class DuplicateAction extends org.talend.core.repository.ui.actions.Dupli
 
     /**
      * DOC msjian Comment method "generateInitialLabel".
-     * 
+     *
      * check the duplicate name by node.
-     * 
+     *
      * @param node
      * @return
      */
@@ -190,11 +190,11 @@ public class DuplicateAction extends org.talend.core.repository.ui.actions.Dupli
 
     /**
      * DOC bZhou Comment method "selectAndReveal".
-     * 
+     *
      * Selects and reveals the newly added resource in all parts of the active workbench window's active page.
-     * 
+     *
      * @param newLabel
-     * 
+     *
      * @param duplicateObject
      * @throws BusinessException
      */
@@ -225,7 +225,7 @@ public class DuplicateAction extends org.talend.core.repository.ui.actions.Dupli
 
     /**
      * if the duplicate hive connection has its related hadoop cluster, need to refresh it.
-     * 
+     *
      * @param recursiveFind
      */
     private void refreshHiveConnectionParent(RepositoryNode recursiveFind) {

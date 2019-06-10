@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,7 +40,7 @@ public class AnaMatchKeyAndSurvTableViewer extends MatchKeyAndSurvivorshipTableV
 
     /**
      * DOC zhao AnaMatchKeyAndSurvTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param isAddColumn
@@ -51,7 +51,7 @@ public class AnaMatchKeyAndSurvTableViewer extends MatchKeyAndSurvivorshipTableV
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorshipTableViewer#
      * getTableLabelProvider()
@@ -63,7 +63,7 @@ public class AnaMatchKeyAndSurvTableViewer extends MatchKeyAndSurvivorshipTableV
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorshipTableViewer#
      * getCellEditor(java.util.List, java.util.List)

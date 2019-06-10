@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -62,7 +62,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage#addListeners()
      */
     @Override
@@ -101,7 +101,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage imple
     }
 
     /**
-     * 
+     *
      * DOC talend Comment method "updateCompleteState".
      */
     void updateCompleteState() {
@@ -129,7 +129,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TDQObserver)
@@ -140,7 +140,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TDQObserver)
@@ -151,7 +151,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
      */
     public void clearObserver() {
@@ -160,7 +160,7 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage imple
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
      */
     public void notifyObservers() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -95,7 +95,7 @@ public final class CheckValueUtils {
 
     /**
      * DOC Zqin Comment method "isAoverB".
-     * 
+     *
      * @param a
      * @param b
      * @return
@@ -130,7 +130,7 @@ public final class CheckValueUtils {
 
     /**
      * DOC Zqin Comment method "isEmpty".
-     * 
+     *
      * @param strs
      * @return
      */
@@ -152,7 +152,7 @@ public final class CheckValueUtils {
 
     /**
      * DOC Zqin Comment method "isOutRange".
-     * 
+     *
      * @param min the min value of this range, and min <= max.
      * @param max the max value of this range, and max >= min
      * @param strs
@@ -174,7 +174,7 @@ public final class CheckValueUtils {
 
     /**
      * DOC zqin Comment method "isDateValue".
-     * 
+     *
      * @param inputString
      * @return
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -73,7 +73,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
- * 
+ *
  * Helper class for handling indicator attributes.
  */
 public final class IndicatorHelper {
@@ -91,7 +91,7 @@ public final class IndicatorHelper {
 
         /**
          * Getter for label.
-         * 
+         *
          * @return the label
          */
         public String getLabel() {
@@ -131,7 +131,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "getDataThreshold".
-     * 
+     *
      * @param indicator
      * @return an array with 2 strings representing the data thresholds or null. If the array is not null, its content
      * can be null but its size is always 2.
@@ -146,7 +146,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "setIndicatorThreshold".
-     * 
+     *
      * @param parameters
      * @param min the minimal value of the threshold (can be null)
      * @param max the maximal value of the threshold (can be null)
@@ -157,7 +157,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "setIndicatorThresholdInPercent" set the threholds of the indicator in percentage of the row count value.
-     * 
+     *
      * @param parameters
      * @param min the minimal value of the threshold (can be null)
      * @param max the minimal value of the threshold (can be null)
@@ -188,7 +188,7 @@ public final class IndicatorHelper {
 
     /**
      * DOC yyin Comment method "addThresholdToIndiParameterDomain".
-     * 
+     *
      * @param min
      * @param max
      * @param thresholdType
@@ -211,7 +211,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "getIndicatorThreshold".
-     * 
+     *
      * @param indicator
      * @return an array of thresholds if any or null. When the array is not null, its size is 2 but its elements can be
      * null. The first element is the lower threshold and the second element is the higher threshold.
@@ -222,7 +222,7 @@ public final class IndicatorHelper {
 
     /**
      * DOC Zqin Comment method "getIndicatorThreshold".
-     * 
+     *
      * @param parameters
      * @return an array of thresholds if any or null. When the array is not null, its size is 2 but its elements can be
      * null. The first element is the lower threshold and the second element is the higher threshold.
@@ -236,7 +236,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "getIndicatorThresholdInPercent" returns the threshold in percentage.
-     * 
+     *
      * @param indicator
      * @return an array of thresholds if any or null. When the array is not null, its size is 2 but its elements can be
      * null. The first element is the lower threshold and the second element is the higher threshold.
@@ -247,7 +247,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "getIndicatorThresholdInPercent" returns the threshold in percentage.
-     * 
+     *
      * @param parameters
      * @return an array of thresholds if any or null. When the array is not null, its size is 2 but its elements can be
      * null. The first element is the lower threshold and the second element is the higher threshold.
@@ -275,7 +275,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "getDataThreshold".
-     * 
+     *
      * @param parameters
      * @return an array with two elements. returns null when no threshold has been found. One element of the array can
      * be null but not both. In this case, it means that there is only one defined threshold, either the upper or the
@@ -300,7 +300,7 @@ public final class IndicatorHelper {
 
     /**
      * This method only be used when running analysis. it get RowCountIndicator from RowCountIndicatorsAdapter.
-     * 
+     *
      * @param indicator the indicator
      * @return the leaf indicators
      */
@@ -331,7 +331,7 @@ public final class IndicatorHelper {
     /**
      * This method is used when not running analysis.returns the leaf indicators when the given indicator is a composite indicator
      * or the given indicator.
-     * 
+     *
      * @param indicator the indicator
      * @return the leaf indicators
      */
@@ -355,7 +355,7 @@ public final class IndicatorHelper {
     /**
      * This method is used when not running analysis.returns the leaf indicators when the given indicator is a composite indicator
      * or the given indicator.
-     * 
+     *
      * @param result
      * @return all the leaf indicators
      */
@@ -374,7 +374,7 @@ public final class IndicatorHelper {
 
     /**
      * This method only used when running analysis. it get RowCountIndicator from RowCountIndicatorsAdapter.
-     * 
+     *
      * @param result
      * @return all the leaf indicators
      */
@@ -394,7 +394,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "getIndicators".
-     * 
+     *
      * @param result
      * @return
      */
@@ -420,7 +420,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "getExpectedValue".
-     * 
+     *
      * @param indicator usually a mode indicator
      * @return the expected value of the indicator
      */
@@ -430,7 +430,7 @@ public final class IndicatorHelper {
 
     /**
      * DOC zqin Comment method "getExpectedValue".
-     * 
+     *
      * @param parameters
      * @return
      */
@@ -458,10 +458,10 @@ public final class IndicatorHelper {
     /**
      * Method "propagateDataThresholdsInChildren" will propage the data threshold to the indicator if the given
      * indicator is a BoxIndicator (Otherwise, nothing is done).
-     * 
+     *
      * @param indicator an instance of BoxIndicator
-     * 
-     * 
+     *
+     *
      */
     public static void propagateDataThresholdsInChildren(Indicator indicator) {
         if (IndicatorsPackage.eINSTANCE.getBoxIndicator().equals(indicator.eClass())) {
@@ -507,7 +507,7 @@ public final class IndicatorHelper {
 
     /**
      * DOC scorreia Comment method "clearDataThresholds".
-     * 
+     *
      * @param ind
      */
     private static void clearDataThresholds(Indicator ind) {
@@ -519,7 +519,7 @@ public final class IndicatorHelper {
 
     /**
      * DOC scorreia Comment method "setDataThresholds".
-     * 
+     *
      * @param rangeIndicator
      * @param dataThreshold
      */
@@ -558,7 +558,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "ignoreCaseOption".
-     * 
+     *
      * @param indicator
      * @return the ignoreCase option or null if it is not set.
      */
@@ -569,7 +569,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "ignoreCaseOption".
-     * 
+     *
      * @param parameters
      * @return the ignoreCase option or null if it is not set.
      */
@@ -580,7 +580,7 @@ public final class IndicatorHelper {
 
     /**
      * DOC bZhou Comment method "getIndicatorValue".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -736,7 +736,7 @@ public final class IndicatorHelper {
 
     /**
      * DOC bZhou Comment method "getIndicatorPercentValue".
-     * 
+     *
      * @param indicator, never null
      * @return null in case of error
      */
@@ -766,7 +766,7 @@ public final class IndicatorHelper {
 
     /**
      * DOC bZhou Comment method "computePercent".
-     * 
+     *
      * @param userCount
      * @param count
      * @return
@@ -784,9 +784,9 @@ public final class IndicatorHelper {
 
     /**
      * MOD gdbu 2011-4-14 bug : 18975
-     * 
+     *
      * DOC gdbu Comment method "getLongFromObject".
-     * 
+     *
      * @param objects
      * @return
      */
@@ -806,9 +806,9 @@ public final class IndicatorHelper {
 
     /**
      * MOD gdbu 2011-4-28 bug : 18975
-     * 
+     *
      * DOC gdbu Comment method "getIntegerFromObject".
-     * 
+     *
      * @param objects
      * @return
      */
@@ -827,9 +827,9 @@ public final class IndicatorHelper {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "propagateCountyCodeInChildren".
-     * 
+     *
      * @param indicator
      * @param countryCode
      */
@@ -854,9 +854,9 @@ public final class IndicatorHelper {
     }
 
     /**
-     * 
+     *
      * set country code as parameter for indicator
-     * 
+     *
      * @param indicator
      * @param countryCode
      */
@@ -875,9 +875,9 @@ public final class IndicatorHelper {
     }
 
     /**
-     * 
+     *
      * get coutry code by TextParameters,if textParameters is null,get it by Locale.getDefault().
-     * 
+     *
      * @param textParameters
      * @return
      */
@@ -896,9 +896,9 @@ public final class IndicatorHelper {
     }
 
     /**
-     * 
+     *
      * Get default coutry from system properties.
-     * 
+     *
      * @return
      */
     public static String getDefCountryCodeBySystem() {
@@ -912,7 +912,7 @@ public final class IndicatorHelper {
 
     /**
      * Check value threshold value conatined in the indicator.
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -922,7 +922,7 @@ public final class IndicatorHelper {
 
     /**
      * Check percent threshold value conatined in the indicator.
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -932,7 +932,7 @@ public final class IndicatorHelper {
 
     /**
      * DOC scorreia Comment method "getRowCountIndicator".
-     * 
+     *
      * @param modelElement
      * @param elementToIndicator
      * @return
@@ -969,9 +969,9 @@ public final class IndicatorHelper {
     }
 
     /**
-     * 
+     *
      * it is WhereRuleIndicator and not WhereRuleAideIndicator.
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -984,7 +984,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "getPatternName" returns the name of the pattern or null.
-     * 
+     *
      * @param indicator an indicator, supposedly a regexMatchingIndicator
      * @return the name of the pattern used by the regex matching indicator or null
      */
@@ -995,7 +995,7 @@ public final class IndicatorHelper {
 
     /**
      * Method "getPattern" returns the pattern or null.
-     * 
+     *
      * @param indicator an indicator, supposedly a regexMatchingIndicator
      * @return the pattern used by the regex matching indicator or null
      */

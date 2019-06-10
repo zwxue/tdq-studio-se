@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -46,7 +46,7 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.navigator.CommonActionProvider#init(org.eclipse.ui.navigator.ICommonActionExtensionSite)
      */
     @Override
@@ -56,7 +56,7 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.action.IMenuManager)
      */
     @Override
@@ -69,8 +69,8 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
 
         Object firstElement = currentSelection.getFirstElement();
         boolean selectedMoreThanOne=currentSelection.size()>1;
-        
-        
+
+
         // when the selection is valid, only two possible status: some columns in the same columnset are selected.
         // keep all of columns belong to same one table and create SemanticDiscoveryAction.
         if (selectedMoreThanOne || firstElement instanceof ColumnRepNode) {
@@ -120,7 +120,7 @@ public class SemanticDiscoveryActionProvider extends AbstractCommonActionProvide
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider#isShowMenu()
      */
     @Override

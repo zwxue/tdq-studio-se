@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -80,9 +80,9 @@ import org.talend.dataquality.indicators.validation.IDataValidationFactory;
 import org.talend.dq.helper.SqlExplorerUtils;
 
 /**
- * 
+ *
  * DOC zshen class global comment. Detailled comment
- * 
+ *
  * Display result for drill down operation
  */
 public class DrillDownResultEditor extends EditorPart {
@@ -174,7 +174,7 @@ public class DrillDownResultEditor extends EditorPart {
 
     /**
      * DOC talend Comment method "initTableViewerForJava".
-     * 
+     *
      * @param table
      * @param ddEditorInput
      */
@@ -190,7 +190,7 @@ public class DrillDownResultEditor extends EditorPart {
 
     /**
      * DOC talend Comment method "initTableViewerForMapDB".
-     * 
+     *
      * @param parent
      * @param table
      * @param ddEditorInput
@@ -233,7 +233,7 @@ public class DrillDownResultEditor extends EditorPart {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.nebula.widgets.pagination.PageChangedAdapter#pageIndexChanged(int, int,
              * org.eclipse.nebula.widgets.pagination.PageableController)
              */
@@ -270,7 +270,7 @@ public class DrillDownResultEditor extends EditorPart {
 
     /**
      * DOC talend Comment method "createColumns".
-     * 
+     *
      * @param tableView2
      * @param controller
      * @param currIndicator
@@ -380,7 +380,7 @@ public class DrillDownResultEditor extends EditorPart {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.CellLabelProvider#update(org.eclipse.jface.viewers.ViewerCell)
          */
         @Override
@@ -393,7 +393,7 @@ public class DrillDownResultEditor extends EditorPart {
 
     /**
      * DOC talend Comment method "createTableViewerColumn".
-     * 
+     *
      * @param tableView2
      * @param tableColumnName
      * @return
@@ -534,17 +534,17 @@ public class DrillDownResultEditor extends EditorPart {
     }
 
     /**
-     * 
+     *
      * DOC zshen DrillDownResultEditor class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
-     * 
+     *
      */
     private class DrillDownResultLabelProvider implements ITableLabelProvider {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
          */
         public Image getColumnImage(Object element, int columnIndex) {
@@ -554,7 +554,7 @@ public class DrillDownResultEditor extends EditorPart {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
          */
         public String getColumnText(Object element, int columnIndex) {
@@ -572,7 +572,7 @@ public class DrillDownResultEditor extends EditorPart {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
          */
@@ -583,7 +583,7 @@ public class DrillDownResultEditor extends EditorPart {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
          */
         public void dispose() {
@@ -593,7 +593,7 @@ public class DrillDownResultEditor extends EditorPart {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
          */
         public boolean isLabelProperty(Object element, String property) {
@@ -603,7 +603,7 @@ public class DrillDownResultEditor extends EditorPart {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see
          * org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
          */
@@ -615,16 +615,16 @@ public class DrillDownResultEditor extends EditorPart {
     }
 
     /**
-     * 
+     *
      * DOC zshen DrillDownResultEditor class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class DrillDownResultContentProvider implements IStructuredContentProvider {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
          */
 
@@ -650,7 +650,7 @@ public class DrillDownResultEditor extends EditorPart {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IContentProvider#dispose()
          */
         public void dispose() {
@@ -660,7 +660,7 @@ public class DrillDownResultEditor extends EditorPart {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
          * java.lang.Object, java.lang.Object)
          */
@@ -672,9 +672,9 @@ public class DrillDownResultEditor extends EditorPart {
     }
 
     /**
-     * 
+     *
      * DOC zshen DrillDownResultEditor class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class ListenToTheAction extends SelectionAdapter {
@@ -696,7 +696,7 @@ public class DrillDownResultEditor extends EditorPart {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.part.WorkbenchPart#dispose()
      */
     @Override

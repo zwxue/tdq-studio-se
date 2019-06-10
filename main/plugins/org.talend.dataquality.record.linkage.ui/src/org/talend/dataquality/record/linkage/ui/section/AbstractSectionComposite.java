@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,7 +28,7 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 /**
  * created by zshen on Aug 20, 2013 Detailled comment
- * 
+ *
  */
 public abstract class AbstractSectionComposite implements PropertyChangeListener {
 
@@ -59,7 +59,7 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
 
     /**
      * Getter for section.
-     * 
+     *
      * @return the section
      */
     public Section getSection() {
@@ -72,7 +72,7 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
 
     /**
      * Getter for form.
-     * 
+     *
      * @return the form
      */
     public ScrolledForm getForm() {
@@ -98,7 +98,7 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
 
     /**
      * change Section Display status when we switch different algorithm
-     * 
+     *
      */
     public void changeSectionDisStatus(boolean isVisible) {
         GridData gd = (GridData) getSection().getLayoutData();

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -56,7 +56,7 @@ import orgomg.cwm.objectmodel.core.CorePackage;
 
 /**
  * @author scorreia
- * 
+ *
  * This class is a utility for CWM and Talend extension Factories initialization. MODSCA 2008-04-03 use
  * Factory.eINSTANCE.getEPackage() instead of FactoryImpl.init() so that implementation packages can be hidden.
  */
@@ -175,7 +175,7 @@ public final class FactoriesUtil {
 
     /**
      * Method "getExtensions".
-     * 
+     *
      * @return the list of file extensions
      */
     public static List<String> getExtensions() {
@@ -243,7 +243,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isAnalysisFile".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -253,7 +253,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isReportFile".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -263,7 +263,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isProvFile".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -273,7 +273,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isPatternFile".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -283,7 +283,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isDQRuleFile".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -293,7 +293,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isUDIFile".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -303,7 +303,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC zshen Comment method "isUDIJarFile".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -313,7 +313,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isSQLFile".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -323,7 +323,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isCATFile".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -333,7 +333,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isEmfFile".
-     * 
+     *
      * @return
      */
     public static boolean isEmfFile(String fileExt) {
@@ -342,7 +342,7 @@ public final class FactoriesUtil {
 
     /**
      * DOC bZhou Comment method "isJrxmlFile".
-     * 
+     *
      * @param fileExt
      * @return
      */
@@ -355,7 +355,7 @@ public final class FactoriesUtil {
     }
 
     /**
-     * 
+     *
      * DOC mzhao FactoriesUtil class global comment. Detailled comment
      */
     public enum EElementEName {
@@ -399,7 +399,7 @@ public final class FactoriesUtil {
 
         /**
          * DOC bZhou Comment method "getElementEName".
-         * 
+         *
          * @param item
          * @return
          */

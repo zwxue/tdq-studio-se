@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -52,7 +52,7 @@ import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- * 
+ *
  * DOC mzhao Abstract common action provider.
  */
 public class AbstractCommonActionProvider extends CommonActionProvider {
@@ -128,7 +128,7 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
 
     /**
      * DOC bZhou Comment method "getSubMenuManager".
-     * 
+     *
      * @param subMenuId
      * @return
      */
@@ -145,9 +145,9 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     }
 
     /**
-     * 
+     *
      * DOC bzhou Comment method "getContextObject".
-     * 
+     *
      * @return
      */
     protected Object getContextObject() {
@@ -156,7 +156,7 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
 
     /**
      * DOC msjian Comment method "getFirstRepositoryNode".
-     * 
+     *
      * @return
      */
     protected IRepositoryNode getFirstRepositoryNode() {
@@ -170,9 +170,9 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     }
 
     /**
-     * 
+     *
      * judge if all selections are the same type nodes.
-     * 
+     *
      * @return
      */
     protected boolean isSelectionSameType() {
@@ -205,11 +205,11 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
     }
 
     /**
-     * 
+     *
      * Get Connection which cotain by selectedNode(DBConnectionRepNode\DBCatalogRepNode\DBSchemaRepNode) If want to
      * support to DelimiteFileConnection node need to make DFColumnFolderRepNode implements IConnectionElementSubFolder
      * interface The case for MDMConnection is same to DelimiteFileConnection.
-     * 
+     *
      * @param selectedNode
      * @return
      */

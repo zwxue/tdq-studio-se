@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -68,7 +68,7 @@ public abstract class AbstractWizardPage extends WizardPage implements IConnecti
 
     /**
      * DOC zqin Comment method "checkFieldsValue".
-     * 
+     *
      * @return
      */
     public boolean checkFieldsValue() {
@@ -85,7 +85,7 @@ public abstract class AbstractWizardPage extends WizardPage implements IConnecti
 
     /**
      * update Status of the Wizard OR of the label Status.
-     * 
+     *
      * @param String
      */
     protected void updateStatus(final int status, final String statusLabelText) {
@@ -102,7 +102,7 @@ public abstract class AbstractWizardPage extends WizardPage implements IConnecti
 
     /**
      * Getter for statusOnError.
-     * 
+     *
      * @return the statusOnError
      */
     public boolean isStatusOnError() {
@@ -111,7 +111,7 @@ public abstract class AbstractWizardPage extends WizardPage implements IConnecti
 
     /**
      * Getter for statusOnValid.
-     * 
+     *
      * @return the statusOnValid
      */
     public boolean isStatusOnValid() {

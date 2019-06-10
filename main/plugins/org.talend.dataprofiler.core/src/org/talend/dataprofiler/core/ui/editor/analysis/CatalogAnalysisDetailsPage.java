@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,7 +40,7 @@ public class CatalogAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     /**
      * DOC rli CatalogMasterDetailsPage constructor comment.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -51,7 +51,7 @@ public class CatalogAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#fillDataProvider()
      */
     @Override
@@ -66,7 +66,7 @@ public class CatalogAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#getCatalogIndicators()
      */
     @Override
@@ -106,7 +106,7 @@ public class CatalogAnalysisDetailsPage extends AbstractFilterMetadataPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractFilterMetadataPage#getSchemaIndicators()
      */
     @Override

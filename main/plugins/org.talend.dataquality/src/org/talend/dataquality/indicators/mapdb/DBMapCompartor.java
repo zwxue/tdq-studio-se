@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * created by talend on Aug 5, 2014 Detailled comment
- * 
+ *
  */
 @SuppressWarnings("rawtypes")
 public class DBMapCompartor implements Comparator<Object>, Serializable {
@@ -40,7 +40,7 @@ public class DBMapCompartor implements Comparator<Object>, Serializable {
 
         /**
          * Getter for weight.
-         * 
+         *
          * @return the weight
          */
         protected int getWeight() {
@@ -59,7 +59,7 @@ public class DBMapCompartor implements Comparator<Object>, Serializable {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     @Override
@@ -121,7 +121,7 @@ public class DBMapCompartor implements Comparator<Object>, Serializable {
 
     /**
      * DOC talend Comment method "listCompare".
-     * 
+     *
      * @param array
      * @param array2
      * @return

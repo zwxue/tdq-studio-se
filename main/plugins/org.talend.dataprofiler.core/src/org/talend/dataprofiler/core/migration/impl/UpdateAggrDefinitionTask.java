@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -28,11 +28,11 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.writer.EMFSharedResources;
 
 /**
- * 
+ *
  * DOC qiongli class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z mhirt $
- * 
+ *
  */
 public class UpdateAggrDefinitionTask extends AbstractWorksapceUpdateTask {
 
@@ -120,7 +120,7 @@ public class UpdateAggrDefinitionTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC xqliu Comment method "getIndicatorsDefinitionByLabel".
-     * 
+     *
      * @param label
      * @return
      */
@@ -135,7 +135,7 @@ public class UpdateAggrDefinitionTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC xqliu Comment method "getIndicatorsDefinitions".
-     * 
+     *
      * @return
      */
     private List<IndicatorDefinition> getIndicatorsDefinitions() {
@@ -163,7 +163,7 @@ public class UpdateAggrDefinitionTask extends AbstractWorksapceUpdateTask {
 
     /**
      * DOC xqliu Comment method "getIndicatorDefinitionFromFile".
-     * 
+     *
      * @param file
      * @return
      */

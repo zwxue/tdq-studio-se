@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,9 +23,9 @@ public interface IDeletionHandle extends IActionHandle {
 
     /**
      * DOC bZhou Comment method "delete".
-     * 
+     *
      * This function is to delete an item in tdq reponsitory.
-     * 
+     *
      * @param isPhysical
      * @return
      * @throws Exception
@@ -34,16 +34,16 @@ public interface IDeletionHandle extends IActionHandle {
 
     /**
      * DOC bZhou Comment method "getDependencies".
-     * 
+     *
      * This function is to get dependencies of a file.
-     * 
+     *
      * @return
      */
     public List<ModelElement> getDependencies();
 
     /**
      * DOC bZhou Comment method "isPhysicalDelete".
-     * 
+     *
      * @return
      */
     public boolean isPhysicalDelete();

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,13 +20,13 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * It will be used for ColumnSet analysis and column correlation analysis.
- * 
+ *
  */
 public class ColumnSetIndicatorUnit extends IndicatorUnit {
 
     /**
      * DOC talend ColumnSetIndicatorUnit constructor comment.
-     * 
+     *
      * @param type
      * @param indicator
      */
@@ -36,7 +36,7 @@ public class ColumnSetIndicatorUnit extends IndicatorUnit {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getForms()
      */
     @Override

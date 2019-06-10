@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -41,7 +41,7 @@ public class AddPatternISBN13Task extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -50,7 +50,7 @@ public class AddPatternISBN13Task extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.IMigrationTask#getMigrationTaskType()
      */
     public MigrationTaskType getMigrationTaskType() {
@@ -59,7 +59,7 @@ public class AddPatternISBN13Task extends AbstractWorksapceUpdateTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.migration.AMigrationTask#doExecute()
      */
     @Override
@@ -83,7 +83,7 @@ public class AddPatternISBN13Task extends AbstractWorksapceUpdateTask {
             }
         }
         // Update IPv6 Address.pattern.
-        IFile file = ResourceManager.getPatternRegexFolder().getFolder("internet").getFile("IPv6_Address_0.1.pattern"); //$NON-NLS-1$  
+        IFile file = ResourceManager.getPatternRegexFolder().getFolder("internet").getFile("IPv6_Address_0.1.pattern"); //$NON-NLS-1$
         if (file.exists()) {
             Pattern ipv6Pattern = PatternResourceFileHelper.getInstance().findPattern(file);
             if (ipv6Pattern != null) {

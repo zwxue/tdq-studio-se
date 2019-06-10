@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -83,9 +83,9 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
     }
 
     /**
-     * 
+     *
      * DOC xqliu Comment method "findWhereRule".
-     * 
+     *
      * @param file
      * @return
      */
@@ -146,7 +146,7 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#checkFile(org.eclipse.core.resources.IFile)
      */
     @Override
@@ -156,7 +156,7 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#doSwitch(org.eclipse.emf.ecore.EObject)
      */
     @Override
@@ -171,7 +171,7 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.helper.resourcehelper.ResourceFileMap#getTypedFolder()
      */
     @Override
@@ -181,7 +181,7 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
 
     /**
      * Getter for rulesSwitch.
-     * 
+     *
      * @return the rulesSwitch
      */
     public RulesSwitch<WhereRule> getRulesSwitch() {

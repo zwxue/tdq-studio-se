@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -17,7 +17,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * @author rli
- * 
+ *
  */
 public interface IIndicatorNode {
 
@@ -35,25 +35,25 @@ public interface IIndicatorNode {
     public IndicatorEnum getIndicatorEnum();
 
     /**
-     * 
+     *
      * Set the indicatorEnum for current node
-     * 
+     *
      * @param indicatorEnum The enum which will be setting
      */
     public void setIndicatorEnum(IndicatorEnum indicatorEnum);
 
     /**
-     * 
+     *
      * Get the instance of indicator if don't create it yet then create one
-     * 
+     *
      * @return
      */
     public Indicator getIndicatorInstance();
 
     /**
-     * 
+     *
      * Create a new instance of indicator will not get from {@link #getIndicatorInstance()}
-     * 
+     *
      * @return
      */
     public Indicator createNewIndicatorInstance();
@@ -63,9 +63,9 @@ public interface IIndicatorNode {
     public boolean isIndicatorEnumNode();
 
     /**
-     * 
+     *
      * Get the name of image
-     * 
+     *
      * @return The name of image
      */
     public String getImageName();

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -92,7 +92,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Getter for usedMemory.
-     * 
+     *
      * @return the usedMemory
      */
     public long getUsedMemory() {
@@ -101,7 +101,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.analysis.IAnalysisExecutor#execute(org.talend.dataquality.analysis.Analysis)
      */
     public ReturnCode execute(final Analysis analysis) {
@@ -198,9 +198,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "hasOutThreshold".
-     * 
+     *
      * @param indicator
      * @return
      */
@@ -237,7 +237,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Method "createSqlStatement".
-     * 
+     *
      * @param analysis the analysis from which the SQL will be generated
      * @return the generated SQL statement or null if problem
      */
@@ -245,7 +245,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Method "getReturnCode".
-     * 
+     *
      * @param ok
      * @return a return code with the last error message
      */
@@ -261,7 +261,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Method "runAnalysis". Mod 20130314 TDQ-5973 refactor to extract same part here
-     * 
+     *
      * @param analysis the analysis to be run
      * @param sqlStatement the sql statement to execute on Database
      * @return true if ok
@@ -290,7 +290,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * get the connection before evaluating, same for all sub classes
-     * 
+     *
      * @param analysis
      * @return the connection(pooled or not)
      */
@@ -311,7 +311,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * close the connection for the analysis after running.
-     * 
+     *
      * @param analysis
      * @param connection
      * @return close success or not
@@ -337,7 +337,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Set the error.
-     * 
+     *
      * @param error to be set.
      */
     protected void setError(String error) {
@@ -349,9 +349,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * 
+     *
      * Append the error to error message buffer.
-     * 
+     *
      * @param error the error message to be appended.
      */
     protected void appendError(String error) {
@@ -368,7 +368,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Method "traceError".
-     * 
+     *
      * @param error the message to set in errorMessage
      */
     protected void traceError(String error) {
@@ -378,7 +378,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getConnection".
-     * 
+     *
      * @param analysis
      * @param schema
      * @return
@@ -440,7 +440,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * let the connection pool go back to its original state.
-     * 
+     *
      * @param analysis
      */
     protected void resetConnectionPool(Analysis analysis) {
@@ -449,7 +449,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * DOC xqliu Comment method "getPooledConnection".
-     * 
+     *
      * @param analysis
      * @param dataProvider
      * @return
@@ -476,7 +476,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * DOC xqliu Comment method "getAnalysisDataProvider".
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -526,7 +526,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Getter for checkContinueCount.
-     * 
+     *
      * @return the checkContinueCount
      */
     public long getCheckContinueCount() {
@@ -535,7 +535,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Method "getCatalogName".
-     * 
+     *
      * @param analyzedElement
      * @return the catalog or schema quoted name
      */
@@ -546,7 +546,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * DOC scorreia Comment method "getSchemaName".
-     * 
+     *
      * @param columnSetOwner
      * @return
      */
@@ -556,7 +556,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Method "dbms".
-     * 
+     *
      * @return the DBMS language (not null)
      */
     protected DbmsLanguage dbms() {
@@ -573,7 +573,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * Method "quote".
-     * 
+     *
      * @param input
      * @return the given string between quotes (for SQL)
      */
@@ -616,7 +616,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * Mysql: because there will generate the sql statement with fully qualified name before the table name,so no need to change
      * the catalog of the connection here
      * <p>
-     * 
+     *
      * @return need to change the catalog or not
      */
     protected boolean needChangeCatalog(java.sql.Connection connection) {
@@ -641,7 +641,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     /**
      * change the connection's catalog, need to call needChangeCatalog() before call this method
-     * 
+     *
      * @return true if change catalog successful; false if failed to change catalog
      */
     protected boolean changeCatalog(String catalogName, java.sql.Connection connection) {

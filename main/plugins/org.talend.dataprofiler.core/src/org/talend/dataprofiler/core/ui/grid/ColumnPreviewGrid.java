@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -40,7 +40,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * The table which is used be preivew data
- * 
+ *
  */
 public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TDQObserver<ObserverEvent>,
         Observerable<ObserverEvent> {
@@ -49,7 +49,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /**
      * ColumnPreviewGrid constructor comment.
-     * 
+     *
      * @param dialog
      * @param parent
      * @param style
@@ -64,7 +64,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.AbstractIndicatorSelectGrid#createTableContent()
      */
     @Override
@@ -84,7 +84,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /**
      * DOC talend Comment method "processNodePrivew".
-     * 
+     *
      * @param object
      * @param previewItem
      * @throws SQLException
@@ -114,7 +114,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /**
      * DOC talend Comment method "checkSameTable".
-     * 
+     *
      * @return
      */
     private boolean checkSameTable() {
@@ -124,7 +124,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /**
      * DOC talend Comment method "getColumnValue".
-     * 
+     *
      * @param column
      * @param currentItem
      * @return
@@ -144,7 +144,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.TalendObserver#Update(org.talend.dataprofiler.core.ui.grid.utils.
      * Observerable)
      */
@@ -204,7 +204,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.AbstractIndicatorSelectGrid#getCellRenderer()
      */
     @Override
@@ -214,7 +214,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.AbstractIndicatorSelectGrid#redrawTable()
      */
     @Override
@@ -232,7 +232,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#addObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TDQObserver)
@@ -244,7 +244,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.utils.Observerable#removeObserver(org.talend.dataprofiler.core.ui.grid.utils
      * .TDQObserver)
@@ -258,7 +258,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#clearObserver()
      */
     public void clearObserver() {
@@ -271,7 +271,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#notifyObservers()
      */
     public void notifyObservers() {
@@ -281,7 +281,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.utils.Observerable#initObserverable()
      */
     public void initObserverable() {
@@ -293,7 +293,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.grid.AbstractIndicatorSelectGrid#notifyObservers(org.eclipse.nebula.widgets.grid
      * .GridColumn)
@@ -328,7 +328,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /**
      * DOC talend Comment method "notifyVerticalBarVisible".
-     * 
+     *
      * @param observer
      */
     @Override
@@ -346,7 +346,7 @@ public class ColumnPreviewGrid extends AbstractIndicatorSelectGrid implements TD
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.grid.AbstractIndicatorSelectGrid#notifyHscrollSelectionChange()
      */
     @Override

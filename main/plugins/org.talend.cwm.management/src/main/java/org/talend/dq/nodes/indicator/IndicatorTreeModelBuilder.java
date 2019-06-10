@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * This class for the indicator tree building.
- * 
+ *
  */
 public final class IndicatorTreeModelBuilder {
 
@@ -71,9 +71,9 @@ public final class IndicatorTreeModelBuilder {
     private static IndicatorCategoryNode[] indicatorCategoryNodes;
 
     /**
-     * 
+     *
      * Get the root node
-     * 
+     *
      * @return
      */
     public static IIndicatorNode getRootNode() {
@@ -86,7 +86,7 @@ public final class IndicatorTreeModelBuilder {
     /**
      * build Indicator Category. we DO NOT use the CACHE here, because sometimes, when the indicator definitions become
      * to Proxy, we can not get its property to get Label display on the select indicator dialog(can prefer to TDQ-8857)
-     * 
+     *
      * @return
      */
     public static IIndicatorNode[] buildIndicatorCategory() {
@@ -155,7 +155,7 @@ public final class IndicatorTreeModelBuilder {
 
     /**
      * DOC talend Comment method "createSqlPatternChildrens".
-     * 
+     *
      * @return
      */
     private static IIndicatorNode[] createSqlPatternChildrens() {
@@ -164,9 +164,9 @@ public final class IndicatorTreeModelBuilder {
     }
 
     /**
-     * 
+     *
      * Create IIndicatorNode for every folder or file which is valid
-     * 
+     *
      * @param folder
      * @param indiEnum
      * @param resourceMap
@@ -216,7 +216,7 @@ public final class IndicatorTreeModelBuilder {
 
     /**
      * Create leafNode by the type of indiEnum
-     * 
+     *
      * @param label
      * @param indiEnum
      * @return
@@ -236,7 +236,7 @@ public final class IndicatorTreeModelBuilder {
 
     /**
      * DOC talend Comment method "createRegexPatternChildrens".
-     * 
+     *
      * @return
      */
     private static IIndicatorNode[] createRegexPatternChildrens() {
@@ -246,7 +246,7 @@ public final class IndicatorTreeModelBuilder {
 
     /**
      * Init and return all of user define indicators
-     * 
+     *
      * @return
      */
     private static IIndicatorNode[] createUDIChildrens() {

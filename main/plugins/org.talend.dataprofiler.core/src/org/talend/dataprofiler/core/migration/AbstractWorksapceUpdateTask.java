@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -48,7 +48,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#valid()
      */
     public boolean valid() {
@@ -57,7 +57,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#persist()
      */
     public boolean persist() throws Exception {
@@ -66,7 +66,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#clear()
      */
     public boolean clear() {
@@ -83,7 +83,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     /**
      * DOC bZhou Comment method "isWorksapcePath".
-     * 
+     *
      * @return
      */
     protected boolean isWorksapcePath() {
@@ -92,7 +92,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     /**
      * DOC bZhou Comment method "getTopFolderList".
-     * 
+     *
      * @return
      */
     protected List<File> getTopFolderList() {
@@ -107,7 +107,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     /**
      * DOC bZhou Comment method "getOldTopFolderList".
-     * 
+     *
      * @return
      */
     protected List<File> getOldTopFolderList() {
@@ -122,7 +122,7 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     /**
      * DOC sgandon Comment method "getAllFilesFromFolder".
-     * 
+     *
      * @param sampleFolder
      * @param arrayList
      * @param filenameFilter
@@ -143,10 +143,10 @@ public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
 
     /**
      * DOC bZhou Comment method "getResourceSet".
-     * 
+     *
      * If the target resource is in the current workspace, it will return the shared resource set, otherwise, it will
      * return a new one.
-     * 
+     *
      * @return
      */
     protected ResourceSet getResourceSet() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,13 +29,13 @@ import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 
 /**
  * created by zshen on Aug 26, 2013 Detailled comment
- * 
+ *
  */
 public class BlockingKeyDefinitionTableViewer extends BlockingKeyTableViewer {
 
     /**
      * DOC zshen BlockingKeyDefinitionTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param isAddColumn
@@ -46,7 +46,7 @@ public class BlockingKeyDefinitionTableViewer extends BlockingKeyTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer#getCellEditor(java.util
      * .List)
@@ -74,7 +74,7 @@ public class BlockingKeyDefinitionTableViewer extends BlockingKeyTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer#getTableLabelProvider()
      */

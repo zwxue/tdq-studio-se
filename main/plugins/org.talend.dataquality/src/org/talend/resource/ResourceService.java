@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -39,7 +39,7 @@ public final class ResourceService {
 
     /**
      * DOC bZhou Comment method "setReadOnlyProperty".
-     * 
+     *
      * @param resource
      * @throws CoreException
      */
@@ -54,7 +54,7 @@ public final class ResourceService {
 
     /**
      * DOC bZhou Comment method "isReadOnlyFolder".
-     * 
+     *
      * @param resource
      * @return
      * @throws CoreException
@@ -74,7 +74,7 @@ public final class ResourceService {
 
     /**
      * DOC bZhou Comment method "setNoSubFolderProperty".
-     * 
+     *
      * @param resource
      * @throws CoreException
      */
@@ -89,7 +89,7 @@ public final class ResourceService {
 
     /**
      * DOC bZhou Comment method "isNoSubFolder".
-     * 
+     *
      * @param resource
      * @return
      * @throws CoreException
@@ -127,7 +127,7 @@ public final class ResourceService {
 
     /**
      * DOC bZhou Comment method "isSubFolder".
-     * 
+     *
      * @param parentFolder
      * @param subFolder
      * @return
@@ -141,7 +141,7 @@ public final class ResourceService {
 
     /**
      * DOC xqliu Comment method "isSubFolder".
-     * 
+     *
      * @param parentPath
      * @param subPath
      * @return
@@ -152,7 +152,7 @@ public final class ResourceService {
 
     /**
      * DOC xqliu Comment method "isSubFolder".
-     * 
+     *
      * @param parentPath
      * @param subPath
      * @param true2SamePath
@@ -171,7 +171,7 @@ public final class ResourceService {
 
     /**
      * DOC bZhou Comment method "isSubFolder".
-     * 
+     *
      * @param parentFolder
      * @param subFolders
      * @return
@@ -191,7 +191,7 @@ public final class ResourceService {
 
     /**
      * DOC bZhou Comment method "checkResource".
-     * 
+     *
      * @return
      */
     public static boolean checkResource() {
@@ -204,7 +204,7 @@ public final class ResourceService {
 
     /**
      * DOC bZhou Comment method "checkResource".
-     * 
+     *
      * @return
      */
     public static boolean checkSecludedResource() {
@@ -255,7 +255,7 @@ public final class ResourceService {
 
     /**
      * DOC bZhou Comment method "file2IFile".
-     * 
+     *
      * @param file
      * @return
      */

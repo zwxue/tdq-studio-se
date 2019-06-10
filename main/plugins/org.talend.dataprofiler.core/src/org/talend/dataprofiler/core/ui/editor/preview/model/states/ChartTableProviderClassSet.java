@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -84,7 +84,7 @@ public class ChartTableProviderClassSet {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
          */
         public Color getForeground(Object element, int columnIndex) {
@@ -135,7 +135,7 @@ public class ChartTableProviderClassSet {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @seeorg.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.
          * BaseChartTableLabelProvider#getColumnText(java.lang.Object, int)
          */
@@ -156,7 +156,7 @@ public class ChartTableProviderClassSet {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @seeorg.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.
          * BaseChartTableLabelProvider#getForeground(java.lang.Object, int)
          */
@@ -209,7 +209,7 @@ public class ChartTableProviderClassSet {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @seeorg.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.
          * BaseChartTableLabelProvider#getForeground(java.lang.Object, int)
          */

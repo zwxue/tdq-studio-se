@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -37,7 +37,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * created by talend on Dec 30, 2013 Detailled comment
- * 
+ *
  */
 public class DBSybaseCatalogRepNode extends DBCatalogRepNode {
 
@@ -45,7 +45,7 @@ public class DBSybaseCatalogRepNode extends DBCatalogRepNode {
 
     /**
      * DOC talend DBSybaseCatalogRepNode constructor comment.
-     * 
+     *
      * @param viewObject
      * @param parent
      * @param type
@@ -57,7 +57,7 @@ public class DBSybaseCatalogRepNode extends DBCatalogRepNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.nodes.DBCatalogRepNode#getChildren()
      */
     @Override
@@ -84,7 +84,7 @@ public class DBSybaseCatalogRepNode extends DBCatalogRepNode {
 
     /**
      * judge whether the schemas has been filled
-     * 
+     *
      * @return
      */
     private boolean containSchemas() {
@@ -96,9 +96,9 @@ public class DBSybaseCatalogRepNode extends DBCatalogRepNode {
     }
 
     /**
-     * 
+     *
      * fill schemas on the catalog
-     * 
+     *
      * @return if fill action is success
      */
     private boolean fillSchemaToCatalog(Item databaseItem) {

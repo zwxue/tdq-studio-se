@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -60,7 +60,7 @@ public class AnalysisHandler {
 
     /**
      * DOC xqliu Comment method "createHandler".
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -72,7 +72,7 @@ public class AnalysisHandler {
 
     /**
      * Method "setAnalysis".
-     * 
+     *
      * @param columnAnalysis the analysis to set
      */
     public void setAnalysis(Analysis columnAnalysis) {
@@ -82,7 +82,7 @@ public class AnalysisHandler {
 
     /**
      * Method "getAnalysis".
-     * 
+     *
      * @return the analysis
      */
     public Analysis getAnalysis() {
@@ -167,7 +167,7 @@ public class AnalysisHandler {
 
     /**
      * Method "getSchemaNames".
-     * 
+     *
      * @return the schema names concatenated or the empty string (never null)
      */
     public String getSchemaNames() {
@@ -196,7 +196,7 @@ public class AnalysisHandler {
 
     /**
      * Method "getCatalogNames".
-     * 
+     *
      * @return the catalog names concatenated or the empty string (never null)
      */
     public String getCatalogNames() {
@@ -309,7 +309,7 @@ public class AnalysisHandler {
 
     /**
      * get NumberOfConnections Per Analysis with the real value.
-     * 
+     *
      * @return
      */
     public int getNumberOfConnectionsPerAnalysis() throws NumberFormatException {
@@ -326,7 +326,7 @@ public class AnalysisHandler {
 
     /**
      * get NumberOfConnections Per Analysis with context value.
-     * 
+     *
      * @return
      */
     public String getNumberOfConnectionsPerAnalysisWithContext() {
@@ -343,7 +343,7 @@ public class AnalysisHandler {
 
     /**
      * find in analysis's parameter if has: DefaultLoadedRowCount".if has:get its value, if not, create one
-     * 
+     *
      * @return
      */
     public String getDefaultLoadedRowCount() {
@@ -359,7 +359,7 @@ public class AnalysisHandler {
 
     /**
      * Change the max number of rows
-     * 
+     *
      * @param text
      */
     public void changeDefaultRowLoaded(String text) {
@@ -368,7 +368,7 @@ public class AnalysisHandler {
 
     /**
      * Change the max number of rows
-     * 
+     *
      * @param text
      */
     public void changeSampleDataShowWay(String text) {

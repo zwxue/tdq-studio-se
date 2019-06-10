@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -105,9 +105,9 @@ import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
- * 
+ *
  * DOC scorreia. All indicator definitions defined in .Talend.definition file must be implemented here.
- * 
+ *
  * WARNING: The label of the indicator definition in .Talend.definition must be exactly the same as the strings used
  * here. <br>
  * mzhao split system indicators. feature 13676, 2010-07-12
@@ -144,7 +144,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @seeorg.talend.dataquality.indicators.schema.util.SchemaSwitch# caseCatalogIndicator(org.talend.dataquality
          * .indicators.schema.CatalogIndicator)
          */
@@ -155,7 +155,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @seeorg.talend.dataquality.indicators.schema.util.SchemaSwitch#
          * caseConnectionIndicator(org.talend.dataquality .indicators.schema.ConnectionIndicator)
          */
@@ -166,7 +166,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @seeorg.talend.dataquality.indicators.schema.util.SchemaSwitch# caseSchemaIndicator(org.talend.dataquality
          * .indicators.schema.SchemaIndicator)
          */
@@ -177,7 +177,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @seeorg.talend.dataquality.indicators.schema.util.SchemaSwitch# caseTableIndicator(org.talend.dataquality.
          * indicators.schema.TableIndicator)
          */
@@ -188,7 +188,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @seeorg.talend.dataquality.indicators.schema.util.SchemaSwitch# caseViewIndicator(org.talend.dataquality.
          * indicators.schema.ViewIndicator)
          */
@@ -199,7 +199,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @seeorg.talend.dataquality.indicators.schema.util.SchemaSwitch# defaultCase(org.eclipse.emf.ecore.EObject)
          */
         @Override
@@ -213,7 +213,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch #caseRowMatchingIndicator(org.talend.
          * dataquality.indicators.columnset.RowMatchingIndicator)
          */
@@ -224,7 +224,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch #caseColumnSetMultiValueIndicator(org
          * .talend.dataquality.indicators .columnset.ColumnSetMultiValueIndicator)
          */
@@ -236,7 +236,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch
          * #caseAllMatchIndicator(org.talend.dataquality .indicators .columnset.AllMatchIndicator)
          */
@@ -267,7 +267,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.talend.dataquality.indicators.columnset.util.ColumnsetSwitch
          * #defaultCase(org.eclipse.emf.ecore.EObject )
          */
@@ -296,7 +296,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataquality.indicators.util.IndicatorsSwitch# caseLowFrequencyIndicator(org.talend.dataquality.
      * indicators.LowFrequencyIndicator)
      */
@@ -522,7 +522,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataquality.indicators.util.IndicatorsSwitch# caseSoundexFreqIndicator(org.talend.dataquality.
      * indicators.SoundexFreqIndicator)
      */
@@ -533,7 +533,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.talend.dataquality.indicators.util.IndicatorsSwitch# caseSoundexLowFreqIndicator(org.talend.dataquality
      * .indicators.SoundexLowFreqIndicator)
      */
@@ -663,7 +663,7 @@ class IndcatorSwitchImp extends IndicatorsSwitch<Boolean> {
     }
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.indicators.util.IndicatorsSwitch#caseIndicator(org.talend.dataquality.indicators.Indicator)
      */
     @Override

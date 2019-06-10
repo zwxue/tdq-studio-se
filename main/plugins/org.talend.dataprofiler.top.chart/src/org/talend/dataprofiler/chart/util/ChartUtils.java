@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -38,9 +38,9 @@ import org.jfree.chart.JFreeChart;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
- * 
+ *
  */
 public final class ChartUtils {
 
@@ -87,7 +87,7 @@ public final class ChartUtils {
 
     /**
      * Create a AWT_SWT bridge composite for displaying the <CODE>ChartPanel</CODE>.
-     * 
+     *
      * @param composite
      * @param gd
      * @param chartPanel
@@ -110,7 +110,7 @@ public final class ChartUtils {
 
     /**
      * DOC Administrator Comment method "openReferenceLink".
-     * 
+     *
      * @param httpurl
      * */
     public static void openReferenceLink(String httpurl) {

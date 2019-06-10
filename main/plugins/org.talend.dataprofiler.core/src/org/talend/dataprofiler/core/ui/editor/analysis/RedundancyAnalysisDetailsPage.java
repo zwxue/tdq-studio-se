@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -120,7 +120,7 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
 
     /**
      * DOC rli Comment method "setDefaultIndDef".
-     * 
+     *
      * @param indicator
      */
     private void setDefaultIndDef(Indicator[] indicators) {
@@ -195,7 +195,7 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
     }
 
     /**
-     * 
+     *
      * DOC mzhao Open column selection dialog for left column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetASelectionDialog() {
@@ -203,7 +203,7 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
     }
 
     /**
-     * 
+     *
      * DOC mzhao Open column selection dialog for right column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetBSelectionDialog() {
@@ -382,7 +382,7 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#updateTreeView()
      */
     @Override
@@ -398,7 +398,7 @@ public class RedundancyAnalysisDetailsPage extends AbstractAnalysisMetadataPage 
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getConnectionsWithoutDeleted()
      */
     @Override

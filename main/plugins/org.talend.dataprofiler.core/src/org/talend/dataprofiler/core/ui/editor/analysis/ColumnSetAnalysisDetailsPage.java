@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -271,7 +271,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
                  */
                 @Override
@@ -300,7 +300,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /**
      * DOC yyi Comment method "createIndicatorsSection".
-     * 
+     *
      * @param topComp
      * @param form
      */
@@ -357,7 +357,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#openColumnsSelectionDialog()
      */
     @Override
@@ -558,7 +558,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /**
      * create StoreData Checkbox.
-     * 
+     *
      * @param sectionClient
      */
     private Composite createStoreDataCheck(Composite sectionClient) {
@@ -726,7 +726,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
      */
     @Override
@@ -844,7 +844,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /**
      * DOC qiongli Comment method "includeDatePatternFreqIndicator".
-     * 
+     *
      * @return
      */
     @Override
@@ -859,7 +859,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getNoNJavaIndiatorMessage()
      */
     @Override
@@ -874,7 +874,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /**
      * set the Language To TreeViewer.
-     * 
+     *
      * @param executionLanguage
      */
     @Override
@@ -905,7 +905,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getAnalysisHandler()
      */
     @Override
@@ -914,9 +914,9 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
     }
 
     /**
-     * 
+     *
      * Refresh the column tree
-     * 
+     *
      * @param modelElements
      */
     public void refreshTheTree(ModelElementIndicator[] modelElements) {
@@ -935,7 +935,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#setTreeViewInput(java.lang.Object[])
      */
@@ -952,7 +952,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
 
     /**
      * Refresh the preview Table
-     * 
+     *
      * @param modelElementIndicator
      */
     public void refreshPreviewTable(ModelElementIndicator[] modelElements, boolean loadData) {
@@ -969,7 +969,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
     /*
      * (non-Javadoc)
      * Same with column detail page to do a merge when have a time
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#doCheckOption()
      */
     @Override
@@ -1002,7 +1002,7 @@ public class ColumnSetAnalysisDetailsPage extends AbstractAnalysisMetadataPage i
     /**
      * DOC zshen Comment method "isFileConnection".
      * Same with column detail page to do a merge when have a time
-     * 
+     *
      * @return
      */
     private boolean isFileConnection() {

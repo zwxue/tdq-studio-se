@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -272,7 +272,7 @@ public class DQRespositoryView extends CommonNavigator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.navigator.CommonNavigator#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
      */
     @Override
@@ -344,7 +344,7 @@ public class DQRespositoryView extends CommonNavigator {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse .swt.widgets.Composite)
      */
     @Override
@@ -546,7 +546,7 @@ public class DQRespositoryView extends CommonNavigator {
 
     /**
      * DOC gdbu Comment method "createTreeFilter".
-     * 
+     *
      * @param parent
      * @param _catalogToolBarMgr
      */
@@ -598,7 +598,7 @@ public class DQRespositoryView extends CommonNavigator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -613,7 +613,7 @@ public class DQRespositoryView extends CommonNavigator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -648,7 +648,7 @@ public class DQRespositoryView extends CommonNavigator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -684,7 +684,7 @@ public class DQRespositoryView extends CommonNavigator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
              */
             @Override
@@ -699,7 +699,7 @@ public class DQRespositoryView extends CommonNavigator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.KeyAdapter#keyPressed(org.eclipse.swt.events.KeyEvent)
              */
             @Override
@@ -713,7 +713,7 @@ public class DQRespositoryView extends CommonNavigator {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent)
              */
             @Override
@@ -757,7 +757,7 @@ public class DQRespositoryView extends CommonNavigator {
     }
 
     /**
-     * 
+     *
      * DOC gdbu DQRespositoryView class global comment. Detailled comment
      */
     class RunFilterThread extends Thread {
@@ -909,9 +909,9 @@ public class DQRespositoryView extends CommonNavigator {
 
     /**
      * DOC Zqin Comment method "showSelectedElements".
-     * 
+     *
      * MOD 2009-01-07 mzhao for feature:0005664
-     * 
+     *
      * @param newTree
      */
     public void showSelectedElements(Object selectedElement) {
@@ -937,9 +937,9 @@ public class DQRespositoryView extends CommonNavigator {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "recursiveExpandTree".
-     * 
+     *
      * @param commonViewer
      * @param provider
      * @param item
@@ -968,7 +968,7 @@ public class DQRespositoryView extends CommonNavigator {
     /**
      * Because the exist for filter on the repositoryView we maybe use a temp node to display so we need to find out
      * real one at here.
-     * 
+     *
      * @param item
      * @return
      */
@@ -1041,7 +1041,7 @@ public class DQRespositoryView extends CommonNavigator {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "initAllFolder".
      */
     private void initAllFolders() {

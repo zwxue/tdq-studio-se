@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -51,7 +51,7 @@ public class ModelElementIndicatorRuleTest {
 
     /**
      * DOC yyin Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -118,7 +118,7 @@ public class ModelElementIndicatorRuleTest {
     }
 
     /**
-     * 
+     *
      * test for Hive connection and some indicators should be disabled.
      */
     @Test
@@ -210,7 +210,7 @@ public class ModelElementIndicatorRuleTest {
     }
 
     /**
-     * 
+     *
      * test for teradata connection and Pattern Frequency Statistics indicators should be disabled.
      */
     @Test

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -58,7 +58,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
- * 
+ *
  * @param <T> the type of analyzed element.
  */
 public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
@@ -90,7 +90,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (this.dbmsLanguage == null) {
             DataManager dm = this.getDataManager();
             if (dm == null) {
-                throw new RuntimeException("No data manager found."); //$NON-NLS-1$ 
+                throw new RuntimeException("No data manager found."); //$NON-NLS-1$
             }
             this.dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
         }
@@ -105,7 +105,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "queryOnTable".
-     * 
+     *
      * @param catalog
      * @param schema
      * @param schemaIndic
@@ -152,7 +152,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * just extract this method from evalAllCounts,and need to junit.
-     * 
+     *
      * @param SchemaIndicator
      */
     protected String getCatalogNameWithQuote(SchemaIndicator schemaIndic) {
@@ -171,7 +171,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "createViewIndicator".
-     * 
+     *
      * @param t
      * @param schemaIndic
      * @param rowCount
@@ -188,9 +188,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#executeSqlQuery(java.lang.String)
-     * 
+     *
      * Note that the given statement is not used.
      */
     @Override
@@ -198,7 +198,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "createTableIndicator".
-     * 
+     *
      * @param t
      * @param schemaIndic
      * @param rowCount
@@ -219,7 +219,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "getIndexCount".
-     * 
+     *
      * @param catalog
      * @param schema
      * @param table
@@ -261,7 +261,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "getPKCount".
-     * 
+     *
      * @param catalog
      * @param schema
      * @param table
@@ -294,7 +294,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "reloadConnection".
-     * 
+     *
      * @param catalog
      */
     protected void reloadConnectionAfterException(String catalog) {
@@ -322,7 +322,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "getRowCounts".
-     * 
+     *
      * @param schemaIndic
      * @param quCatalog
      * @param quSchema
@@ -402,7 +402,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "evalSchemaIndic".
-     * 
+     *
      * @param connIndicator
      * @param tdCatalog
      * @param tableBuilder
@@ -416,7 +416,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * DOC scorreia Comment method "evalSchemaIndic".
-     * 
+     *
      * @param tdSchema
      * @param tableBuilder
      * @param tablePattern
@@ -566,7 +566,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * Getter for tablePattern.
-     * 
+     *
      * @return the tablePattern
      */
     public String getTablePattern() {
@@ -575,7 +575,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * Sets the tablePattern.
-     * 
+     *
      * @param tablePattern the tablePattern to set
      */
     public void setTablePattern(String tablePattern) {
@@ -584,7 +584,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * Getter for viewPattern.
-     * 
+     *
      * @return the viewPattern
      */
     public String getViewPattern() {
@@ -593,7 +593,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * Sets the viewPattern.
-     * 
+     *
      * @param viewPattern the viewPattern to set
      */
     public void setViewPattern(String viewPattern) {
@@ -602,7 +602,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * Getter for catalogPattern.
-     * 
+     *
      * @return the catalogPattern
      */
     public String getCatalogPattern() {
@@ -611,7 +611,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * Sets the catalogPattern.
-     * 
+     *
      * @param catalogPattern the catalogPattern to set
      */
     public void setCatalogPattern(String catalogPattern) {
@@ -620,7 +620,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * Getter for schemaPattern.
-     * 
+     *
      * @return the schemaPattern
      */
     public String getSchemaPattern() {
@@ -629,7 +629,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * Sets the schemaPattern.
-     * 
+     *
      * @param schemaPattern the schemaPattern to set
      */
     public void setSchemaPattern(String schemaPattern) {
@@ -638,7 +638,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * * yyi 2009-11-30 10187 check catalog is exist in DB.
-     * 
+     *
      * @param catName
      * @return
      */
@@ -659,7 +659,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * yyi 2009-11-30 10187 check schema is exist in DB.
-     * 
+     *
      * @param catName
      * @return
      */
@@ -677,7 +677,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /**
      * yyi 2009-11-30 10187 check schema is exist in DB.
-     * 
+     *
      * @param catName
      * @return
      */
@@ -727,7 +727,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
     /*
      * Check DB connection is exist in Metadata
-     * 
+     *
      * @see org.talend.dq.indicators.Evaluator#checkConnection()
      */
     @Override

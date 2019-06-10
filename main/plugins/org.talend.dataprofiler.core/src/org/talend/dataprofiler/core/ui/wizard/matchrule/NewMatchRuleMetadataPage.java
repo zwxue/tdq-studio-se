@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,7 +23,7 @@ import org.talend.resource.ResourceManager;
 
 /**
  * created by zshen on Aug 19, 2013 Detailled comment
- * 
+ *
  */
 public class NewMatchRuleMetadataPage extends MetadataWizardPage {
 
@@ -31,7 +31,7 @@ public class NewMatchRuleMetadataPage extends MetadataWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -58,7 +58,7 @@ public class NewMatchRuleMetadataPage extends MetadataWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite
      * )
@@ -70,7 +70,7 @@ public class NewMatchRuleMetadataPage extends MetadataWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#getStoredFolder()
      */
     @Override
@@ -81,7 +81,7 @@ public class NewMatchRuleMetadataPage extends MetadataWizardPage {
     /*
      * Added TDQ-8236 Eclipse help view for the Match rule wizard. TO show the help in the create match rule wizard.
      * 20131022 yyin
-     * 
+     *
      * @see org.eclipse.jface.dialogs.DialogPage#performHelp()
      */
     @Override

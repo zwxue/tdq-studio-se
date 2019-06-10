@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -211,7 +211,7 @@ public class UIPagination {
 
     /**
      * DOC bZhou Comment method "createExtContol".
-     * 
+     *
      * @param parent
      */
     protected void createExtContol(Composite parent) {
@@ -325,8 +325,8 @@ public class UIPagination {
 
     /**
      * go to special page
-     * 
-     * 
+     *
+     *
      * @param pageNumber
      */
     protected void go(int pageNumber) {
@@ -342,9 +342,9 @@ public class UIPagination {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "synNagivatorState".
-     * 
+     *
      * @param modelElementIndicator synchornized data between pagination nagivator bar and tree.
      */
     public void synNagivatorState(ModelElementIndicator[] modelElementIndicator) {
@@ -426,7 +426,7 @@ public class UIPagination {
 
     /**
      * Sets the bandingViewer.
-     * 
+     *
      * @param bandingViewer the bandingViewer to set
      */
     public void setBandingViewer(Viewer bandingViewer) {
@@ -435,7 +435,7 @@ public class UIPagination {
 
     /**
      * Getter for bandingViewer.
-     * 
+     *
      * @return the bandingViewer
      */
     public Viewer getBandingViewer() {
@@ -443,7 +443,7 @@ public class UIPagination {
     }
 
     /**
-     * 
+     *
      * @deprecated use {@link #goToPage(int)} instead of it
      * @param pageNumber
      */
@@ -468,7 +468,7 @@ public class UIPagination {
     }
 
     /**
-     * 
+     *
      * go to Last Page
      */
     public void goToLastPage() {
@@ -476,9 +476,9 @@ public class UIPagination {
     }
 
     /**
-     * 
+     *
      * Go to special page
-     * 
+     *
      * @param pageNumber
      */
     public void goToPage(int pageNumber) {
@@ -487,7 +487,7 @@ public class UIPagination {
 
     /**
      * Getter for currentPage.
-     * 
+     *
      * @return the currentPage
      */
     public int getCurrentPageNumber() {
@@ -496,7 +496,7 @@ public class UIPagination {
 
     /**
      * Added TDQ-8787 20140612: get all indicators and its related dataset (for dynamic chart)
-     * 
+     *
      * @return
      */
     public List<DynamicIndicatorModel> getAllIndcatorAndDatasetOfCurrentPage() {
@@ -509,7 +509,7 @@ public class UIPagination {
 
     /**
      * DOC msjian Comment method "getCurrentPage".
-     * 
+     *
      * @return
      */
     public IPagination getCurrentPage() {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,13 +24,13 @@ import org.talend.cwm.indicator.DataValidation;
 
 /**
  * created by talend on Sep 1, 2014 Detailled comment
- * 
+ *
  */
 public class MapDBColumnSetDataSet extends MapDBkeyListDataSet {
 
     /**
      * MapDBColumnSetDataSet constructor.
-     * 
+     *
      * @param columnLabels
      * @param imputDBMap
      * @param size
@@ -43,7 +43,7 @@ public class MapDBColumnSetDataSet extends MapDBkeyListDataSet {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.sourceforge.sqlexplorer.dataset.mapdb.MapDBkeyListDataSet#getRow(int)
      */
     @Override
@@ -85,7 +85,7 @@ public class MapDBColumnSetDataSet extends MapDBkeyListDataSet {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see net.sourceforge.sqlexplorer.dataset.mapdb.TalendDataSet#getCurrentPageDataSet()
      */
     @Override

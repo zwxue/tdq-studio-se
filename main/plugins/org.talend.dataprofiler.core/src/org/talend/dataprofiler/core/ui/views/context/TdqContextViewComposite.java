@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -23,7 +23,7 @@ import org.talend.dataprofiler.core.ui.editor.SupportContextEditor;
 
 /**
  * created by xqliu on Jul 25, 2013 Detailled comment
- * 
+ *
  */
 public class TdqContextViewComposite extends ContextComposite {
 
@@ -33,7 +33,7 @@ public class TdqContextViewComposite extends ContextComposite {
 
     /**
      * Getter for tdqContextView.
-     * 
+     *
      * @return the tdqContextView
      */
     public TdqContextView getTdqContextView() {
@@ -42,7 +42,7 @@ public class TdqContextViewComposite extends ContextComposite {
 
     /**
      * DOC xqliu TdqContextViewComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param contextView
      */
@@ -53,7 +53,7 @@ public class TdqContextViewComposite extends ContextComposite {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.ContextComposite#getContextManager()
      */
     @Override
@@ -63,7 +63,7 @@ public class TdqContextViewComposite extends ContextComposite {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ui.context.ContextComposite#getCommandStack()
      */
     @Override

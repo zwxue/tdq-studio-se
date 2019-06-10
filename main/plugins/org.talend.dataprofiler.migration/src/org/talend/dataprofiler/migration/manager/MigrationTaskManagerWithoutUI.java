@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,7 +29,7 @@ import org.talend.utils.ProductVersion;
 
 /**
  * created by xqliu on 2013-11-7 Detailled comment
- * 
+ *
  */
 public class MigrationTaskManagerWithoutUI {
 
@@ -80,7 +80,7 @@ public class MigrationTaskManagerWithoutUI {
 
     /**
      * DOC bZhou Comment method "getValidTasks".
-     * 
+     *
      * @param workspaceVersion
      * @param currentVersion
      * @param tasks
@@ -111,7 +111,7 @@ public class MigrationTaskManagerWithoutUI {
 
     /**
      * DOC bZhou Comment method "getValidTasks".
-     * 
+     *
      * @return
      */
     public List<IMigrationTask> getValidTasks() {
@@ -125,9 +125,9 @@ public class MigrationTaskManagerWithoutUI {
 
     /**
      * DOC bZhou Comment method "getWorksapceTasks".
-     * 
+     *
      * @param wVersion
-     * 
+     *
      * @return
      */
     public List<IMigrationTask> getWorksapceTasks() {
@@ -160,7 +160,7 @@ public class MigrationTaskManagerWithoutUI {
 
     /**
      * DOC bZhou Comment method "getTaskByType".
-     * 
+     *
      * @param type
      * @param specifiedVersion
      * @return
@@ -179,7 +179,7 @@ public class MigrationTaskManagerWithoutUI {
 
     /**
      * DOC bZhou Comment method "sortTasks".
-     * 
+     *
      * @param tasks
      */
     private static void sortTasks(List<IMigrationTask> tasks) {
@@ -214,7 +214,7 @@ public class MigrationTaskManagerWithoutUI {
 
     /**
      * DOC bZhou Comment method "doMigrationTask".
-     * 
+     *
      * @param tasks
      * @param monitor
      */

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -24,16 +24,16 @@ import org.talend.repository.model.RepositoryNode;
 
 /**
  * the Factory to create DQ RepositoryNode
- * 
+ *
  */
 public class DQRepNodeCreateFactory {
 
     /**
-     * 
+     *
      * this method is used to create a DBCatalogRepNode. And Sybase is a specal case because we don't create schema
      * level when the version of stdio is lower than 5.0.0.So we will create DBSybaseCatalogRepNode to deal with this
      * special case
-     * 
+     *
      * @param viewObject
      * @param parent parent of repositoryNode
      * @param type

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -92,7 +92,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
 
     /**
      * DOC xqliu TableAnalysisWizard constructor comment.
-     * 
+     *
      * @param parameter
      */
     public TableAnalysisWizard(AnalysisFilterParameter parameter) {
@@ -118,7 +118,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#createAndSaveCWMFile(orgomg.cwm.objectmodel
      * .core.ModelElement)
@@ -174,7 +174,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
 
     /**
      * DOC xqliu Comment method "getWhereRules".
-     * 
+     *
      * @param checkedElements
      * @return
      */
@@ -204,7 +204,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.repository.model.IRepositoryNode
      * )

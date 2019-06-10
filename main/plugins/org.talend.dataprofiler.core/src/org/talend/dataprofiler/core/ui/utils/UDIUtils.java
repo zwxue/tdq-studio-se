@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -98,7 +98,7 @@ public final class UDIUtils {
 
     /**
      * get Current DateTime
-     * 
+     *
      * @return
      */
     public static String getCurrentDateTime() {
@@ -107,7 +107,7 @@ public final class UDIUtils {
 
     /**
      * check the TdExpression is Language And Version.
-     * 
+     *
      * @param tdExp
      * @param language
      * @param version
@@ -121,7 +121,7 @@ public final class UDIUtils {
 
     /**
      * check if Exist In List.
-     * 
+     *
      * @param list
      * @param language
      * @param version
@@ -140,7 +140,7 @@ public final class UDIUtils {
 
     /**
      * create New TdExpression.
-     * 
+     *
      * @param language
      * @param version
      * @param body
@@ -154,7 +154,7 @@ public final class UDIUtils {
 
     /**
      * create Default Drill Down List for UDI.
-     * 
+     *
      * @param indiDefinition
      * @return
      */
@@ -238,7 +238,7 @@ public final class UDIUtils {
 
     /**
      * replace Query For Match UDI.
-     * 
+     *
      * @param genericSQLHandler
      * @return
      */
@@ -340,7 +340,7 @@ public final class UDIUtils {
 
     /**
      * DOC xqliu Comment method "createUdiCheckedTreeSelectionDialog".
-     * 
+     *
      * @param meIndicator
      * @return
      */
@@ -382,7 +382,7 @@ public final class UDIUtils {
 
     /**
      * get the repository nodes corresponding to the indicator.
-     * 
+     *
      * @param meIndicator
      * @return
      */
@@ -422,9 +422,9 @@ public final class UDIUtils {
     }
 
     /**
-     * 
+     *
      * zshen Comment method "createUdiJarCheckedTreeSelectionDialog".
-     * 
+     *
      * @param udiJarProject
      * @return
      */
@@ -458,7 +458,7 @@ public final class UDIUtils {
 
     /**
      * convert the string array to String({a,b,c}==>a||b||c)
-     * 
+     *
      * @param selectionPath
      * @return
      */
@@ -475,9 +475,9 @@ public final class UDIUtils {
     }
 
     /**
-     * 
+     *
      * zshen Comment method "getLibJarFileList".
-     * 
+     *
      * @return
      */
     public static List<IFile> getLibJarFileList() {
@@ -514,9 +514,9 @@ public final class UDIUtils {
     }
 
     /**
-     * 
+     *
      * zshen Comment method "getContainJarFile".
-     * 
+     *
      * @param jarPathStr
      * @return
      */

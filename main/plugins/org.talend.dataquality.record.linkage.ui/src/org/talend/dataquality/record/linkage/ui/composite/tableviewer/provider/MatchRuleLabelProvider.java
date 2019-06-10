@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,13 +27,13 @@ import org.talend.dq.helper.CustomAttributeMatcherHelper;
 
 /**
  * created by zshen on Aug 1, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
     @Override
@@ -43,7 +43,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
      */
     @Override
@@ -73,7 +73,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ITableColorProvider#getForeground(java.lang.Object, int)
      */
     @Override
@@ -83,7 +83,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
      */
     @Override
@@ -105,7 +105,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
 
     /**
      * DOC zshen Comment method "getCellColor".
-     * 
+     *
      * @param takeParameter
      * @return
      */
