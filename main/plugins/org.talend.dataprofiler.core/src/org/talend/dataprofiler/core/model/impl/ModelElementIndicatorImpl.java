@@ -22,6 +22,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataColumnRepositoryObject;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
@@ -914,6 +917,15 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     }
 
     public String getElementName() {
-        return getModelElementRepositoryNode().getObject().getLabel();
+        IRepositoryViewObject object = getModelElementRepositoryNode().getObject();
+        // TDQ-17261 Use 'getName()' instead of 'getLable()' for MetadataColumn because the label might be changed by
+        // Retrieve schema on DI side
+        if (object instanceof MetadataColumnRepositoryObject) {
+            MetadataColumn mdColumn = ((MetadataColumnRepositoryObject) object).getTdColumn();
+            if (mdColumn != null) {
+                return mdColumn.getName();
+            }
+        }
+        return object.getLabel();
     }
 }
