@@ -293,7 +293,10 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                     DynamicChartEventReceiver eReceiver = AnalysisUtils.createDynamicChartEventReceiver(
                             oneCategoryIndicatorModel, index++, oneIndicator);
                     eReceiver.setChartComposite(chartComposite);
+                    // don't remove - for TDQ-12247 frequence indicator will use the parent chart composite to refresh
+                    // the result
                     eReceiver.setParentChartComposite((Composite) oneCategoryIndicatorModel.getBawParentChartComp());
+                    // ~don't remove
                     eReceiver.refreshChart();
                     eReceiver.setTableViewer(tableViewer);
 
