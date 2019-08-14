@@ -237,6 +237,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
      *
      * @seejava.beans.PropertyChangeListener#propertyChange(java.beans. PropertyChangeEvent)
      */
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
@@ -292,6 +293,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                     DynamicChartEventReceiver eReceiver = AnalysisUtils.createDynamicChartEventReceiver(
                             oneCategoryIndicatorModel, index++, oneIndicator);
                     eReceiver.setChartComposite(chartComposite);
+                    eReceiver.setParentChartComposite((Composite) oneCategoryIndicatorModel.getBawParentChartComp());
                     eReceiver.refreshChart();
                     eReceiver.setTableViewer(tableViewer);
 
