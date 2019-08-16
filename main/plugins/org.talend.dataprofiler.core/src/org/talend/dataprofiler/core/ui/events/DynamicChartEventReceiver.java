@@ -20,6 +20,7 @@ import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dq.helper.UDIHelper;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.format.StringFormatUtil;
@@ -183,6 +184,11 @@ public class DynamicChartEventReceiver extends EventReceiver {
     // frequency and summary need this method
     public void refreshChart() {
         // no need to implements
+    }
+
+    // frequency and summary need this method
+    public void refreshChart(EIndicatorChartType chartType) {
+        refreshChart();
     }
 
     public void refreshTable(String value) {

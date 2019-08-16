@@ -297,7 +297,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                     // the result
                     eReceiver.setParentChartComposite((Composite) oneCategoryIndicatorModel.getBawParentChartComp());
                     // ~don't remove
-                    eReceiver.refreshChart();
+                    eReceiver.refreshChart(oneCategoryIndicatorModel.getChartType());
                     eReceiver.setTableViewer(tableViewer);
 
                     // clear data

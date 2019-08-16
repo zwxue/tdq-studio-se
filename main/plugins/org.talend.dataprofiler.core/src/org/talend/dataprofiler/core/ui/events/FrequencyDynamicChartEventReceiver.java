@@ -20,14 +20,18 @@ import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryD
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.TableWithData;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyStatisticsState;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.utils.FrequencyTypeStateUtil;
 import org.talend.dataprofiler.core.ui.utils.TOPChartUtils;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.ModeIndicator;
 import org.talend.dq.indicators.ext.FrequencyExt;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
@@ -171,12 +175,39 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
 
     @Override
     public void refreshChart() {
-        List<IndicatorUnit> indicatorUnits = new ArrayList<IndicatorUnit>();
-        indicatorUnits.add(new ColumnIndicatorUnit(IndicatorEnum.findIndicatorEnum(this.getIndicator().eClass()), this
-                .getIndicator(), null));
+        // List<IndicatorUnit> indicatorUnits = new ArrayList<IndicatorUnit>();
+        // indicatorUnits.add(new ColumnIndicatorUnit(IndicatorEnum.findIndicatorEnum(this.getIndicator().eClass()),
+        // this
+        // .getIndicator(), null));
+        // // indicators
+        // // IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(chartType, units);
+        // FrequencyStatisticsState state = new FrequencyStatisticsState(indicatorUnits);
+        // state.setSupportDynamicChart(true);
+        // Object chart = state.getChart();
+        // TOPChartUtils.getInstance().decorateChart(chart, false);
+        // if (this.parentChartComposite != null && !parentChartComposite.isDisposed()) {
+        // TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, chart);
+        // }
+        //
+        // EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
+        refreshChart(null);
+
+    }
+
+    @Override
+    public void refreshChart(EIndicatorChartType chartType) {
+        List<IndicatorUnit> indicatorUnits = new ArrayList<>();
+        indicatorUnits
+                .add(new ColumnIndicatorUnit(IndicatorEnum.findIndicatorEnum(this.getIndicator().eClass()),
+                        this.getIndicator(), null));
         // indicators
-        FrequencyStatisticsState state = new FrequencyStatisticsState(indicatorUnits);
-        state.setSupportDynamicChart(true);
+        IChartTypeStates state = ChartTypeStatesFactory.getChartState(chartType, indicatorUnits);
+        if (state == null) {
+            state = new FrequencyStatisticsState(indicatorUnits);
+        }
+        if (state instanceof FrequencyTypeStates) {
+            ((FrequencyTypeStates) state).setSupportDynamicChart(true);
+        }
         Object chart = state.getChart();
         TOPChartUtils.getInstance().decorateChart(chart, false);
         if (this.parentChartComposite != null && !parentChartComposite.isDisposed()) {
