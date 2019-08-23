@@ -714,41 +714,43 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart implements
     void initializedConnection(ModelElementIndicator[] indicators) {
         Analysis analysis = getMasterPage().getAnalysisHandler().getAnalysis();
         DataManager connection = analysis.getContext().getConnection();
-        // Connection tdDataProvider = null;
-
         boolean enableWhereClauseFlag = true;
-        boolean enableExecuteLanguageFlag = false;
-        // ~
-        if (indicators != null && indicators.length > 0) {
-            if (connection == null) {
+        boolean isChangeExecuteToSql = false;
+        if (connection == null) {
+            if (indicators != null && indicators.length > 0) {
                 connection = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
                 analysis.getContext().setConnection(connection);
             }
-            if (connection != null && getMasterPage().getExecCombo() != null) {
-                if (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection)) {
-                    getMasterPage().setWhereClauseDisabled();
-                    // when the selected column is not DB type,will disable the execute engine combobox.
-                    getMasterPage().changeExecuteLanguageToJava(true);
+        }
+        if (connection != null && getMasterPage().getExecCombo() != null) {
+            if (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection)) {
+                // TDQ-7444 msjian: when change connection from DB to file connection, we need to empty the WhereClause
+                // field, else can not save analysis.
+                getMasterPage().emptyWhereClauseField();
+                getMasterPage().setWhereClauseDisabled();
 
-                    enableWhereClauseFlag = false;
-                    enableExecuteLanguageFlag = false;
-                } else {// when the selected column is back to DB type, should enable the execute engine combobox again.
-                    getMasterPage().enableExecuteLanguage();
-                }
+                // when the selected column is not DB type,will disable the execute engine combobox.
+                getMasterPage().changeExecuteLanguageToJava(true);
+
+                enableWhereClauseFlag = false;
+                isChangeExecuteToSql = false;
+            } else {// when the selected column is back to DB type, should enable the execute engine combobox again.
+                getMasterPage().enableExecuteLanguage();
             }
         }
+
         // MOD klliu if default ExecutionLanguage is java,it is not changed to SQL.2011-11-21
         String execLang = analysis.getParameters().getExecutionLanguage().getLiteral();
         if (execLang != null && ExecutionLanguage.JAVA.getLiteral().equals(execLang)
                 && (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection))) {
-            enableExecuteLanguageFlag = false;
+            isChangeExecuteToSql = false;
         }
 
         if (enableWhereClauseFlag) {
             getMasterPage().setWhereClauseEnable();
         }
 
-        if (enableExecuteLanguageFlag) {
+        if (isChangeExecuteToSql) {
             getMasterPage().changeExecuteLanguageToSql(true);
         }
     }
