@@ -308,7 +308,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
         // create chart
         try {
-            if (!EditorPreferencePage.isHideGraphicsForResultPage() && TOPChartUtils.getInstance().isTOPChartInstalled()) {
+            if (!EditorPreferencePage.isHideGraphicsForResultPage()
+                    && TOPChartUtils.getInstance().isTOPChartInstalled()) {
                 IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(chartType, units);
                 boolean isPattern = chartTypeState instanceof PatternStatisticsState;
                 if (event == null) {
@@ -343,8 +344,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                     Object chartComposite =
                             TOPChartUtils.getInstance().createTalendChartComposite(composite, swtStyle, chart, true);
                     dyModel.setBawParentChartComp(chartComposite);
-                    Map<String, Object> menuMap = createMenuForAllDataEntity((Composite) chartComposite, dataExplorer, analysis,
-                            ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
+                    Map<String, Object> menuMap = createMenuForAllDataEntity((Composite) chartComposite, dataExplorer,
+                            analysis, ((ICustomerDataset) chartTypeState.getDataset()).getDataEntities());
                     // call chart service to create related mouse listener
                     if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)
                             || EIndicatorChartType.FREQUENCE_STATISTICS.equals(chartType)) {

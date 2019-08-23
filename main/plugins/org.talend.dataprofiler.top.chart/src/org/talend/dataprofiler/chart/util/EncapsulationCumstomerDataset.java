@@ -186,5 +186,14 @@ public class EncapsulationCumstomerDataset extends DefaultCategoryDataset implem
         return this.cusmomerDataset;
     }
 
+    /**
+     * Getter for dataset.
+     * 
+     * @return the dataset
+     */
+    public CategoryDataset getDataset() {
+        return this.dataset;
+    }
+
 
 }

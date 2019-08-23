@@ -55,6 +55,7 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.category.SlidingCategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
@@ -81,6 +82,7 @@ import org.talend.dataprofiler.chart.util.PluginConstant;
 import org.talend.dataprofiler.chart.util.SlideChartComposite;
 import org.talend.dataprofiler.chart.util.TalendChartComposite;
 import org.talend.dataprofiler.chart.util.TopChartFactory;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.service.ITOPChartService;
 import org.talend.dataprofiler.service.utils.ValueAggregator;
 
@@ -138,6 +140,11 @@ public class TOPChartService implements ITOPChartService {
     @Override
     public Object createBarChartByKCD(String title, Object dataset, Object customerDataset) {
         return TopChartFactory.createBarChartByKCD(title, (CategoryDataset) dataset, customerDataset);
+    }
+
+    @Override
+    public Object createBarChartByECD(String title, Object eCDataset) {
+        return TopChartFactory.createBarChartByECD(title, eCDataset);
     }
 
     @Override
@@ -608,6 +615,29 @@ public class TOPChartService implements ITOPChartService {
 
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataprofiler.service.ITOPChartService#addValueToLastTimeCategoryDataset(double, java.lang.String,
+     * java.lang.String)
+     */
+    @Override
+    public void addValueToLastTimeCategoryDataset(Object dataset, double value, String labelX, String labelY) {
+        try {
+            if (dataset instanceof EncapsulationCumstomerDataset) {
+                EncapsulationCumstomerDataset ecDataset = ((EncapsulationCumstomerDataset) dataset);
+                CategoryDataset underlyingDataset =
+                        ((SlidingCategoryDataset) ecDataset.getDataset()).getUnderlyingDataset();
+                if (underlyingDataset instanceof DefaultCategoryDataset) {
+                    ((DefaultCategoryDataset) underlyingDataset).addValue(value, labelX, labelY);
+                }
+
+            }
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+    }
+
     @Override
     public int getRowCount(Object dataset) {
         return ((DefaultCategoryDataset) dataset).getRowCount();
@@ -740,8 +770,25 @@ public class TOPChartService implements ITOPChartService {
      */
     @Override
     public void clearDataset(Object dataset) {
-        // the dataset must be DefaultCategoryDataset
-        ((DefaultCategoryDataset) dataset).clear();
+        try {
+            if(dataset instanceof EncapsulationCumstomerDataset ) {
+                EncapsulationCumstomerDataset ecDataset = ((EncapsulationCumstomerDataset) dataset);
+                CategoryDataset underlyingDataset =
+                        ((SlidingCategoryDataset) ecDataset.getDataset()).getUnderlyingDataset();
+                if (underlyingDataset instanceof DefaultCategoryDataset) {
+                    ((DefaultCategoryDataset) underlyingDataset).clear();
+                    Object clearDataset = ecDataset.getCusmomerDataset();
+                    if (clearDataset != null && clearDataset instanceof CustomerDefaultCategoryDataset) {
+                        ((CustomerDefaultCategoryDataset) clearDataset).clearAll();
+                    }
+                }
+            }else {
+                // the dataset must be DefaultCategoryDataset
+                ((DefaultCategoryDataset) dataset).clear();
+            }
+        } catch (Exception e) {
+            log.error(e, e);
+        }
     }
 
     /*

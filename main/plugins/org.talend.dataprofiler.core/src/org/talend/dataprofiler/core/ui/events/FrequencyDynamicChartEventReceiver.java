@@ -18,6 +18,7 @@ import java.util.List;
 import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesFactory;
@@ -47,14 +48,17 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
         if (value == null) {
             indValue = 0;
         }
-        if (dataset != null) {
+
+        if (dataset == null) {
+            return true;
+        }
+
             // no sort needed here
             if (indValue instanceof FrequencyExt[]) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) indValue;
                 setFrequecyToDataset(dataset, frequencyExt, indicator);
             }
-        }
-        if (tableViewer != null && dataset != null) {
+        if (tableViewer != null) {
             TableWithData input = (TableWithData) tableViewer.getInput();
             if (input != null) {
                 if (this.indicator instanceof ModeIndicator) {
@@ -79,9 +83,10 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             }
         }
 
-        if (registerChart != TOPChartUtils.getInstance().getChartFromChartComposite(parentChartComposite)) {
-            restoreChart();
-        }
+        // if (registerChart != TOPChartUtils.getInstance().getChartFromChartComposite(parentChartComposite)) {
+            // restoreChart();
+            createChart();
+        // }
 
         // need to refresh the parent composite of the chart to show the changes
         if (!(indicator instanceof ModeIndicator)) {
@@ -104,16 +109,8 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
 
         // Added TDQ-12870
         if (tempFreq != null && tempFreq.length > 0) {
-            FrequencyExt freqE = tempFreq[0];
-            List columnKeys = TOPChartUtils.getInstance().getColumnKeys(customerdataset);
-            if (!columnKeys.contains(String.valueOf(freqE.getKey()))) {
-                // columnKeys.clear();
-                TOPChartUtils.getInstance().clearDataset(customerdataset);
-                ICustomerDataset customerDataset = TOPChartUtils.getInstance().getCustomerDataset(customerdataset);
-                if (customerDataset != null && customerDataset instanceof CustomerDefaultCategoryDataset) {
-                    ((CustomerDefaultCategoryDataset) customerDataset).clearAll();
-                }
-            }
+            // columnKeys.clear();
+            TOPChartUtils.getInstance().clearDataset(customerdataset);
             for (int i = 0; i < numOfShown; i++) {
                 FrequencyExt freqExt = tempFreq[i];
                 String keyLabel = String.valueOf(freqExt.getKey());
@@ -136,10 +133,19 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
 
                         addValueToDataset(((CustomerDefaultCategoryDataset) customerDataset).getDataset(), freqExt,
                                 keyLabel);
+
+                        updateLastTimeDataSet(customerdataset, freqExt, keyLabel);
                     }
                 }
             }
         }
+    }
+
+    private void updateLastTimeDataSet(Object customerdataset, FrequencyExt freqExt, String keyLabel) {
+
+        TOPChartUtils
+                .getInstance()
+                .addValueToLastTimeCategoryDataset(customerdataset, freqExt.getValue(), "1", keyLabel); //$NON-NLS-1$
 
     }
 
@@ -171,6 +177,20 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
 
         EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
 
+    }
+
+    private void createChart() {
+        Object chart = TOPChartUtils
+                .getInstance()
+                .createBarChartByECD(DefaultMessagesImpl.getString("TopChartFactory.count"), dataset); //$NON-NLS-1$
+        TOPChartUtils.getInstance().decoratePatternMatching(chart);
+        
+        if (this.parentChartComposite != null && !parentChartComposite.isDisposed()) {
+            TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, chart);
+            // EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
+        }
+        
+        
     }
 
     @Override

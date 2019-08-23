@@ -133,6 +133,21 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         return null;
     }
 
+    /**
+     *
+     * Create bar chart by Encapsulation Cumstomer Dataset
+     *
+     * @param title
+     * @param dataset
+     * @return
+     */
+    public Object createBarChartByECD(String title, Object eCDataset) {
+        if (isTOPChartInstalled()) {
+            return chartService.createBarChartByECD(title, eCDataset);
+        }
+        return null;
+    }
+
     public Object createBenfordChart(String axisXLabel, String categoryAxisLabel, Object dataset, List<String> dotChartLabels,
             double[] formalValues, String title) {
         if (isTOPChartInstalled()) {
@@ -306,6 +321,7 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         // TDQ-12737: fix the no more handles error, because we create a potentially unreferenced menu, so we must dispose it
         composite.addListener(SWT.Dispose, new Listener() {
 
+            @Override
             public void handleEvent(Event event) {
                 menu.dispose();
             }
@@ -365,6 +381,7 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
                 } else {
                     Display.getDefault().asyncExec(new Runnable() {
 
+                        @Override
                         public void run() {
                             Connection tdDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(analysis1.getContext()
                                     .getConnection());
@@ -388,6 +405,12 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     public void addValueToCategoryDataset(Object dataset, double value, String labelX, String labelY) {
         if (isTOPChartInstalled()) {
             chartService.addValueToCategoryDataset(dataset, value, labelX, labelY);
+        }
+    }
+
+    public void addValueToLastTimeCategoryDataset(Object dataset, double value, String labelX, String labelY) {
+        if (isTOPChartInstalled()) {
+            chartService.addValueToLastTimeCategoryDataset(dataset, value, labelX, labelY);
         }
     }
 
@@ -454,6 +477,14 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
         }
     }
 
+    /**
+     * Three case we will support at here
+     * 1.dataset is EncapsulationCumstomerDataset so that we need to clear:
+     * 1)dataset
+     * 2)cusmomerDataset
+     * 
+     * 2.dataset is DefaultCategoryDataset so that we only clear itself
+     */
     public void clearDataset(Object dataset) {
         if (isTOPChartInstalled()) {
             chartService.clearDataset(dataset);

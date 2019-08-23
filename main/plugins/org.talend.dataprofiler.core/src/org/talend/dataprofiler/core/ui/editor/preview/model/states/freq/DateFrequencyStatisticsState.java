@@ -49,7 +49,9 @@ public class DateFrequencyStatisticsState extends FrequencyStatisticsState {
      */
     @Override
     public ICustomerDataset getCustomerDataset() {
-        return DateFrequencyStateUtil.getCustomerDataset(units, ComparatorsFactory.FREQUENCY_COMPARATOR_ID);
+        
+        return DateFrequencyStateUtil
+                .getCustomerDataset(units, ComparatorsFactory.FREQUENCY_COMPARATOR_ID, this.isSupportDynamicChart());
     }
 
     @Override

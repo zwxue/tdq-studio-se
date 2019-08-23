@@ -70,6 +70,8 @@ public interface ITOPChartService {
 
     Object createBarChartByKCD(String title, Object dataset, Object customerDataset);
 
+    Object createBarChartByECD(String title, Object eCDataset);
+
     Object createPieChart(String title, Object dataset, boolean showLegend, boolean toolTips, boolean urls);
 
     Object createBenfordChart(String axisXLabel, String categoryAxisLabel, Object dataset, List<String> dotChartLabels,
@@ -126,6 +128,8 @@ public interface ITOPChartService {
     Object createXYDataset(Map<Integer, Double> valueMap);
 
     void addValueToCategoryDataset(Object dataset, double value, String labelX, String labelY);
+
+    void addValueToLastTimeCategoryDataset(Object dataset, double value, String labelX, String labelY);
 
     int getRowCount(Object dataset);
 
