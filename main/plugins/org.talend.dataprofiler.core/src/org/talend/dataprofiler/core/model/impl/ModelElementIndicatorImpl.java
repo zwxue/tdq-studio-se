@@ -162,9 +162,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         if (indicator == null) {
             return false;
         }
-        String displayTextWithProjectName =
-                RepositoryNodeHelper.recursiveFind(indicator.getIndicatorDefinition()).getDisplayTextWithProjectName();
-        IndicatorUnit indicatorUnit = specialIndicatorUnitMap.get(displayTextWithProjectName);
+        IndicatorUnit indicatorUnit = specialIndicatorUnitMap.get(indicator.getName());
         return this.specialIndicatorUnitList.contains(indicatorUnit);
     }
 
@@ -489,9 +487,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
      * Remove indicator from special indicator list
      */
     public void removeSpecialIndicator(Indicator indicator) {
-        String displayTextWithProjectName =
-                RepositoryNodeHelper.recursiveFind(indicator.getIndicatorDefinition()).getDisplayTextWithProjectName();
-        IndicatorUnit indicatorUnit = this.specialIndicatorUnitMap.get(displayTextWithProjectName);
+        IndicatorUnit indicatorUnit = this.specialIndicatorUnitMap.get(indicator.getName());
         if (indicatorUnit != null) {
             this.specialIndicatorUnitList.remove(indicatorUnit);
         }
@@ -501,9 +497,8 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
      * Remove indicator from temp special indicator list
      */
     public void removeTempSpecialIndicator(Indicator indicator) {
-        String displayTextWithProjectName =
-                RepositoryNodeHelper.recursiveFind(indicator.getIndicatorDefinition()).getDisplayTextWithProjectName();
-        IndicatorUnit indicatorUnit = this.specialIndicatorUnitMap.get(displayTextWithProjectName);
+        // TDQ-17434: until now, this indicator parameter node can only be main project node
+        IndicatorUnit indicatorUnit = this.specialIndicatorUnitMap.get(indicator.getName());
         if (indicatorUnit != null) {
             this.tempSpecialIndicatorUnitList.remove(indicatorUnit);
         }
@@ -865,10 +860,9 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         }
         IndicatorUnit indicatorUnit = new ColumnIndicatorUnit(indicatorEnum, tempIndicator, this);
         specialIndicatorUnitList.add(indicatorUnit);
-        String displayTextWithProjectName = RepositoryNodeHelper
-                .recursiveFind(tempIndicator.getIndicatorDefinition())
-                .getDisplayTextWithProjectName();
-        this.specialIndicatorUnitMap.put(displayTextWithProjectName, indicatorUnit);
+
+        String tempIndicatorName = RepositoryNodeHelper.getDisplayLabelInEditor(tempIndicator);
+        this.specialIndicatorUnitMap.put(tempIndicatorName, indicatorUnit);
         return indicatorUnit;
     }
 
@@ -889,23 +883,14 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
             this.specialIndicatorUnitList = new ArrayList<IndicatorUnit>();
         }
         for (IndicatorUnit currentUnit : tempSpecialIndicatorUnitList) {
-            String tempIndicatorName = RepositoryNodeHelper
-                    .recursiveFind(tempIndicator.getIndicatorDefinition())
-                    .getDisplayTextWithProjectName();
-            String currentUnitName = RepositoryNodeHelper
-                    .recursiveFind(currentUnit.getIndicator().getIndicatorDefinition())
-                    .getDisplayTextWithProjectName();
-            if (tempIndicatorName.equalsIgnoreCase(currentUnitName)) {
+            if (tempIndicator.getName().equalsIgnoreCase(currentUnit.getIndicator().getName())) {
                 return currentUnit;
             }
         }
         IndicatorUnit indicatorUnit = new ColumnIndicatorUnit(indicatorEnum, tempIndicator, this);
 
         tempSpecialIndicatorUnitList.add(indicatorUnit);
-        String displayTextWithProjectName = RepositoryNodeHelper
-                .recursiveFind(tempIndicator.getIndicatorDefinition())
-                .getDisplayTextWithProjectName();
-        this.specialIndicatorUnitMap.put(displayTextWithProjectName, indicatorUnit);
+        this.specialIndicatorUnitMap.put(tempIndicator.getName(), indicatorUnit);
         return indicatorUnit;
     }
 
