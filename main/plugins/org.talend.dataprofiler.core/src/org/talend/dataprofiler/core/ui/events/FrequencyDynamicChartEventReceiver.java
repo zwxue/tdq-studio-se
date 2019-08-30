@@ -83,10 +83,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             }
         }
 
-        // if (registerChart != TOPChartUtils.getInstance().getChartFromChartComposite(parentChartComposite)) {
-            // restoreChart();
             createChart();
-        // }
 
         // need to refresh the parent composite of the chart to show the changes
         if (!(indicator instanceof ModeIndicator)) {
@@ -141,7 +138,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
         }
     }
 
-    private void updateLastTimeDataSet(Object customerdataset, FrequencyExt freqExt, String keyLabel) {
+    protected void updateLastTimeDataSet(Object customerdataset, FrequencyExt freqExt, String keyLabel) {
 
         TOPChartUtils
                 .getInstance()
@@ -166,20 +163,7 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
 
     }
 
-    private void restoreChart() {
-        if (registerChart == null) {
-            return;
-        }
-
-        if (this.parentChartComposite != null && !parentChartComposite.isDisposed()) {
-            TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, registerChart);
-        }
-
-        EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
-
-    }
-
-    private void createChart() {
+    protected void createChart() {
         Object chart = TOPChartUtils
                 .getInstance()
                 .createBarChartByECD(DefaultMessagesImpl.getString("TopChartFactory.count"), dataset); //$NON-NLS-1$
@@ -187,31 +171,12 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
         
         if (this.parentChartComposite != null && !parentChartComposite.isDisposed()) {
             TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, chart);
-            // EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
         }
-        
-        
     }
 
     @Override
     public void refreshChart() {
-        // List<IndicatorUnit> indicatorUnits = new ArrayList<IndicatorUnit>();
-        // indicatorUnits.add(new ColumnIndicatorUnit(IndicatorEnum.findIndicatorEnum(this.getIndicator().eClass()),
-        // this
-        // .getIndicator(), null));
-        // // indicators
-        // // IChartTypeStates chartTypeState = ChartTypeStatesFactory.getChartState(chartType, units);
-        // FrequencyStatisticsState state = new FrequencyStatisticsState(indicatorUnits);
-        // state.setSupportDynamicChart(true);
-        // Object chart = state.getChart();
-        // TOPChartUtils.getInstance().decorateChart(chart, false);
-        // if (this.parentChartComposite != null && !parentChartComposite.isDisposed()) {
-        // TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, chart);
-        // }
-        //
-        // EventManager.getInstance().publish(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART, null);
         refreshChart(null);
-
     }
 
     @Override

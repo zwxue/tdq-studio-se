@@ -773,14 +773,19 @@ public class TOPChartService implements ITOPChartService {
         try {
             if(dataset instanceof EncapsulationCumstomerDataset ) {
                 EncapsulationCumstomerDataset ecDataset = ((EncapsulationCumstomerDataset) dataset);
-                CategoryDataset underlyingDataset =
-                        ((SlidingCategoryDataset) ecDataset.getDataset()).getUnderlyingDataset();
-                if (underlyingDataset instanceof DefaultCategoryDataset) {
-                    ((DefaultCategoryDataset) underlyingDataset).clear();
-                    Object clearDataset = ecDataset.getCusmomerDataset();
-                    if (clearDataset != null && clearDataset instanceof CustomerDefaultCategoryDataset) {
-                        ((CustomerDefaultCategoryDataset) clearDataset).clearAll();
+                CategoryDataset eCDDataset = ecDataset.getDataset();
+                if (eCDDataset instanceof SlidingCategoryDataset) {
+
+                    CategoryDataset underlyingDataset = ((SlidingCategoryDataset) eCDDataset).getUnderlyingDataset();
+                    if (underlyingDataset instanceof DefaultCategoryDataset) {
+                        ((DefaultCategoryDataset) underlyingDataset).clear();
+                        Object clearDataset = ecDataset.getCusmomerDataset();
+                        if (clearDataset != null && clearDataset instanceof CustomerDefaultCategoryDataset) {
+                            ((CustomerDefaultCategoryDataset) clearDataset).clearAll();
+                        }
                     }
+                } else {
+                    ((DefaultCategoryDataset) eCDDataset).clear();
                 }
             }else {
                 // the dataset must be DefaultCategoryDataset

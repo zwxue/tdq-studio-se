@@ -42,6 +42,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesFacto
 import org.talend.dataprofiler.core.ui.editor.preview.model.TableTypeStatesFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.TableWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BenfordLawFrequencyState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.FrequencyTypeStates;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern.PatternStatisticsState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.table.ITableTypeStates;
@@ -340,7 +341,10 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                         TOPChartUtils.getInstance().decoratePatternMatching(chart);
                     }
                     // TDQ-13378 vertical scroll bar for Frequency indicators
-                    int swtStyle = (chartTypeState instanceof FrequencyTypeStates) ? SWT.VERTICAL : SWT.NONE;
+                    int swtStyle = (chartTypeState instanceof FrequencyTypeStates)
+                            //BenfordLawFrequency don't need the scroll bar
+                            ? (chartTypeState instanceof BenfordLawFrequencyState ? SWT.NONE : SWT.VERTICAL)
+                            : SWT.NONE;
                     Object chartComposite =
                             TOPChartUtils.getInstance().createTalendChartComposite(composite, swtStyle, chart, true);
                     dyModel.setBawParentChartComp(chartComposite);

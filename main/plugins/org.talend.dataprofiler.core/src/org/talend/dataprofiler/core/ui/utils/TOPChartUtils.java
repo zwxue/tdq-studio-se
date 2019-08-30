@@ -151,8 +151,12 @@ public class TOPChartUtils extends AbstractOSGIServiceUtils {
     public Object createBenfordChart(String axisXLabel, String categoryAxisLabel, Object dataset, List<String> dotChartLabels,
             double[] formalValues, String title) {
         if (isTOPChartInstalled()) {
+            Object realDataset = dataset;
+            if (dataset instanceof CustomerDefaultCategoryDataset) {
+                realDataset = ((CustomerDefaultCategoryDataset) dataset).getDataset();
+            }
             return chartService.createBenfordChart(axisXLabel, categoryAxisLabel,
-                    ((CustomerDefaultCategoryDataset) dataset).getDataset(), dotChartLabels, formalValues, title);
+                            realDataset, dotChartLabels, formalValues, title);
         }
         return null;
     }

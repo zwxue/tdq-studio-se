@@ -12,6 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BenfordLawFrequencyState;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.util.BenfordLawFrequencyStateUtil;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
@@ -26,6 +32,8 @@ import org.talend.dq.indicators.ext.FrequencyExt;
 public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicChartEventReceiver {
 
     private Object secondDataset = null;
+
+    private List<String> dotChartLabels = new ArrayList<>();
 
     @Override
     public boolean handle(Object value) {
@@ -45,6 +53,7 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
                 TOPChartUtils.getInstance().addValueToCategoryDataset(secondDataset, BenfordLawFrequencyState.formalValues[9],
                         "Expected(%)", keyLabel);//$NON-NLS-1$
             }
+            dotChartLabels.add(keyLabel);
         }
     }
 
@@ -79,6 +88,42 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
         if (secondDataset != null) {// when the graph is hiden, the secondDataset is null
             TOPChartUtils.getInstance().clearDataset(secondDataset);
         }
+        dotChartLabels.clear();
         super.clearValue();
     }
+
+    @Override
+    protected void createChart() {
+        Object chart = TOPChartUtils
+                .getInstance()
+                .createBenfordChart(DefaultMessagesImpl.getString("BenfordLawFrequencyState.value"), //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("BenfordLawFrequencyState.AxisY"), getDataset(), dotChartLabels, //$NON-NLS-1$
+                        BenfordLawFrequencyState.formalValues,
+                        DefaultMessagesImpl.getString("BenfordLawFrequencyState.value")); //$NON-NLS-1$
+        TOPChartUtils.getInstance().decoratePatternMatching(chart);
+
+        if (this.parentChartComposite != null && !parentChartComposite.isDisposed()) {
+            TOPChartUtils.getInstance().refrechChart(this.parentChartComposite, chart);
+        }
+    }
+
+    @Override
+    protected void updateLastTimeDataSet(Object customerdataset, FrequencyExt freqExt, String keyLabel) {
+        // do nothing here
+    }
+
+    @Override
+    public Object getDataset() {
+        Object customerdataset = super.getDataset();
+        if (customerdataset instanceof CustomerDefaultCategoryDataset) {
+            return ((CustomerDefaultCategoryDataset) customerdataset).getDataset();
+        } else {
+            ICustomerDataset customerDataset = TOPChartUtils.getInstance().getCustomerDataset(customerdataset);
+            if (customerDataset != null && customerDataset instanceof CustomerDefaultCategoryDataset) {
+                return ((CustomerDefaultCategoryDataset) customerDataset).getDataset();
+            }
+            return null;
+        }
+    }
+
 }
