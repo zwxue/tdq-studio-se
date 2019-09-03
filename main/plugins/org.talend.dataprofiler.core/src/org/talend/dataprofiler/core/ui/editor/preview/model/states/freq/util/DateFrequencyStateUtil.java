@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.commons.utils.SpecialValueDisplay;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -30,11 +31,12 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
  */
 public class DateFrequencyStateUtil {
 
-    public static ICustomerDataset getCustomerDataset(List<IndicatorUnit> units, int sortType) {
+    public static ICustomerDataset getCustomerDataset(List<IndicatorUnit> units, int sortType,
+            boolean isSupportDynamicChart) {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
 
         for (IndicatorUnit unit : units) {
-            if (unit.isExcuted()) {
+            if (unit.isExcuted() && !isSupportDynamicChart) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) unit.getValue();
 
                 ComparatorsFactory.sort(frequencyExt, sortType);
@@ -51,8 +53,18 @@ public class DateFrequencyStateUtil {
 
                     customerdataset.addDataEntity(entity);
                 }
+            } else {
+                ChartDataEntity entity = FrequencyTypeStateUtil
+                        .createChartEntity(unit.getIndicator(), null, SpecialValueDisplay.EMPTY_FIELD, false);
+                FrequencyExt fre = new FrequencyExt();
+                fre.setValue(0l);
+                fre.setFrequency(0d);
+                customerdataset.addValue(fre.getValue(), "1", unit.getIndicatorName()); //$NON-NLS-1$
+
+                customerdataset.addDataEntity(entity);
             }
         }
+
         return customerdataset;
     }
 

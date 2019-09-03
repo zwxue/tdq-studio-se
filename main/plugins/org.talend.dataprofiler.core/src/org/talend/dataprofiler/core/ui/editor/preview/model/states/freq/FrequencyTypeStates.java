@@ -36,6 +36,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
         super(units);
     }
 
+    @Override
     public Object getChart() {
         return getChart(getDataset());
     }
@@ -46,9 +47,10 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                 DefaultMessagesImpl.getString("TopChartFactory.count"), dataset); //$NON-NLS-1$
     }
 
+
+    @Override
     public ICustomerDataset getCustomerDataset() {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
-        boolean withRowCountIndicator = isWithRowCountIndicator();
 
         for (IndicatorUnit unit : units) {
             if (unit.isExcuted() && !this.isSupportDynamicChart) {
@@ -97,6 +99,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
         customerdataset.addValue(freqExt.getValue(), "1", keyLabel); //$NON-NLS-1$
     }
 
+    @Override
     public String getReferenceLink() {
         return null;
     }
@@ -112,6 +115,15 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
      */
     public void setSupportDynamicChart(boolean isSupportDynamicChart) {
         this.isSupportDynamicChart = isSupportDynamicChart;
+    }
+
+    /**
+     * Getter for isSupportDynamicChart.
+     * 
+     * @return the isSupportDynamicChart
+     */
+    protected boolean isSupportDynamicChart() {
+        return this.isSupportDynamicChart;
     }
 
     protected abstract void sortIndicator(FrequencyExt[] frequencyExt);

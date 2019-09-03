@@ -49,7 +49,9 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
      */
     @Override
     public ICustomerDataset getCustomerDataset() {
-        return DateFrequencyStateUtil.getCustomerDataset(units, ComparatorsFactory.LOW_FREQUENCY_COMPARATOR_ID);
+        return DateFrequencyStateUtil
+                .getCustomerDataset(units, ComparatorsFactory.LOW_FREQUENCY_COMPARATOR_ID,
+                        this.isSupportDynamicChart());
 
     }
 

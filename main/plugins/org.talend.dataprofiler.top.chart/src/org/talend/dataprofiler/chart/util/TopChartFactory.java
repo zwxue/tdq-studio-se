@@ -416,6 +416,45 @@ public final class TopChartFactory {
     }
 
     /**
+     * create bar chart.
+     *
+     * @param titile
+     * @param dataset
+     * @return
+     */
+    public static JFreeChart createBarChartByECD(String title, Object eCDataset) {
+
+        EncapsulationCumstomerDataset ecd = (EncapsulationCumstomerDataset) eCDataset;
+        // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
+        // TDQ-13378 add to vertical scroll bar. the scroll bar will be visible when the count >10
+        SlidingCategoryDataset slideDataset = (SlidingCategoryDataset) ecd.getDataset();
+        Object cusmomerDataset = ecd.getCusmomerDataset();
+        // TDQ-5112~
+        JFreeChart createBarChart = ChartFactory
+                .createBarChart(null, Messages.getString("TopChartFactory.Value"), title, slideDataset, //$NON-NLS-1$
+                        PlotOrientation.HORIZONTAL, false, false, false);
+
+        CategoryPlot plot = createBarChart.getCategoryPlot();
+        if (cusmomerDataset != null) {
+            plot.setDataset(1, new EncapsulationCumstomerDataset(slideDataset, cusmomerDataset));
+        }
+
+        CategoryAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setTickLabelPaint(NULL_FIELD, Color.RED);
+        domainAxis.setTickLabelPaint(NULL_FIELD2, Color.RED);
+        domainAxis.setTickLabelPaint(EMPTY_FIELD, Color.RED);
+
+        // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
+        BarRenderer renderer = new TalendBarRenderer(false, ChartDecorator.COLOR_LIST);
+        renderer.setShadowVisible(false);
+        // TDQ-5251~
+
+        plot.setRenderer(renderer);
+        return createBarChart;
+    }
+
+    /**
      *
      * DOC zshen Comment method "createMatchRuleBarChart".
      *
