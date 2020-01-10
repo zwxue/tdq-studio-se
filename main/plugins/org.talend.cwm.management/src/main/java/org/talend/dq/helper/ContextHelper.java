@@ -271,12 +271,14 @@ public final class ContextHelper {
         String logo = tdReport.getLogo();
         String host = ReportHelper.getHost(tdReport);
         String port = ReportHelper.getPort(tdReport);
+        String warehouse = ReportHelper.getWarehouse(tdReport);
         String sid = ReportHelper.getDbName(tdReport);
         String schema = ReportHelper.getSchema(tdReport);
         String user = ReportHelper.getUser(tdReport);
         String password = ReportHelper.getPassword(tdReport);
         String paramter = ReportHelper.getParameter(tdReport);
-        return isContextVar(of) || isContextVar(logo) || isContextVar(host) || isContextVar(port) || isContextVar(sid)
+        return isContextVar(of) || isContextVar(logo) || isContextVar(host) || isContextVar(port)
+                || isContextVar(warehouse) || isContextVar(sid)
                 || isContextVar(schema) || isContextVar(user) || isContextVar(password) || isContextVar(paramter);
     }
 
