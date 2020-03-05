@@ -66,6 +66,15 @@ public class Application implements IApplication {
         StudioKeysFileCheck.check(ConfigurationScope.INSTANCE.getLocation().toFile());
 
         Display display = PlatformUI.createDisplay();
+        try {
+            StudioKeysFileCheck.validateJavaVersion();
+        } catch (Exception e) {
+            Shell shell = new Shell(display, SWT.NONE);
+            MessageDialog.openError(shell, null, // $NON-NLS-1$
+                    Messages.getString("JavaVersion.CheckError", StudioKeysFileCheck.JAVA_VERSION_MINIMAL_STRING,
+                            StudioKeysFileCheck.getJavaVersion()));
+            return IApplication.EXIT_RELAUNCH;
+        }
         Shell shell = DisplayUtils.getDefaultShell(false);
         // TDQ-12221: do check before use to make sure can popup the "Connect to TalendForge"
         checkBrowserSupport();
